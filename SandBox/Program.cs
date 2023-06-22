@@ -35,7 +35,7 @@ internal class Program
     {
         var path = GetReplayPath(InvalidMeOnWuShang);
         var replayBinary = File.ReadAllBytes(path);
-        var replay = ReplayData.ReadReplay(replayBinary);
+        var replay = Replay.ReadReplay(replayBinary);
         string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions()
         {
             WriteIndented = true

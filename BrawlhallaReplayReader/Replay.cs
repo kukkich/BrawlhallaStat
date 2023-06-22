@@ -3,7 +3,7 @@ using BrawlhallaReplayReader.Helpers;
 
 namespace BrawlhallaReplayReader;
 
-public class ReplayData
+public class Replay
 {
     private static readonly byte[] XorKey = new byte[]
     {
@@ -402,15 +402,15 @@ public class ReplayData
         return data.Data;
     }
 
-    public static ReplayData ReadReplay(byte[] data)
+    public static Replay ReadReplay(byte[] data)
     {
-        var replay = new ReplayData(); 
+        var replay = new Replay(); 
         var stream = new BitStream(data);
         replay.Read(stream);
         return replay;
     }
 
-    public static byte[] WriteReplay(ReplayData replay)
+    public static byte[] WriteReplay(Replay replay)
     {
         var stream = new BitStream();
         replay.Write(stream);

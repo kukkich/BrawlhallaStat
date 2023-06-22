@@ -1,6 +1,6 @@
 ﻿namespace BrawlhallaReplayReader.Deserializers;
 
-public interface IReadingStrategy
+public class ReadingStrategyBeforeV7
 {
-    public Read;
+    
 }

@@ -1,5 +1,4 @@
 ﻿using BrawlhallaReplayReader.Helpers;
-using System.Globalization;
 
 namespace BrawlhallaReplayReader.Deserializers;
 
@@ -11,19 +10,46 @@ public class BHReplayDeserializer
         157, 197, 212, 107, 84, 114, 252, 87, 93, 26, 6, 115, 194, 81, 75, 176, 201,
         140, 120, 4, 17, 122, 239, 116, 62, 70, 57, 160, 199, 166
     };
-
-    public void Read(BitStream data)
+    
+    private Replay _result;
+    private IReadingStrategy _readingStrategy;
+    
+    public Replay Read(BitStream data)
     {
+        _result = new Replay();
+        
+    }
 
+    private void ReadHeader(BitStream data)
+    {
+        _result.RandomSeed = data.ReadInt();
+        _result.Version = data.ReadInt();
+
+
+        _result.PlaylistId = data.ReadInt();
+
+        if (_result.PlaylistId != 0)
+        {
+            _result.PlaylistName = data.ReadString();
+        }
+
+        _result.OnlineGame = data.ReadBoolean();
+    }
+
+    private void SelectReadingStrategy()
+    {
+        //TODO correct versions
+        if (_result.Version > 215)
+        {
+            _readingStrategy = new ReadingStrategyAfterV7();
+        } 
     }
 
     private void XorData(BitStream data)
     {
         var buffer = data.Data;
         for (var i = 0; i < buffer.Length; i++)
-        {
             buffer[i] ^= XorKey[i % XorKey.Length];
-        }
     }
 
     private void Decompress(BitStream data)
