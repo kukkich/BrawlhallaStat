@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a482f8f6-b55d-408b-883d-e8528f2c005b</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0-rc.1.22427.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CommandHandlers\BrawlhallaEntities\" />
+    <Folder Include="Commands\BrawlhallaEntities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BrawlhallaStas.Domain\BrawlhallaStat.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
