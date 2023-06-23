@@ -2,6 +2,8 @@
 
 public class LegendAgainstLegendStatistic : IConcreteStatistic
 {
+    public string Id { get; set; } = null!;
+
     public int LegendId { get; set; }
     public Legend Legend { get; set; } = null!;
 
@@ -11,6 +13,6 @@ public class LegendAgainstLegendStatistic : IConcreteStatistic
     public string StatisticId { get; set; } = null!;
     public Statistic Statistic { get; set; } = null!;
 
-    public int UserId { get; set; }
+    public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
 }

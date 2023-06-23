@@ -2,5 +2,5 @@
 
 public interface IReadingStrategy
 {
-    public Read;
+    //public Read
 }

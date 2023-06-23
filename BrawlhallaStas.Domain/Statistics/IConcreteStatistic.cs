@@ -1,10 +1,12 @@
-﻿namespace BrawlhallaStat.Domain.Statistics;
+﻿using BrawlhallaStat.Domain.Base;
 
-public interface IConcreteStatistic
+namespace BrawlhallaStat.Domain.Statistics;
+
+public interface IConcreteStatistic : IHaveId<string>
 {
     public string StatisticId { get; set; }
     public Statistic Statistic { get; set; }
 
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public User User { get; set; }
 }

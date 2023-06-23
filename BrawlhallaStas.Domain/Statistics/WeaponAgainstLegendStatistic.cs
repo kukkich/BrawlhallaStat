@@ -2,6 +2,8 @@
 
 public class WeaponAgainstLegendStatistic : IConcreteStatistic
 {
+    public string Id { get; set; } = null!;
+
     public int WeaponId { get; set; }
     public Weapon Weapon { get; set; } = null!;
 
@@ -11,6 +13,6 @@ public class WeaponAgainstLegendStatistic : IConcreteStatistic
     public string StatisticId { get; set; } = null!;
     public Statistic Statistic { get; set; } = null!;
 
-    public int UserId { get; set; }
+    public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
 }
