@@ -12,7 +12,7 @@ public class Replay
         157, 197, 212, 107, 84, 114, 252, 87, 93, 26, 6, 115, 194, 81, 75, 176, 201,
         140, 120, 4, 17, 122, 239, 116, 62, 70, 57, 160, 199, 166
     };
-    
+
     public List<int> StateOrder { get; set; } = new() { 3, 4, 6, 1, 5 }; // Keeps track of the order of state writes
 
     public int Length { get; set; } = -1;
@@ -83,12 +83,11 @@ public class Replay
 
             var playerData = PlayerData.FromBitStream(data, HeroCount);
 
-            Entities.Add(new Entity
-            {
-                Id = entityId,
-                Name = entityName,
-                Data = playerData
-            });
+            Entities.Add(new Entity(
+                entityId,
+                entityName,
+                playerData
+           ));
 
             calculatedChecksum += playerData.CalcChecksum();
         }
@@ -213,11 +212,10 @@ public class Replay
                 var timestamp = data.ReadInt();
                 var inputState = data.ReadBoolean() ? data.ReadBits(14) : 0;
 
-                Inputs[entityId].Add(new Input
-                {
-                    Timestamp = timestamp,
-                    InputState = inputState
-                });
+                Inputs[entityId].Add(new Input(
+                    timestamp, 
+                    inputState
+                ));
             }
         }
     }
@@ -253,11 +251,7 @@ public class Replay
             var entityId = data.ReadBits(5);
             var timestamp = data.ReadInt();
 
-            arr.Add(new Face
-            {
-                EntityId = entityId,
-                Timestamp = timestamp
-            });
+            arr.Add(new Face(entityId, timestamp));
         }
 
         arr.Sort((a, b) => a.Timestamp - b.Timestamp);
@@ -300,13 +294,13 @@ public class Replay
     private void Compress(BitStream data)
     {
         var buffer = data.Data;
-        
+
         ZLibAdapter.CompressData(buffer, out var compressed);
         //byte[] compressed = ZlibUtils.Deflate(buffer);
 
         data.Data = compressed;
     }
-    
+
     public void Read(BitStream data)
     {
         Decompress(data);
@@ -404,7 +398,7 @@ public class Replay
 
     public static Replay ReadReplay(byte[] data)
     {
-        var replay = new Replay(); 
+        var replay = new Replay();
         var stream = new BitStream(data);
         replay.Read(stream);
         return replay;

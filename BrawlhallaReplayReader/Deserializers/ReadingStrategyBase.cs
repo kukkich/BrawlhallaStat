@@ -1,6 +1,6 @@
 ﻿namespace BrawlhallaReplayReader.Deserializers;
 
-public class ReadingStrategyBase
+public abstract class ReadingStrategyBase : IReadingStrategy
 {
     protected void ReadPlayerData(BitStream stream, Replay destination)
     {
@@ -17,4 +17,6 @@ public class ReadingStrategyBase
     {
         throw new NotImplementedException();
     }
+
+    public abstract Replay Read(BitStream stream, Replay replay);
 }

@@ -17,7 +17,7 @@ public class BHReplayDeserializer
     public Replay Read(BitStream data)
     {
         _result = new Replay();
-        
+        throw new NotImplementedException();
     }
 
     private void ReadHeader(BitStream data)
