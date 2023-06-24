@@ -10,6 +10,6 @@ public class WeaponStatistic : IConcreteStatistic
     public string StatisticId { get; set; } = null!;
     public Statistic Statistic { get; set; } = null!;
 
-    public string UserId { get; set; }
+    public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
 }

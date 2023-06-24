@@ -15,6 +15,7 @@ public class BrawlhallaStatContext : DbContext
     public DbSet<WeaponAgainstWeaponStatistic> WeaponAgainstWeaponStatistics { get; set; }
     public DbSet<LegendAgainstWeaponStatistic> LegendAgainstWeaponStatistics { get; set; }
     public DbSet<LegendAgainstLegendStatistic> LegendAgainstLegendStatistics { get; set; }
+    public DbSet<ReplayFile> Replays { get; set; }
 
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
