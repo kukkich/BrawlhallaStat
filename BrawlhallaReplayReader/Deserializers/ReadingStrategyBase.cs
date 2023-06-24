@@ -15,7 +15,7 @@ public abstract class ReadingStrategyBase : IReadingStrategy
         
         destination.LevelId = Stream.ReadInt();
         destination.HeroCount = Stream.ReadShort();
-        destination.Entities.Clear();
+        destination.Players.Clear();
 
         var calculatedChecksum = 0;
 
@@ -26,7 +26,7 @@ public abstract class ReadingStrategyBase : IReadingStrategy
 
             var playerData = PlayerData.FromBitStream(Stream, destination.HeroCount);//TODO extract
 
-            destination.Entities.Add(new Entity(
+            destination.Players.Add(new Player(
                 entityId,
                 entityName,
                 playerData
