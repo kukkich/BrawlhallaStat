@@ -3,7 +3,7 @@ using BrawlhallaReplayReader.Helpers;
 
 namespace BrawlhallaReplayReader;
 
-public class Replay
+public class ReplayInfo
 {
     private static readonly byte[] XorKey = new byte[]
     {
@@ -26,10 +26,10 @@ public class Replay
     public int RandomSeed { get; set; } = -1;
     public int Version { get; set; } = -1;
     public int PlaylistId { get; set; } = -1;
-    public string PlaylistName { get; set; }
+    public string PlaylistName { get; set; } = string.Empty;
     public bool OnlineGame { get; set; } = false;
 
-    public GameSettings GameSettings { get; set; }
+    public GameSettings GameSettings { get; set; } = null!;
     public int LevelId { get; set; } = -1;
 
     public int HeroCount { get; set; } = -1;
@@ -37,51 +37,51 @@ public class Replay
 
     public int EndOfMatchFanfare { get; set; } = 0;
 
-    private void ReadHeader(BitStream data)
+    private void ReadHeader(BitStream stream)
     {
-        RandomSeed = data.ReadInt();
-        Version = data.ReadInt();
-        PlaylistId = data.ReadInt();
+        RandomSeed = stream.ReadInt();
+        Version = stream.ReadInt();
+        PlaylistId = stream.ReadInt();
 
         if (PlaylistId != 0)
         {
-            PlaylistName = data.ReadString();
+            PlaylistName = stream.ReadString();
         }
 
-        OnlineGame = data.ReadBoolean();
+        OnlineGame = stream.ReadBoolean();
     }
 
-    private void WriteHeader(BitStream data)
+    private void WriteHeader(BitStream stream)
     {
-        data.WriteInt(RandomSeed);
-        data.WriteInt(Version);
-        data.WriteInt(PlaylistId);
+        stream.WriteInt(RandomSeed);
+        stream.WriteInt(Version);
+        stream.WriteInt(PlaylistId);
 
         if (PlaylistId != 0 && !string.IsNullOrEmpty(PlaylistName))
         {
-            data.WriteString(PlaylistName);
+            stream.WriteString(PlaylistName);
         }
 
-        data.WriteBoolean(OnlineGame);
+        stream.WriteBoolean(OnlineGame);
     }
 
-    private void ReadPlayerData(BitStream data)
+    private void ReadPlayerData(BitStream stream)
     {
-        GameSettings = GameSettings.FromBitStream(data);
-        LevelId = data.ReadInt();
+        GameSettings = GameSettings.FromBitStream(stream);
+        LevelId = stream.ReadInt();
 
-        HeroCount = data.ReadShort();
+        HeroCount = stream.ReadShort();
 
         Entities.Clear();
 
         var calculatedChecksum = 0;
 
-        while (data.ReadBoolean())
+        while (stream.ReadBoolean())
         {
-            var entityId = data.ReadInt();
-            var entityName = data.ReadString();
+            var entityId = stream.ReadInt();
+            var entityName = stream.ReadString();
 
-            var playerData = PlayerData.FromBitStream(data, HeroCount);
+            var playerData = PlayerData.FromBitStream(stream, HeroCount);
 
             Entities.Add(new Entity(
                 entityId,
@@ -92,7 +92,7 @@ public class Replay
             calculatedChecksum += playerData.CalcChecksum();
         }
 
-        var secondVersionCheck = data.ReadInt();
+        var secondVersionCheck = stream.ReadInt();
 
         if (secondVersionCheck != Version)
         {
@@ -103,7 +103,7 @@ public class Replay
 
         calculatedChecksum = calculatedChecksum % 173;
 
-        var checksum = data.ReadInt();
+        var checksum = stream.ReadInt();
 
         if (checksum != calculatedChecksum)
         {
@@ -111,57 +111,57 @@ public class Replay
         }
     }
 
-    private void WritePlayerData(BitStream data)
+    private void WritePlayerData(BitStream stream)
     {
         throw new NotImplementedException();
         if (GameSettings == null)
             throw new Exception("Game settings is undefined");
 
-        GameSettings.Write(data);
+        GameSettings.Write(stream);
 
-        data.WriteInt(LevelId);
+        stream.WriteInt(LevelId);
 
-        //data.WriteShort(HeroCount);
+        //stream.WriteShort(HeroCount);
 
         var checksum = 0;
 
         foreach (var entity in Entities)
         {
-            data.WriteBoolean(true);
-            data.WriteInt(entity.Id);
-            data.WriteString(entity.Name);
+            stream.WriteBoolean(true);
+            stream.WriteInt(entity.Id);
+            stream.WriteString(entity.Name);
 
             checksum += entity.Data.CalcChecksum();
 
-            entity.Data.Write(data, HeroCount);
+            entity.Data.Write(stream, HeroCount);
         }
 
-        data.WriteBoolean(false);
+        stream.WriteBoolean(false);
 
-        data.WriteInt(Version);
+        stream.WriteInt(Version);
 
         checksum += LevelId * 47;
 
-        data.WriteInt(checksum % 173);
+        stream.WriteInt(checksum % 173);
     }
 
-    private void ReadResults(BitStream data)
+    private void ReadResults(BitStream stream)
     {
-        Length = data.ReadInt();
-        var thirdVersionCheck = data.ReadInt();
+        Length = stream.ReadInt();
+        var thirdVersionCheck = stream.ReadInt();
 
         if (thirdVersionCheck != Version)
         {
             throw new Exception("Third version check does not match first version check");
         }
 
-        if (data.ReadBoolean())
+        if (stream.ReadBoolean())
         {
             Results.Clear();
-            while (data.ReadBoolean())
+            while (stream.ReadBoolean())
             {
-                var entityId = data.ReadBits(5);
-                int result = data.ReadShort();
+                var entityId = stream.ReadBits(5);
+                int result = stream.ReadShort();
                 Results[entityId] = result;
             }
         }
@@ -171,36 +171,36 @@ public class Replay
         // Cause fanfare was added in update 7.00
         // fanfare it's phrases like "WOW!", "Obliteration", "Total destruction" at the end of the match
         // TODO Find out which value of field Version means old (<7.00) versions
-        EndOfMatchFanfare = data.ReadInt(); // end of match fanfare id
+        EndOfMatchFanfare = stream.ReadInt(); // end of match fanfare id
     }
-    private void WriteResults(BitStream data)
+    private void WriteResults(BitStream stream)
     {
         throw new NotImplementedException();
-        data.WriteInt(Length);
-        data.WriteInt(Version);
+        stream.WriteInt(Length);
+        stream.WriteInt(Version);
 
-        data.WriteBoolean(Results.Any());
+        stream.WriteBoolean(Results.Any());
         if (Results.Any())
         {
             foreach (var result in Results)
             {
-                data.WriteBoolean(true);
-                data.WriteBits(result.Key, 5);
-                //data.WriteShort(result.Value);
+                stream.WriteBoolean(true);
+                stream.WriteBits(result.Key, 5);
+                //stream.WriteShort(result.Value);
             }
-            data.WriteBoolean(false);
+            stream.WriteBoolean(false);
         }
 
-        data.WriteInt(EndOfMatchFanfare);
+        stream.WriteInt(EndOfMatchFanfare);
     }
 
-    private void ReadInputs(BitStream data)
+    private void ReadInputs(BitStream stream)
     {
         Inputs.Clear();
-        while (data.ReadBoolean())
+        while (stream.ReadBoolean())
         {
-            var entityId = data.ReadBits(5);
-            var inputCount = data.ReadInt();
+            var entityId = stream.ReadBits(5);
+            var inputCount = stream.ReadInt();
 
             if (!Inputs.ContainsKey(entityId))
             {
@@ -209,8 +209,8 @@ public class Replay
 
             for (var i = 0; i < inputCount; i++)
             {
-                var timestamp = data.ReadInt();
-                var inputState = data.ReadBoolean() ? data.ReadBits(14) : 0;
+                var timestamp = stream.ReadInt();
+                var inputState = stream.ReadBoolean() ? stream.ReadBits(14) : 0;
 
                 Inputs[entityId].Add(new Input(
                     timestamp, 
@@ -220,36 +220,36 @@ public class Replay
         }
     }
 
-    private void WriteInputs(BitStream data)
+    private void WriteInputs(BitStream stream)
     {
         foreach (var inputEntry in Inputs)
         {
             int entityId = inputEntry.Key;
             List<Input> inputs = inputEntry.Value;
 
-            data.WriteBoolean(true);
-            data.WriteBits(entityId, 5);
-            data.WriteInt(inputs.Count);
+            stream.WriteBoolean(true);
+            stream.WriteBits(entityId, 5);
+            stream.WriteInt(inputs.Count);
             foreach (var input in inputs)
             {
-                data.WriteInt(input.Timestamp);
-                data.WriteBoolean(input.InputState != 0);
+                stream.WriteInt(input.Timestamp);
+                stream.WriteBoolean(input.InputState != 0);
                 if (input.InputState != 0)
-                    data.WriteBits(input.InputState, 14);
+                    stream.WriteBits(input.InputState, 14);
             }
         }
 
-        data.WriteBoolean(false);
+        stream.WriteBoolean(false);
     }
 
-    private void ReadFaces(BitStream data, bool kos)
+    private void ReadFaces(BitStream stream, bool kos)
     {
         var arr = kos ? Deaths : VictoryFaces;
 
-        while (data.ReadBoolean())
+        while (stream.ReadBoolean())
         {
-            var entityId = data.ReadBits(5);
-            var timestamp = data.ReadInt();
+            var entityId = stream.ReadBits(5);
+            var timestamp = stream.ReadInt();
 
             arr.Add(new Face(entityId, timestamp));
         }
@@ -257,86 +257,86 @@ public class Replay
         arr.Sort((a, b) => a.Timestamp - b.Timestamp);
     }
 
-    private void WriteFaces(BitStream data, bool kos)
+    private void WriteFaces(BitStream stream, bool kos)
     {
         var arr = kos ? Deaths : VictoryFaces;
 
         foreach (var face in arr)
         {
-            data.WriteBoolean(true);
+            stream.WriteBoolean(true);
 
-            data.WriteBits(face.EntityId, 5);
-            data.WriteInt(face.Timestamp);
+            stream.WriteBits(face.EntityId, 5);
+            stream.WriteInt(face.Timestamp);
         }
 
-        data.WriteBoolean(false);
+        stream.WriteBoolean(false);
     }
 
-    private void XorData(BitStream data)
+    private void XorData(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
         for (var i = 0; i < buffer.Length; i++)
         {
             buffer[i] ^= XorKey[i % XorKey.Length];
         }
     }
 
-    private void Decompress(BitStream data)
+    private void Decompress(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
 
         ZLibAdapter.DecompressData(buffer, out var decompressed);
         //byte[] decompressed = ZlibUtils.Inflate(buffer);
 
-        data.Data = decompressed;
+        stream.Data = decompressed;
     }
 
-    private void Compress(BitStream data)
+    private void Compress(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
 
         ZLibAdapter.CompressData(buffer, out var compressed);
         //byte[] compressed = ZlibUtils.Deflate(buffer);
 
-        data.Data = compressed;
+        stream.Data = compressed;
     }
 
-    public void Read(BitStream data)
+    internal void Read(BitStream stream)
     {
-        Decompress(data);
-        XorData(data);
+        Decompress(stream);
+        XorData(stream);
 
         StateOrder.Clear();
 
         var stop = false;
-        while (data.ReadBytesAvailable > 0 && !stop)
+        while (stream.ReadBytesAvailable > 0 && !stop)
         {
-            var state = data.ReadBits(3);
+            var state = stream.ReadBits(3);
             StateOrder.Add(state);
 
             switch (state)
             {
                 case 1:
-                    ReadInputs(data);
+                    ReadInputs(stream);
                     break;
                 case 2:
                     stop = true;
                     break;
                 case 3:
-                    ReadHeader(data);
+                    ReadHeader(stream);
                     break;
                 case 4:
-                    ReadPlayerData(data);
+                    ReadPlayerData(stream);
                     break;
                 case 6:
-                    ReadResults(data);
+                    ReadResults(stream);
                     break;
                 case 5:
                 case 7:
-                    ReadFaces(data, state == 5);
+                    ReadFaces(stream, state == 5);
                     break;
                 default:
-                    throw new Exception("Unknown replay read state: " + state);
+                    throw new Exception("Unknown replayInfo read state: " + state);
             }
         }
     }
@@ -352,62 +352,62 @@ public class Replay
         }
 
         // TODO: dynamically resize
-        var data = new BitStream(new byte[1024 * 512]);
+        var bitStream = new BitStream(new byte[1024 * 512]);
 
         var stop = false;
         foreach (var state in StateOrder)
         {
             Console.WriteLine($"Writing state: {state}");
-            data.WriteBits(state, 3);
+            bitStream.WriteBits(state, 3);
 
             switch (state)
             {
                 case 1:
-                    WriteInputs(data);
+                    WriteInputs(bitStream);
                     break;
                 case 2:
                     stop = true;
                     break;
                 case 3:
-                    WriteHeader(data);
+                    WriteHeader(bitStream);
                     break;
                 case 4:
-                    WritePlayerData(data);
+                    WritePlayerData(bitStream);
                     break;
                 case 6:
-                    WriteResults(data);
+                    WriteResults(bitStream);
                     break;
                 case 5:
                 case 7:
-                    WriteFaces(data, state == 5);
+                    WriteFaces(bitStream, state == 5);
                     break;
                 default:
-                    throw new Exception("Unknown replay write state: " + state);
+                    throw new Exception("Unknown replayInfo write state: " + state);
             }
 
             if (stop) break;
         }
 
-        data.Shrink();
+        bitStream.Shrink();
 
-        XorData(data);
-        Compress(data);
+        XorData(bitStream);
+        Compress(bitStream);
 
-        return data.Data;
+        return bitStream.Data;
     }
 
-    public static Replay ReadReplay(byte[] data)
+    internal static ReplayInfo ReadReplay(byte[] stream)
     {
-        var replay = new Replay();
-        var stream = new BitStream(data);
-        replay.Read(stream);
+        var replay = new ReplayInfo();
+        var bitStream = new BitStream(stream);
+        replay.Read(bitStream);
         return replay;
     }
 
-    public static byte[] WriteReplay(Replay replay)
+    internal static byte[] WriteReplay(ReplayInfo replayInfo)
     {
         var stream = new BitStream();
-        replay.Write(stream);
+        replayInfo.Write(stream);
         return stream.Data;
     }
 }

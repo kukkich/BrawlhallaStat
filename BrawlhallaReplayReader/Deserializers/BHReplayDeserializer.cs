@@ -11,62 +11,76 @@ public class BHReplayDeserializer
         140, 120, 4, 17, 122, 239, 116, 62, 70, 57, 160, 199, 166
     };
     
-    private Replay _result;
+    private ReplayInfo _result;
     private IReadingStrategy _readingStrategy;
     
-    public Replay Read(BitStream data)
+    public ReplayInfo Read(BitStream stream)
     {
-        _result = new Replay();
+        _result = new ReplayInfo();
+
+        Decompress(stream);
+        XorData(stream);
+
+        ReadHeader(stream);
+        SelectReadingStrategy(stream);
         throw new NotImplementedException();
     }
 
-    private void ReadHeader(BitStream data)
+    private void ReadHeader(BitStream stream)
     {
-        _result.RandomSeed = data.ReadInt();
-        _result.Version = data.ReadInt();
+        var stateCode = stream.ReadBits(3);
+        if (stateCode != 3)
+        {
+            throw new Exception($"Expected state 3 but was {stateCode}");
+        }
 
-
-        _result.PlaylistId = data.ReadInt();
+        _result.RandomSeed = stream.ReadInt();
+        _result.Version = stream.ReadInt();
+        _result.PlaylistId = stream.ReadInt();
 
         if (_result.PlaylistId != 0)
         {
-            _result.PlaylistName = data.ReadString();
+            _result.PlaylistName = stream.ReadString();
         }
 
-        _result.OnlineGame = data.ReadBoolean();
+        _result.OnlineGame = stream.ReadBoolean();
     }
 
-    private void SelectReadingStrategy()
+    private void SelectReadingStrategy(BitStream stream)
     {
         //TODO correct versions
         if (_result.Version > 215)
         {
-            _readingStrategy = new ReadingStrategyAfterV7();
-        } 
+            _readingStrategy = new ReadingStrategyAfterV7(stream);
+        }
+        else
+        {
+            _readingStrategy = new ReadingStrategyBeforeV7(stream);
+        }
     }
 
-    private void XorData(BitStream data)
+    private void XorData(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
         for (var i = 0; i < buffer.Length; i++)
             buffer[i] ^= XorKey[i % XorKey.Length];
     }
 
-    private void Decompress(BitStream data)
+    private void Decompress(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
 
         ZLibAdapter.DecompressData(buffer, out var decompressed);
 
-        data.Data = decompressed;
+        stream.Data = decompressed;
     }
 
-    private void Compress(BitStream data)
+    private void Compress(BitStream stream)
     {
-        var buffer = data.Data;
+        var buffer = stream.Data;
 
         ZLibAdapter.CompressData(buffer, out var compressed);
 
-        data.Data = compressed;
+        stream.Data = compressed;
     }
 }

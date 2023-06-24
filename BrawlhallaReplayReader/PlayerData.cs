@@ -24,56 +24,56 @@ public class PlayerData
     public int HandicapDamageDoneMultiplier { get; set; } = 1;
     public int HandicapDamageTakenMultiplier { get; set; } = 1;
 
-    public void Read(BitStream data, int heroCount)
+    public void Read(BitStream Stream, int heroCount)
     {
-        ColorId = data.ReadInt();
-        SpawnBotId = data.ReadInt();
-        EmitterId = data.ReadInt();
-        PlayerThemeId = data.ReadInt();
+        ColorId = Stream.ReadInt();
+        SpawnBotId = Stream.ReadInt();
+        EmitterId = Stream.ReadInt();
+        PlayerThemeId = Stream.ReadInt();
 
         Taunts = new List<int>();
         for (var i = 0; i < 8; i++)
         {
-            Taunts.Add(data.ReadInt());
+            Taunts.Add(Stream.ReadInt());
         }
 
-        WinTaunt = data.ReadShort();
-        LoseTaunt = data.ReadShort();
+        WinTaunt = Stream.ReadShort();
+        LoseTaunt = Stream.ReadShort();
 
         OwnedTaunts = new List<int>();
-        while (data.ReadBoolean())
+        while (Stream.ReadBoolean())
         {
-            OwnedTaunts.Add(data.ReadInt());
+            OwnedTaunts.Add(Stream.ReadInt());
         }
 
-        AvatarId = data.ReadShort();
-        Team = data.ReadInt();
-        Unknown2 = data.ReadInt();
+        AvatarId = Stream.ReadShort();
+        Team = Stream.ReadInt();
+        Unknown2 = Stream.ReadInt();
 
         Heroes = new List<HeroData>();
         for (var i = 0; i < heroCount; i++)
         {
-            Heroes.Add(HeroData.FromBitStream(data));
+            Heroes.Add(HeroData.FromBitStream(Stream));
         }
 
-        Bot = data.ReadBoolean();
-        HandicapsEnabled = data.ReadBoolean();
+        Bot = Stream.ReadBoolean();
+        HandicapsEnabled = Stream.ReadBoolean();
 
         if (HandicapsEnabled)
         {
-            HandicapStockCount = data.ReadInt();
-            HandicapDamageDoneMultiplier = data.ReadInt();
-            HandicapDamageTakenMultiplier = data.ReadInt();
+            HandicapStockCount = Stream.ReadInt();
+            HandicapDamageDoneMultiplier = Stream.ReadInt();
+            HandicapDamageTakenMultiplier = Stream.ReadInt();
         }
     }
 
-    public void Write(BitStream data, int heroCount)
+    public void Write(BitStream Stream, int heroCount)
     {
         throw new NotImplementedException();
-        data.WriteInt(ColorId);
-        data.WriteInt(SpawnBotId);
-        data.WriteInt(EmitterId);
-        data.WriteInt(PlayerThemeId);
+        Stream.WriteInt(ColorId);
+        Stream.WriteInt(SpawnBotId);
+        Stream.WriteInt(EmitterId);
+        Stream.WriteInt(PlayerThemeId);
 
         if (Taunts.Count != 8)
         {
@@ -81,22 +81,22 @@ public class PlayerData
         }
         for (var i = 0; i < 8; i++)
         {
-            data.WriteInt(Taunts[i]);
+            Stream.WriteInt(Taunts[i]);
         }
 
-        //data.WriteShort(WinTaunt);
-        //data.WriteShort(LoseTaunt);
+        //Stream.WriteShort(WinTaunt);
+        //Stream.WriteShort(LoseTaunt);
 
         foreach (var ownedTaunt in OwnedTaunts)
         {
-            data.WriteBoolean(true);
-            data.WriteInt(ownedTaunt);
+            Stream.WriteBoolean(true);
+            Stream.WriteInt(ownedTaunt);
         }
-        data.WriteBoolean(false);
+        Stream.WriteBoolean(false);
 
-        //data.WriteShort(AvatarId);
-        data.WriteInt(Team);
-        data.WriteInt(Unknown2);
+        //Stream.WriteShort(AvatarId);
+        Stream.WriteInt(Team);
+        Stream.WriteInt(Unknown2);
 
         if (Heroes.Count != heroCount)
         {
@@ -106,17 +106,17 @@ public class PlayerData
         {
 
 
-            hero.Write(data);
+            hero.Write(Stream);
         }
 
-        data.WriteBoolean(Bot);
-        data.WriteBoolean(HandicapsEnabled);
+        Stream.WriteBoolean(Bot);
+        Stream.WriteBoolean(HandicapsEnabled);
 
         if (HandicapsEnabled)
         {
-            data.WriteInt(HandicapStockCount);
-            data.WriteInt(HandicapDamageDoneMultiplier);
-            data.WriteInt(HandicapDamageTakenMultiplier);
+            Stream.WriteInt(HandicapStockCount);
+            Stream.WriteInt(HandicapDamageDoneMultiplier);
+            Stream.WriteInt(HandicapDamageTakenMultiplier);
         }
     }
 
@@ -172,10 +172,10 @@ public class PlayerData
         return checksum;
     }
 
-    public static PlayerData FromBitStream(BitStream data, int heroCount)
+    public static PlayerData FromBitStream(BitStream Stream, int heroCount)
     {
         var playerData = new PlayerData();
-        playerData.Read(data, heroCount);
+        playerData.Read(Stream, heroCount);
         return playerData;
     }
 }

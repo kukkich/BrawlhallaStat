@@ -2,5 +2,5 @@
 
 public interface IReadingStrategy
 {
-    public Replay Read(BitStream stream, Replay replay);
+    public ReplayInfo Read(ReplayInfo replayInfo);
 }

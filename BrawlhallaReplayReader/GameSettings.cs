@@ -13,38 +13,38 @@ public class GameSettings
     public int DamageRatio { get; set; } = -1;
     public int LevelSetId { get; set; } = -1;
 
-    public void Read(BitStream data)
+    public void Read(BitStream Stream)
     {
-        Flags = data.ReadInt();
-        MaxPlayers = data.ReadInt();
-        Duration = data.ReadInt();
-        RoundDuration = data.ReadInt();
-        StartingLives = data.ReadInt();
-        ScoringType = data.ReadInt();
-        ScoreToWin = data.ReadInt();
-        GameSpeed = data.ReadInt();
-        DamageRatio = data.ReadInt();
-        LevelSetId = data.ReadInt();
+        Flags = Stream.ReadInt();
+        MaxPlayers = Stream.ReadInt();
+        Duration = Stream.ReadInt();
+        RoundDuration = Stream.ReadInt();
+        StartingLives = Stream.ReadInt();
+        ScoringType = Stream.ReadInt();
+        ScoreToWin = Stream.ReadInt();
+        GameSpeed = Stream.ReadInt();
+        DamageRatio = Stream.ReadInt();
+        LevelSetId = Stream.ReadInt();
     }
 
-    public void Write(BitStream data)
+    public void Write(BitStream Stream)
     {
-        data.WriteInt(Flags);
-        data.WriteInt(MaxPlayers);
-        data.WriteInt(Duration);
-        data.WriteInt(RoundDuration);
-        data.WriteInt(StartingLives);
-        data.WriteInt(ScoringType);
-        data.WriteInt(ScoreToWin);
-        data.WriteInt(GameSpeed);
-        data.WriteInt(DamageRatio);
-        data.WriteInt(LevelSetId);
+        Stream.WriteInt(Flags);
+        Stream.WriteInt(MaxPlayers);
+        Stream.WriteInt(Duration);
+        Stream.WriteInt(RoundDuration);
+        Stream.WriteInt(StartingLives);
+        Stream.WriteInt(ScoringType);
+        Stream.WriteInt(ScoreToWin);
+        Stream.WriteInt(GameSpeed);
+        Stream.WriteInt(DamageRatio);
+        Stream.WriteInt(LevelSetId);
     }
 
-    public static GameSettings FromBitStream(BitStream data)
+    public static GameSettings FromBitStream(BitStream Stream)
     {
         var settings = new GameSettings();
-        settings.Read(data);
+        settings.Read(Stream);
         return settings;
     }
 }
