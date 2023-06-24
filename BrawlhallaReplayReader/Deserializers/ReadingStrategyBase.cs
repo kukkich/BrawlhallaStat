@@ -152,5 +152,7 @@ public abstract class ReadingStrategyBase : IReadingStrategy
                     throw new Exception("Unknown replayInfo read state: " + state);
             }
         }
+
+        return destination;
     }
 }
