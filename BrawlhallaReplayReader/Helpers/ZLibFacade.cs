@@ -2,7 +2,7 @@
 
 namespace BrawlhallaReplayReader.Helpers;
 
-public static class ZLibAdapter
+public static class ZLibFacade
 {
     public static void CompressData(byte[] inData, out byte[] outData)
     {

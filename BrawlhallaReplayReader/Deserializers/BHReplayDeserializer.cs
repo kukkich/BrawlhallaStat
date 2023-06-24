@@ -2,7 +2,8 @@
 
 namespace BrawlhallaReplayReader.Deserializers;
 
-public class BHReplayDeserializer
+// ReSharper disable once InconsistentNaming
+public class BHReplayDeserializer : IBHReplayDeserializer
 {
     private static readonly byte[] XorKey = {
         107, 16, 222, 60, 68, 75, 209, 70, 160, 16, 82, 193, 178, 49, 211, 106, 251,
@@ -11,11 +12,12 @@ public class BHReplayDeserializer
         140, 120, 4, 17, 122, 239, 116, 62, 70, 57, 160, 199, 166
     };
     
-    private ReplayInfo _result;
-    private IReadingStrategy _readingStrategy;
+    private ReplayInfo _result = null!;
+    private IReadingStrategy _readingStrategy = null!;
     
-    public ReplayInfo Read(BitStream stream)
+    public ReplayInfo Read(byte[] bytes)
     {
+        var stream = new BitStream(bytes);
         _result = new ReplayInfo();
 
         Decompress(stream);
@@ -23,7 +25,8 @@ public class BHReplayDeserializer
 
         ReadHeader(stream);
         SelectReadingStrategy(stream);
-        throw new NotImplementedException();
+        _readingStrategy.Read(_result);
+        return _result;
     }
 
     private void ReadHeader(BitStream stream)
@@ -70,7 +73,7 @@ public class BHReplayDeserializer
     {
         var buffer = stream.Data;
 
-        ZLibAdapter.DecompressData(buffer, out var decompressed);
+        ZLibFacade.DecompressData(buffer, out var decompressed);
 
         stream.Data = decompressed;
     }
@@ -79,7 +82,7 @@ public class BHReplayDeserializer
     {
         var buffer = stream.Data;
 
-        ZLibAdapter.CompressData(buffer, out var compressed);
+        ZLibFacade.CompressData(buffer, out var compressed);
 
         stream.Data = compressed;
     }

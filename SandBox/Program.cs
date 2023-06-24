@@ -2,6 +2,7 @@
 
 using System.Text.Json;
 using BrawlhallaReplayReader;
+using BrawlhallaReplayReader.Deserializers;
 
 namespace SandBox;
 
@@ -35,8 +36,9 @@ internal class Program
     {
         var path = GetReplayPath(InvalidMeOnWuShang);
         var replayBinary = File.ReadAllBytes(path);
-        var replay = ReplayInfo.ReadReplay(replayBinary);
-        string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions()
+        var reader = new BHReplayDeserializer();
+        var replay = reader.Read(replayBinary);
+        string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
         {
             WriteIndented = true
         });

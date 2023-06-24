@@ -52,8 +52,6 @@ public abstract class ReadingStrategyBase : IReadingStrategy
             //TODO extract into logger
             Console.WriteLine($"[DEV WARNING] Data checksums don't match: Got {checksum}, calculated {calculatedChecksum}");
         }
-
-        throw new NotImplementedException(); 
     }
 
     protected virtual void ReadResults(ReplayInfo destination)

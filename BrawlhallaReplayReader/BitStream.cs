@@ -22,9 +22,9 @@ public class BitStream
     public int ReadBytesAvailable => (Data.Length * 8 - ReadOffset) / 8;
     public int WriteBytesAvailable => (Data.Length * 8 - WriteOffset) / 8;
 
-    public BitStream(byte[]? Stream = null)
+    public BitStream(byte[]? stream = null)
     {
-        Data = Stream ?? Array.Empty<byte>();
+        Data = stream ?? Array.Empty<byte>();
         ReadOffset = 0;
         WriteOffset = 0;
     }
