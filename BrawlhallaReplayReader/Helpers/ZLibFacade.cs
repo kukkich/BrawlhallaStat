@@ -1,16 +1,28 @@
 ﻿using ComponentAce.Compression.Libs.zlib;
+using System.Buffers;
 
 namespace BrawlhallaReplayReader.Helpers;
 
 public static class ZLibFacade
 {
+    private static readonly ArrayPool<byte> BufferPool = ArrayPool<byte>.Shared;
+
     public static void CompressData(byte[] inData, out byte[] outData)
     {
         using var outMemoryStream = new MemoryStream();
         using var outZStream = new ZOutputStream(outMemoryStream, zlibConst.Z_DEFAULT_COMPRESSION);
-        using MemoryStream inMemoryStream = new (inData);
+        using var inMemoryStream = new MemoryStream(inData);
+        var buffer = BufferPool.Rent(2000);
 
-        CopyStream(inMemoryStream, outZStream);
+        try
+        {
+            CopyStream(inMemoryStream, outZStream, buffer);
+        }
+        finally
+        {
+            BufferPool.Return(buffer);
+        }
+
         outZStream.finish();
         outData = outMemoryStream.ToArray();
     }
@@ -19,18 +31,26 @@ public static class ZLibFacade
     {
         using var outMemoryStream = new MemoryStream();
         using var outZStream = new ZOutputStream(outMemoryStream);
-        using MemoryStream inMemoryStream = new (inData);
+        using var inMemoryStream = new MemoryStream(inData);
+        var buffer = BufferPool.Rent(2000);
 
-        CopyStream(inMemoryStream, outZStream);
+        try
+        {
+            CopyStream(inMemoryStream, outZStream, buffer);
+        }
+        finally
+        {
+            BufferPool.Return(buffer);
+        }
+
         outZStream.finish();
         outData = outMemoryStream.ToArray();
     }
 
-    private static void CopyStream(MemoryStream input, Stream output)
+    private static void CopyStream(MemoryStream input, Stream output, byte[] buffer)
     {
-        var buffer = new byte[2000];
         int len;
-        while ((len = input.Read(buffer, 0, 2000)) > 0)
+        while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
         {
             output.Write(buffer, 0, len);
         }
