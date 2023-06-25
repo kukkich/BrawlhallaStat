@@ -1,7 +1,6 @@
 ﻿// ReSharper disable StringLiteralTypo
 
 using System.Text.Json;
-using BrawlhallaReplayReader;
 using BrawlhallaReplayReader.Deserializers;
 
 namespace SandBox;
@@ -11,7 +10,7 @@ internal class Program
     private static string ValidReplay = "[6.11] SmallGalvanPrime (24).replay";
     private static string ValidReplay2 = "[6.10] SmallGalvanPrime (31).replay";
 
-    private static string[] InvalidReplay = new[]{
+    private static string[] InvalidReplay = {
         "[7.09] SmallEnigma (2).replay",
         "[7.09] FlorenceTerrace.replay",
         "[7.09] Apocalypse (2).replay",
@@ -21,8 +20,8 @@ internal class Program
         "[7.09] SmallFabledCity (1).replay",
         "[7.09] MammothFortress (4).replay",
         "[7.09] SpiritRealm (2).replay",
-    };
-    private static string[] CustomReplays = new[]{
+    };  
+    private static string[] CustomReplays = {
         "[7.09] SmallBrawlhaven (1).replay",
         "[7.09] SmallKingsPass.replay",
         "[7.09] SmallBrawlhaven (2).replay",

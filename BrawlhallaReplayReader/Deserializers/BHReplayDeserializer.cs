@@ -62,14 +62,14 @@ public class BHReplayDeserializer : IBHReplayDeserializer
         }
     }
 
-    private void XorData(BitStream stream)
+    private static void XorData(BitStream stream)
     {
         var buffer = stream.Data;
         for (var i = 0; i < buffer.Length; i++)
             buffer[i] ^= XorKey[i % XorKey.Length];
     }
 
-    private void Decompress(BitStream stream)
+    private static void Decompress(BitStream stream)
     {
         var buffer = stream.Data;
 
@@ -78,7 +78,7 @@ public class BHReplayDeserializer : IBHReplayDeserializer
         stream.Data = decompressed;
     }
 
-    private void Compress(BitStream stream)
+    private static void Compress(BitStream stream)
     {
         var buffer = stream.Data;
 

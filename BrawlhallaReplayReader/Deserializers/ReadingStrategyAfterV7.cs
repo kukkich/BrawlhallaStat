@@ -6,9 +6,9 @@ public class ReadingStrategyAfterV7 : ReadingStrategyBase
         : base(stream)
         { }
 
-    protected override void ReadResults(ReplayInfo replayInfo)
+    protected override void FillResults(ReplayInfo replayInfo)
     {
-        base.ReadResults(replayInfo);
+        base.FillResults(replayInfo);
 
         // fanfare it's phrases like "WOW!", "Obliteration", "Total destruction" at the end of the match
         // TODO Find out which value of field Version means old (<7.00) versions
