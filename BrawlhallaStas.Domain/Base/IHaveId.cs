@@ -1,6 +1,6 @@
 ﻿namespace BrawlhallaStat.Domain.Base;
 
-public interface IHaveId<out T>
+public interface IHaveId<T>
 {
-    public T Id { get; }
+    public T Id { get; set; }
 }
