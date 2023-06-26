@@ -1,4 +1,7 @@
-﻿using BrawlhallaReplayReader.Helpers;
+﻿using BrawlhallaReplayReader.Deserializers.Binary;
+using BrawlhallaReplayReader.Deserializers.ReadingStrategies;
+using BrawlhallaReplayReader.Helpers;
+using BrawlhallaReplayReader.Models;
 
 namespace BrawlhallaReplayReader.Deserializers;
 

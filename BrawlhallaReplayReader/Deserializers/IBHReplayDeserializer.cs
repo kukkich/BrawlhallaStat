@@ -1,4 +1,6 @@
-﻿namespace BrawlhallaReplayReader.Deserializers;
+﻿using BrawlhallaReplayReader.Models;
+
+namespace BrawlhallaReplayReader.Deserializers;
 
 // ReSharper disable once InconsistentNaming
 public interface IBHReplayDeserializer

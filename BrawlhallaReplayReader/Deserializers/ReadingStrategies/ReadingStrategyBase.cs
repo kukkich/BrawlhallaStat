@@ -1,6 +1,9 @@
-﻿namespace BrawlhallaReplayReader.Deserializers;
+﻿using BrawlhallaReplayReader.Deserializers.Binary;
+using BrawlhallaReplayReader.Models;
 
-public abstract class ReadingStrategyBase : IReadingStrategy
+namespace BrawlhallaReplayReader.Deserializers.ReadingStrategies;
+
+internal abstract class ReadingStrategyBase : IReadingStrategy
 {
     protected BitStream Stream { get; set; }
 

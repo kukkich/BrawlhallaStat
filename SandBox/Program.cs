@@ -49,15 +49,16 @@ internal class Program
             .First();
         Console.WriteLine($"Bot: {bot.HeroId}");
 
-        //string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
-        //{
-        //WriteIndented = true
-        //});
-        //Console.WriteLine(json);
-
+        string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        Console.WriteLine(json);
+        Console.WriteLine(replay
+            .Players.First(x => x.Name == "Nasral V Szhopu")
+            .Data.Team);
         Console.WriteLine("Hello, World!");
     }
-
 
     private static string GetReplayPath(string replayName)
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BrawlhallaReplayReader;
+namespace BrawlhallaReplayReader.Models;
 
 public class ReplayInfo
 {
@@ -22,4 +22,3 @@ public class ReplayInfo
     [JsonIgnore]
     public Dictionary<int, List<Input>> Inputs { get; set; } = new();
 }
-

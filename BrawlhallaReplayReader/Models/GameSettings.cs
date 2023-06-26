@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaReplayReader;
+﻿namespace BrawlhallaReplayReader.Models;
 
 public class GameSettings
 {

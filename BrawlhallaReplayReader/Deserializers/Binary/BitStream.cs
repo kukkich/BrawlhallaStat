@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaReplayReader;
+﻿namespace BrawlhallaReplayReader.Deserializers.Binary;
 
 public class BitStream
 {
