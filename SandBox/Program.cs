@@ -7,6 +7,7 @@ namespace SandBox;
 
 internal class Program
 {
+    private static string LegendsExploring = "[6.11] SmallGalvanPrime (24).replay";
     private static string ValidReplay = "[6.11] SmallGalvanPrime (24).replay";
     private static string ValidReplay2 = "[6.10] SmallGalvanPrime (31).replay";
 
@@ -31,17 +32,28 @@ internal class Program
     private static string InvalidMeOnWuShang = "[7.09] ShorwindFishing.replay";
     private static int ValidOffsets = 32;
 
-    static void Main(string[] args)
+    static void Main()
     {
         var path = GetReplayPath(InvalidMeOnWuShang);
-        var replayBinary = File.ReadAllBytes(path);
+        var lastMatchPath = GetNewestFile("C:/Users/vitia/BrawlhallaReplays");
+        var replayBinary = File.ReadAllBytes(lastMatchPath);
         var reader = new BHReplayDeserializer();
         var replay = reader.Read(replayBinary);
-        string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-        Console.WriteLine(json);
+        var heroId = replay.Players.First(x => x.Name == "Nasral V Szhopu")
+            .Data
+            .Heroes[0]
+            .HeroId;
+        Console.WriteLine(lastMatchPath);
+        Console.WriteLine($"Nasral V Szhopu: {heroId}");
+        var bot = replay.Players.Where(x => x.Name != "Nasral V Szhopu").Select(x => x.Data.Heroes[0])
+            .First();
+        Console.WriteLine($"Bot: {bot.HeroId}");
+
+        //string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
+        //{
+        //WriteIndented = true
+        //});
+        //Console.WriteLine(json);
 
         Console.WriteLine("Hello, World!");
     }
@@ -50,5 +62,26 @@ internal class Program
     private static string GetReplayPath(string replayName)
     {
         return "C:/Users/vitia/BrawlhallaReplays" + $"/{replayName}";
+    }
+
+    public static string GetNewestFile(string folderPath)
+    {
+        var files = Directory.GetFiles(folderPath);
+
+        var newestFile = files[0];
+        var newestFileCreationTime = File.GetCreationTime(newestFile);
+
+        for (var i = 1; i < files.Length; i++)
+        {
+            var currentFile = files[i];
+            var currentFileCreationTime = File.GetCreationTime(currentFile);
+
+            if (currentFileCreationTime <= newestFileCreationTime) continue;
+            
+            newestFile = currentFile;
+            newestFileCreationTime = currentFileCreationTime;
+        }
+
+        return newestFile;
     }
 }
