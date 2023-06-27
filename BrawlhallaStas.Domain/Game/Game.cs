@@ -18,5 +18,5 @@ public class Game : IHaveId<string>
     public IEnumerable<Player> Losers => Players.Where(x => !x.IsWinner);
     public List<Death> Deaths { get; set; } = null!;
 
-    public GameSettings GameSettings { get; set; } = null!;
+    public GameSettings Settings { get; set; } = null!;
 }

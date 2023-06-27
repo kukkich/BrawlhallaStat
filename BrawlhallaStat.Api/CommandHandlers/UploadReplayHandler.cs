@@ -142,30 +142,87 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
 
     private Game MapToDomainGame(ReplayInfo replay)
     {
-        var game = new Game();
-
-        game.Id = Guid.NewGuid().ToString();
-
-        game.RandomSeed = replay.RandomSeed;
-        game.Version = replay.Version;
-        game.OnlineGame = replay.OnlineGame;
-        game.LevelId = replay.LevelId;
-        game.EndOfMatchFanfare = replay.EndOfMatchFanfare;
-        game.PlaylistName = replay.PlaylistName;
-        game.Players = replay.Players.Select(player =>
+        var game = new Game
         {
-            var domainPlayer = new Player();
-            domainPlayer.NickName = player.Name;
-            domainPlayer.Team = player.Data.Team switch
+            Id = Guid.NewGuid().ToString(),
+            RandomSeed = replay.RandomSeed,
+            Version = replay.Version,
+            OnlineGame = replay.OnlineGame,
+            LevelId = replay.LevelId,
+            EndOfMatchFanfare = replay.EndOfMatchFanfare,
+            PlaylistName = replay.PlaylistName
+        };
+
+        game.Players = replay.Players.
+            Select(player =>
             {
-                1 => Team.Red,
-                2 => Team.Blue,
-                _ => throw new Exception("Unexpected exception. Game has more than 2 teams")
-            };
-            domainPlayer.Team
-        });
+                var domainPlayer = new Player
+                {
+                    NickName = player.Name,
+                    Team = player.Data.Team switch
+                    {
+                        1 => Team.Red,
+                        2 => Team.Blue,
+                        _ => throw new Exception("Unexpected exception. Game has more than 2 teams")
+                    },
+                    IsWinner = replay.Results[1] == player.Data.Team,
+                    Customization = new Customization(),
+                    Game = game
+                };
 
+                var customization = new Customization
+                {
+                    ColorId = player.Data.ColorId,
+                    ThemeId = player.Data.PlayerThemeId,
+                    WinTaunt = player.Data.WinTaunt,
+                    LoseTaunt = player.Data.LoseTaunt,
+                    AvatarId = player.Data.AvatarId
+                };
 
+                var hero = player.Data.Heroes[0];
+                var legendDetails = new LegendDetails
+                {
+                    LegendId = hero.HeroId,
+                    CostumeId = hero.CostumeId,
+                    Stance = hero.Stance,
+                    WeaponSkins = hero.WeaponSkins
+                };
 
+                var deaths =
+                    from death in replay.Deaths
+                    where death.EntityId == player.Id
+                    select new Death
+                    {
+                        TimeStamp = death.Timestamp,
+                        Player = domainPlayer,
+                        Game = game
+                    };
+
+                domainPlayer.Customization = customization;
+                domainPlayer.LegendDetails = legendDetails;
+                domainPlayer.Deaths = deaths.ToList();
+
+                return domainPlayer;
+            })
+            .ToList();
+        game.Deaths = game.Players.SelectMany(x => x.Deaths)
+            .OrderByDescending(x => x.TimeStamp)
+            .ToList();
+
+        game.Settings = new Domain.Game.GameSettings()
+        {
+            Flags = replay.GameSettings.Flags,
+            MaxPlayers = replay.GameSettings.MaxPlayers,
+            Duration = replay.GameSettings.Duration,
+            RoundDuration = replay.GameSettings.RoundDuration,
+            StartingLives = replay.GameSettings.StartingLives,
+            ScoringType = replay.GameSettings.ScoringType,
+            ScoreToWin = replay.GameSettings.ScoreToWin,
+            GameSpeed = replay.GameSettings.GameSpeed,
+            DamageRatio = replay.GameSettings.DamageRatio,
+            LevelSetId = replay.GameSettings.LevelSetId
+        };
+
+        return game;
     }
 }

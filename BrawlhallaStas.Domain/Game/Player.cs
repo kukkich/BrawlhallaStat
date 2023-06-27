@@ -10,7 +10,7 @@ public class Player : IHaveId<int>
     public Team Team { get; set; }
     public bool IsWinner { get; set; }
     public Customization Customization { get; set; } = null!;
-    public LegendDetails Legend { get; set; } = null!;
+    public LegendDetails LegendDetails { get; set; } = null!;
 
     public string GameId { get; set; } = null!;
     public Game Game { get; set; } = null!;
