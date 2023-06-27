@@ -14,11 +14,11 @@ public class BHReplayDeserializer : IBHReplayDeserializer
         157, 197, 212, 107, 84, 114, 252, 87, 93, 26, 6, 115, 194, 81, 75, 176, 201,
         140, 120, 4, 17, 122, 239, 116, 62, 70, 57, 160, 199, 166
     };
-    
+
     private ReplayInfo _result = null!;
     private IReadingStrategy _readingStrategy = null!;
-    
-    public ReplayInfo Read(byte[] bytes)
+
+    public ReplayInfo Deserialize(byte[] bytes)
     {
         var stream = new BitStream(bytes);
         _result = new ReplayInfo();
@@ -30,6 +30,16 @@ public class BHReplayDeserializer : IBHReplayDeserializer
         SelectReadingStrategy(stream);
         _readingStrategy.Read(_result);
         return _result;
+    }
+
+    public Task<ReplayInfo> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken)
+    {
+        cancellationToken ??= CancellationToken.None;
+
+        return Task.Run(
+            () => Deserialize(bytes),
+            (CancellationToken)cancellationToken
+        );
     }
 
     private void ReadHeader(BitStream stream)

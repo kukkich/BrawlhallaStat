@@ -5,7 +5,7 @@ namespace BrawlhallaStat.Domain.Game;
 public class Game : IHaveId<string>
 {
     public string Id { get; set; } = null!;
-
+    public GameType Type { get; set; }
     public int RandomSeed { get; set; }
     public int Version { get; set; }
     public bool OnlineGame { get; set; }
