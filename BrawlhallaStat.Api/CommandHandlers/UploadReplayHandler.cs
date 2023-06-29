@@ -39,11 +39,14 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         var fileBytes = stream.ToArray();
         var replay = await _replayDeserializer.DeserializeAsync(fileBytes);
 
+        EnsureThatSupports(replay);
+        var game = MapToDomainGame(replay);
+
         throw new NotImplementedException();
 
         //var replayData = ...
 
-        //AddMatchResultsToStatistics();
+        //AddGameResultsToStatistics();
 
         throw new NotImplementedException();
 
@@ -124,18 +127,118 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         }
     }
 
-    private async Task AddMatchResultsToStatistics(IUserIdentity user)
+    private async Task AddGameResultsToStatistics(IUserIdentity user, Game game)
     {
-        //TODO pass replayResult
-        var userData = await _dbContext.Users
+        var userFromDb = await _dbContext.Users
             .Include(x => x.TotalStatistic)
             .Include(x => x.WeaponStatistics)
+                .ThenInclude(x => x.Statistic)
             .Include(x => x.LegendStatistics)
+                .ThenInclude(x => x.Statistic)
             .Include(x => x.LegendAgainstLegendStatistics)
+                .ThenInclude(x => x.Statistic)
             .Include(x => x.LegendAgainstWeaponStatistics)
+                .ThenInclude(x => x.Statistic)
             .Include(x => x.WeaponAgainstWeaponStatistics)
+                .ThenInclude(x => x.Statistic)
             .Include(x => x.WeaponAgainstLegendStatistics)
+                .ThenInclude(x => x.Statistic)
             .FirstAsync(x => x.Id == user.Id);
+
+        var userFromGame = game.Players.FirstOrDefault(x => x.NickName == user.NickName);
+        if (userFromGame is null)
+        {
+            throw new NoUserInGameException(user.NickName);
+        }
+
+        var legendId = userFromGame.LegendDetails.LegendId;
+        var opponentLegendIds = game.Players
+            .Where(x => x.Team != userFromGame.Team)
+            .Select(x => x.LegendDetails.Legend.Id)
+            .ToArray();
+
+        var getLegendTask = _dbContext.Legends
+            .FirstAsync(x => x.Id == legendId);
+
+        if (userFromGame.IsWinner)
+        {
+            userFromDb.TotalStatistic.Wins++;
+
+            userFromDb.LegendStatistics
+                .First(x => x.LegendId == legendId)
+                .Statistic
+                .Wins++;
+
+            foreach (var statistic in
+                     userFromDb.LegendAgainstLegendStatistics
+                         .Where(x => x.LegendId == legendId)
+                         .Where(x => opponentLegendIds.Contains(x.OpponentLegendId))
+                         .Select(x => x.Statistic)
+                    )
+            {
+                statistic.Wins++;
+            }
+
+            var legend = await getLegendTask;
+            foreach (var statistic in
+                     userFromDb.WeaponStatistics
+                         .Where(x => x.WeaponId == legend.FirstWeaponId ||
+                                     x.WeaponId == legend.SecondWeaponId)
+                         .Select(x => x.Statistic)
+                    )
+            {
+                statistic.Wins++;
+            }
+
+            foreach (var statistic in
+                     userFromDb.WeaponAgainstLegendStatistics
+                         .Where(x => x.WeaponId == legend.FirstWeaponId ||
+                                     x.WeaponId == legend.SecondWeaponId)
+                         .Where(x => opponentLegendIds.Contains(x.OpponentLegendId))
+                         .Select(x => x.Statistic)
+                     )
+            {
+                statistic.Wins++;
+            }
+
+            var opponentWeaponIds = await (game.Type switch
+                {
+                    GameType.Ranked2V2 or GameType.Unranked2V2 => _dbContext.Legends
+                        .Where(x => x.Id == opponentLegendIds[0] || x.Id == opponentLegendIds[1]),
+                    GameType.Ranked1V1 or GameType.Unranked1V1 => _dbContext.Legends
+                        .Where(x => x.Id == opponentLegendIds[0]),
+                    _ => throw new NotSupportedException()
+                })
+                .SelectMany(x => new[] {x.FirstWeaponId, x.SecondWeaponId})
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var statistic in
+                     userFromDb.LegendAgainstWeaponStatistics
+                         .Where(x => x.LegendId == legendId)
+                         .Where(x => opponentWeaponIds.Contains(x.OpponentWeaponId))
+                         .Select(x => x.Statistic)
+                    )
+            {
+                statistic.Wins++;
+            }
+
+            foreach (var statistic in
+                     userFromDb.WeaponAgainstWeaponStatistics
+                         .Where(x => x.WeaponId == legend.FirstWeaponId ||
+                                     x.WeaponId == legend.SecondWeaponId)
+                         .Where(x => opponentWeaponIds.Contains(x.OpponentWeaponId))
+                         .Select(x => x.Statistic)
+                    )
+            {
+                statistic.Wins++;
+            }
+        }
+        else
+        {
+            userFromDb.TotalStatistic.Lost++;
+        }
+
 
         throw new NotImplementedException();
     }
@@ -205,11 +308,12 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
                 return domainPlayer;
             })
             .ToList();
-        game.Deaths = game.Players.SelectMany(x => x.Deaths)
+        game.Deaths = game.Players
+            .SelectMany(x => x.Deaths)
             .OrderByDescending(x => x.TimeStamp)
             .ToList();
 
-        game.Settings = new Domain.Game.GameSettings()
+        game.Settings = new Domain.Game.GameSettings
         {
             Flags = replay.GameSettings.Flags,
             MaxPlayers = replay.GameSettings.MaxPlayers,
