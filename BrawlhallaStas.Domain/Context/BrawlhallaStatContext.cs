@@ -20,7 +20,7 @@ public class BrawlhallaStatContext : DbContext
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
     {
-        //Database.EnsureDeleted();
+        Database.EnsureDeleted();
         if (!Database.EnsureCreated()) return;
     }
 }

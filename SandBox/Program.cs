@@ -40,15 +40,14 @@ internal class Program
         var reader = new BHReplayDeserializer();
         var replay = reader.Deserialize(replayBinary);
         //var heroId = replay.Players.First(x => x.Name == "Nasral V Szhopu")
-            //.Data
-            //.Heroes[0]
-            //.HeroId;
+        //.Data
+        //.Heroes[0]
+        //.HeroId;
         //Console.WriteLine(lastMatchPath);
         //Console.WriteLine($"Nasral V Szhopu: {heroId}");
         //var bot = replay.Players.Where(x => x.Name != "Nasral V Szhopu").Select(x => x.Data.Heroes[0])
-            //.First();
+        //.First();
         //Console.WriteLine($"Bot: {bot.HeroId}");
-
         string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
         {
             WriteIndented = true

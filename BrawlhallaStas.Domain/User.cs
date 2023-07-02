@@ -9,7 +9,6 @@ public class User : IHaveId<string>
     public string TelegramId { get; set; } = null!;
     public string Login { get; set; } = null!;
 
-
     public string TotalStatisticId { get; set; } = null!;
     public Statistic TotalStatistic { get; set; } = null!;
 

@@ -5,10 +5,12 @@ using BrawlhallaStat.Domain.Context;
 using MediatR;
 using BrawlhallaReplayReader.Deserializers;
 using BrawlhallaReplayReader.Models;
+using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Domain.Base;
 using BrawlhallaStat.Domain.Game;
 using Microsoft.EntityFrameworkCore;
 using Player = BrawlhallaStat.Domain.Game.Player;
+using System.IO;
 
 namespace BrawlhallaStat.Api.CommandHandlers;
 
@@ -16,16 +18,22 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
 {
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IBHReplayDeserializer _replayDeserializer;
+    private readonly ReplayHandlingPipeline _replayHandlingPipeline;
     private static readonly string[] AllowedPlaylistNames = { "2v2Ranked", "2v2Unranked", "1v1Ranked", "1v1Unranked" };
     private static readonly int[] AllowedResultKeys1V1 = { 1, 2 };
     private static readonly int[] AllowedResultKeys2V2 = { 1, 2, 3, 4 };
     private static readonly int[] AllowedResultValues1V1 = { 1, 2 };
     private static readonly int[] AllowedResultValues2V2 = { 1, 1, 2, 2 };
 
-    public UploadReplayHandler(BrawlhallaStatContext dbContext, IBHReplayDeserializer replayDeserializer)
+    public UploadReplayHandler(
+        BrawlhallaStatContext dbContext, 
+        IBHReplayDeserializer replayDeserializer,
+        ReplayHandlingPipeline replayHandlingPipeline
+        )
     {
         _dbContext = dbContext;
         _replayDeserializer = replayDeserializer;
+        _replayHandlingPipeline = replayHandlingPipeline;
     }
 
     public async Task<string> Handle(UploadReplay request, CancellationToken cancellationToken)
@@ -42,19 +50,13 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         EnsureThatSupports(replay);
         var game = MapToDomainGame(replay);
 
-        throw new NotImplementedException();
-
-        //var replayData = ...
-
-        //AddGameResultsToStatistics();
-
-        throw new NotImplementedException();
+        await _replayHandlingPipeline.Invoke(request.User, game);
 
         var fileModel = new ReplayFile
         {
             Id = Guid.NewGuid().ToString(),
             FileName = file.FileName,
-            FileData = fileData
+            FileData = fileBytes
         };
 
         _dbContext.Replays.Add(fileModel);
