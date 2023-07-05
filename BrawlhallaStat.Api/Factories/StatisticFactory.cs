@@ -16,7 +16,7 @@ public class StatisticFactory : IStatisticFactory
         _weapons = weapons;
     }
 
-    public async Task<WeaponAgainstWeaponStatistic[]> CreateWeaponAgainstWeapon(string userId)
+    public async Task<List<WeaponAgainstWeaponStatistic>> CreateWeaponAgainstWeapon(string userId)
     {
         return CreatePair(
             (await _weapons.GetDataAsync()).Select(x => x.Id),
@@ -29,7 +29,7 @@ public class StatisticFactory : IStatisticFactory
         );
     }
 
-    public async Task<WeaponAgainstLegendStatistic[]> CreateWeaponAgainstLegend(string userId)
+    public async Task<List<WeaponAgainstLegendStatistic>> CreateWeaponAgainstLegend(string userId)
     {
         return CreatePair(
             (await _weapons.GetDataAsync()).Select(x => x.Id),
@@ -43,7 +43,7 @@ public class StatisticFactory : IStatisticFactory
         );
     }
 
-    public async Task<LegendAgainstWeaponStatistic[]> CreateLegendAgainstWeapon(string userId)
+    public async Task<List<LegendAgainstWeaponStatistic>> CreateLegendAgainstWeapon(string userId)
     {
         return CreatePair(
             (await _legends.GetDataAsync()).Select(x => x.Id),
@@ -57,11 +57,11 @@ public class StatisticFactory : IStatisticFactory
         );
     }
 
-    public async Task<LegendAgainstLegendStatistic[]> CreateLegendAgainstLegend(string userId)
+    public async Task<List<LegendAgainstLegendStatistic>> CreateLegendAgainstLegend(string userId)
     {
         return CreatePair(
             (await _legends.GetDataAsync()).Select(x => x.Id),
-            (await _weapons.GetDataAsync()).Select(x => x.Id),
+            (await _legends.GetDataAsync()).Select(x => x.Id),
             (entityId, opponentEntityId) => new LegendAgainstLegendStatistic
             {
                 LegendId = entityId,
@@ -71,7 +71,7 @@ public class StatisticFactory : IStatisticFactory
         );
     }
 
-    public async Task<WeaponStatistic[]> CreateWeapon(string userId)
+    public async Task<List<WeaponStatistic>> CreateWeapon(string userId)
     {
         return Create(
             (await _weapons.GetDataAsync()).Select(x => x.Id),
@@ -80,7 +80,7 @@ public class StatisticFactory : IStatisticFactory
         );
     }
 
-    public async Task<LegendStatistic[]> CreateLegend(string userId)
+    public async Task<List<LegendStatistic>> CreateLegend(string userId)
     {
         return Create(
             (await _legends.GetDataAsync()).Select(x => x.Id),
@@ -94,7 +94,7 @@ public class StatisticFactory : IStatisticFactory
         return new Statistic { Id = Guid.NewGuid().ToString() };
     }
 
-    private TStatistic[] CreatePair<TStatistic>(
+    private List<TStatistic> CreatePair<TStatistic>(
         IEnumerable<int> objectIds,
         IEnumerable<int> opponentObjectIds,
         Func<int, int, TStatistic> statisticFactory,
@@ -116,10 +116,10 @@ public class StatisticFactory : IStatisticFactory
             }
         }
 
-        return statistics.ToArray();
+        return statistics.ToList();
     }
 
-    private TStatistic[] Create<TStatistic>(
+    private List<TStatistic> Create<TStatistic>(
         IEnumerable<int> objectIds,
         Func<int, TStatistic> statisticFactory,
         string userId)
@@ -137,6 +137,6 @@ public class StatisticFactory : IStatisticFactory
             i++;
         }
 
-        return statistics.ToArray();
+        return statistics.ToList();
     }
 }

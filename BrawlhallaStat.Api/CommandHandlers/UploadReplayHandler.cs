@@ -37,6 +37,10 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
 
     public async Task<string> Handle(UploadReplay request, CancellationToken cancellationToken)
     {
+        try
+        {
+
+        
         var file = request.File;
         ValidateFile(file);
 
@@ -44,7 +48,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         await file.CopyToAsync(stream, cancellationToken);
 
         var fileBytes = stream.ToArray();
-        var replay = await _replayDeserializer.DeserializeAsync(fileBytes);
+        var replay = _replayDeserializer.Deserialize(fileBytes);
 
         EnsureThatSupports(replay);
         var game = MapToDomainGame(replay);
@@ -61,8 +65,13 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         _dbContext.Replays.Add(fileModel);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-
         return fileModel.Id;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     private static void ValidateFile(IFormFile file)
@@ -81,7 +90,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
     private static void EnsureThatSupports(ReplayInfo replay)
     {
         var name = replay.PlaylistName;
-        if (AllowedPlaylistNames.Any(name.Contains))
+        if (!AllowedPlaylistNames.Any(name.Contains))
         {
             throw new NotSupportedException("Not supported game type");
         }
@@ -114,7 +123,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         }
         else
         {
-            if (replay.Results.Keys.SequenceEqual(AllowedResultKeys2V2) ||
+            if (!replay.Results.Keys.SequenceEqual(AllowedResultKeys2V2) ||
                 !replay.Results.Values.OrderBy(x => x).SequenceEqual(AllowedResultValues2V2))
             {
                 throw new Exception($"Invalid results format");

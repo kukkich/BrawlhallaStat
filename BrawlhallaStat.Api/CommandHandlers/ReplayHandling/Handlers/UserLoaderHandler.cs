@@ -14,6 +14,14 @@ public class UserLoaderHandler : IReplayHandler
 
     public async Task HandleAsync(ReplayHandlingContext context)
     {
+        var user = await _dbContext.Users
+            .Include(x => x.TotalStatistic)
+            .Include(x => x.WeaponStatistics)
+            .ThenInclude(x => x.Statistic)
+            .Include(x => x.LegendStatistics)
+            .ThenInclude(x => x.Statistic)
+            .FirstAsync(x => x.Id == context.ReplayAuthor.Id);
+        //TODO there exception cause dbContext already disposed
         context.UserFromDb = await _dbContext.Users
             .Include(x => x.TotalStatistic)
             .Include(x => x.WeaponStatistics)

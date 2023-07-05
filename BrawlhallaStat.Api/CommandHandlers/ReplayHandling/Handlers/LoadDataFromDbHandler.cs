@@ -1,15 +1,15 @@
-﻿using BrawlhallaStat.Domain.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using BrawlhallaStat.Api.Services.Cache;
+using BrawlhallaStat.Domain;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
 
 public class LoadDataFromDbHandler : IReplayHandler
 {
-    private readonly BrawlhallaStatContext _dbContext;
+    private readonly ICacheService<Legend> _legends;
 
-    public LoadDataFromDbHandler(BrawlhallaStatContext dbContext)
+    public LoadDataFromDbHandler(ICacheService<Legend> legends)
     {
-        _dbContext = dbContext;
+        _legends = legends;
     }
 
     public async Task HandleAsync(ReplayHandlingContext context)
@@ -20,15 +20,10 @@ public class LoadDataFromDbHandler : IReplayHandler
             .Select(x => x.LegendDetails.Legend.Id)
             .ToArray();
 
-        var legendsQuery = from l in _dbContext.Legends
+        var legendsQuery = from l in await _legends.GetDataAsync()
                            where l.Id == legendId || opponentLegendIds.Contains(l.Id)
                            select l;
-
-        var legendsFromQuery = await legendsQuery
-            .Include(x => x.FirstWeapon)
-            .Include(x => x.SecondWeapon)
-            .Distinct()
-            .ToArrayAsync();
+        var legendsFromQuery = legendsQuery.ToArray();
 
         var legend = legendsFromQuery.First(x => x.Id == legendId);
         var opponentLegends = legendsFromQuery.Where(x => opponentLegendIds.Contains(x.Id)).ToArray();

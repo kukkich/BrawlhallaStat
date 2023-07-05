@@ -5,6 +5,7 @@ using BrawlhallaStat.Api.Factories;
 using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api;
@@ -24,6 +25,8 @@ public class Program
         services.AddMediatR(cfg => {
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
         });
+        services.AddAutoMapper(typeof(Program).Assembly);
+
         services.AddControllers();
 
         services.AddEndpointsApiExplorer();
@@ -43,6 +46,7 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseDeveloperExceptionPage();
         }
 
         app.UseHttpsRedirection();

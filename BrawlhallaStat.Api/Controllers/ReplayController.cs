@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Commands;
+using BrawlhallaStat.Domain;
 using Microsoft.AspNetCore.Mvc;
-using BrawlhallaStat.Domain.Base;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Controllers;
 
+[Route("api/[controller]/[action]")]
 public class ReplayController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -18,16 +19,19 @@ public class ReplayController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Upload(IFormFile? file)
+    public async Task<IActionResult> Upload(IFormFile? file)
     {
         if (file is null || file.Length <= 0)
         {
             return BadRequest("Ошибка при загрузке файла");
         }
         
-        var user = _mapper.Map<IUserIdentity>(HttpContext.User);
+        var user = new User()
+        {
+            Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5"
+        };
 
-        _mediator.Send(new UploadReplay(user, file));
+        await _mediator.Send(new UploadReplay(user, file));
 
         return Ok("Файл успешно загружен");
     }

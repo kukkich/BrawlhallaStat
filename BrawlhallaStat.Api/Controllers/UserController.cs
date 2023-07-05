@@ -17,7 +17,16 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterUser request)
     {
-        var id = await _mediator.Send(request);
-        return Ok(id);
+        try
+        {
+            var id = await _mediator.Send(request);
+            return Ok(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+       
     }
 }
