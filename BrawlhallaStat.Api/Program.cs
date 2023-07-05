@@ -1,4 +1,8 @@
+using BrawlhallaReplayReader.DependencyInjection;
+using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Commands;
+using BrawlhallaStat.Api.Factories;
+using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +28,13 @@ public class Program
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddReplayHandlingPipeline();
+        services.AddBrawlhallaReplayDeserializer();
+
+        services.AddFactories();
+        services.AddMemoryCache();
+        services.AddCaching();
     }
 
     public static void ConfigureApplication(WebApplication app)

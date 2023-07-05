@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Commands;
 using Microsoft.AspNetCore.Mvc;
-using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Base;
 using MediatR;
 
@@ -18,6 +16,7 @@ public class ReplayController : ControllerBase
         _mediator = mediator;
         _mapper = mapper;
     }
+
     [HttpPost]
     public IActionResult Upload(IFormFile? file)
     {
