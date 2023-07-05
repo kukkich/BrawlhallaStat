@@ -10,7 +10,6 @@ using BrawlhallaStat.Domain.Base;
 using BrawlhallaStat.Domain.Game;
 using Microsoft.EntityFrameworkCore;
 using Player = BrawlhallaStat.Domain.Game.Player;
-using System.IO;
 
 namespace BrawlhallaStat.Api.CommandHandlers;
 
