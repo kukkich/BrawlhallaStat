@@ -28,7 +28,8 @@ public class ReplayController : ControllerBase
         
         var user = new User()
         {
-            Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5"
+            Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5",
+            Login = "Nasral V Szhopu"
         };
 
         await _mediator.Send(new UploadReplay(user, file));

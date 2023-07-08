@@ -3,11 +3,11 @@ using BrawlhallaStat.Domain;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
 
-public class LoadDataFromDbHandler : IReplayHandler
+public class SelectLegendsAndWeaponDataHandler : IReplayHandler
 {
     private readonly ICacheService<Legend> _legends;
 
-    public LoadDataFromDbHandler(ICacheService<Legend> legends)
+    public SelectLegendsAndWeaponDataHandler(ICacheService<Legend> legends)
     {
         _legends = legends;
     }
@@ -17,7 +17,7 @@ public class LoadDataFromDbHandler : IReplayHandler
         int legendId = context.UserFromGame.LegendDetails.LegendId;
         int[] opponentLegendIds = context.Game.Players
             .Where(x => x.Team != context.UserFromGame.Team)
-            .Select(x => x.LegendDetails.Legend.Id)
+            .Select(x => x.LegendDetails.LegendId)
             .ToArray();
 
         var legendsQuery = from l in await _legends.GetDataAsync()

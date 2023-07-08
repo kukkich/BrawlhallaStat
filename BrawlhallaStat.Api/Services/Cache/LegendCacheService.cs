@@ -15,6 +15,9 @@ public class LegendCacheService : MemCacheBase<Legend>
 
     protected override async Task<List<Legend>> LoadDataFromDatabaseAsync()
     {
-        return await DbContext.Legends.AsNoTracking().ToListAsync();
+        return await DbContext.Legends
+            .Include(x => x.FirstWeapon)
+            .Include(x => x.SecondWeapon)
+            .AsNoTracking().ToListAsync();
     }
 }

@@ -25,7 +25,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
     private static readonly int[] AllowedResultValues2V2 = { 1, 1, 2, 2 };
 
     public UploadReplayHandler(
-        BrawlhallaStatContext dbContext, 
+        BrawlhallaStatContext dbContext,
         IBHReplayDeserializer replayDeserializer,
         ReplayHandlingPipeline replayHandlingPipeline
         )
@@ -39,33 +39,32 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
     {
         try
         {
+            var file = request.File;
+            ValidateFile(file);
 
-        
-        var file = request.File;
-        ValidateFile(file);
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream, cancellationToken);
 
-        using var stream = new MemoryStream();
-        await file.CopyToAsync(stream, cancellationToken);
+            var fileBytes = stream.ToArray();
+            var replay = _replayDeserializer.Deserialize(fileBytes);
 
-        var fileBytes = stream.ToArray();
-        var replay = _replayDeserializer.Deserialize(fileBytes);
+            EnsureThatSupports(replay);
+            var game = MapToDomainGame(replay);
 
-        EnsureThatSupports(replay);
-        var game = MapToDomainGame(replay);
+            await _replayHandlingPipeline.Invoke(request.User, game);
 
-        await _replayHandlingPipeline.Invoke(request.User, game);
+            var fileModel = new ReplayFile
+            {
+                Id = Guid.NewGuid().ToString(),
+                AuthorId = request.User.Id,
+                FileName = file.FileName,
+                FileData = fileBytes,
+            };
 
-        var fileModel = new ReplayFile
-        {
-            Id = Guid.NewGuid().ToString(),
-            FileName = file.FileName,
-            FileData = fileBytes
-        };
+            _dbContext.Replays.Add(fileModel);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _dbContext.Replays.Add(fileModel);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return fileModel.Id;
+            return fileModel.Id;
         }
         catch (Exception e)
         {
@@ -212,14 +211,14 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
             }
 
             var opponentWeaponIds = await (game.Type switch
-                {
-                    GameType.Ranked2V2 or GameType.Unranked2V2 => _dbContext.Legends
-                        .Where(x => x.Id == opponentLegendIds[0] || x.Id == opponentLegendIds[1]),
-                    GameType.Ranked1V1 or GameType.Unranked1V1 => _dbContext.Legends
-                        .Where(x => x.Id == opponentLegendIds[0]),
-                    _ => throw new NotSupportedException()
-                })
-                .SelectMany(x => new[] {x.FirstWeaponId, x.SecondWeaponId})
+            {
+                GameType.Ranked2V2 or GameType.Unranked2V2 => _dbContext.Legends
+                    .Where(x => x.Id == opponentLegendIds[0] || x.Id == opponentLegendIds[1]),
+                GameType.Ranked1V1 or GameType.Unranked1V1 => _dbContext.Legends
+                    .Where(x => x.Id == opponentLegendIds[0]),
+                _ => throw new NotSupportedException()
+            })
+                .SelectMany(x => new[] { x.FirstWeaponId, x.SecondWeaponId })
                 .Distinct()
                 .ToListAsync();
 

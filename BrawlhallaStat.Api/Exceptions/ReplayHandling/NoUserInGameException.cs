@@ -2,11 +2,13 @@
 
 public class NoUserInGameException : ApiException
 {
-    private readonly string _expectedNickName;
-    public override string Message => $"There is no player with the nickname {_expectedNickName} in the game";
+    public readonly string ExpectedNickName;
+    public readonly string? ButWas;
+    public override string Message => $"There is no player with the nickname {ExpectedNickName} in the game";
 
-    public NoUserInGameException(string expectedNickName)
+    public NoUserInGameException(string expectedNickName, string? butWas=null)
     {
-        _expectedNickName = expectedNickName;
+        ExpectedNickName = expectedNickName;
+        ButWas = butWas;
     }
 }

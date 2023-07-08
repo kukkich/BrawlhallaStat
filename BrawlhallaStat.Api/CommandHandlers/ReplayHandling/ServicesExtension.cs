@@ -8,10 +8,9 @@ public static class ServicesExtension
     {
         services.AddScoped<ReplayHandlingPipeline>();
 
-
-        services.AddScoped<IReplayHandler, UserLoaderHandler>();
         services.AddScoped<IReplayHandler, UserExistValidationHandler>();
-        services.AddScoped<IReplayHandler, LoadDataFromDbHandler>();
+        services.AddScoped<IReplayHandler, SelectLegendsAndWeaponDataHandler>();
+        services.AddScoped<IReplayHandler, UserLoaderHandler>();
        
         services.AddScoped<IReplayHandler, SelectWinLoseCounterHandler>();
         
