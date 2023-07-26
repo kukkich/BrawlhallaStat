@@ -11,11 +11,11 @@ public static class ServicesExtension
         services.AddScoped<IReplayHandler, UserExistValidationHandler>();
         services.AddScoped<IReplayHandler, SelectLegendsAndWeaponDataHandler>();
         services.AddScoped<IReplayHandler, UserLoaderHandler>();
-       
+
         services.AddScoped<IReplayHandler, SelectWinLoseCounterHandler>();
-        
+
         services.AddScoped<IReplayHandler, TotalStatisticHandler>();
-        
+
         services.AddScoped<IReplayHandler, LegendStatisticsHandler>();
         services.AddScoped<IReplayHandler, LegendAgainstLegendStatisticsHandler>();
         services.AddScoped<IReplayHandler, LegendAgainstWeaponStatisticsHandler>();
@@ -23,6 +23,6 @@ public static class ServicesExtension
         services.AddScoped<IReplayHandler, WeaponStatisticsHandler>();
         services.AddScoped<IReplayHandler, WeaponAgainstLegendStatisticsHandler>();
         services.AddScoped<IReplayHandler, WeaponAgainstWeaponStatisticsHandler>();
-        
+
     }
 }

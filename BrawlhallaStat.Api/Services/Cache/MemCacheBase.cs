@@ -1,7 +1,6 @@
-﻿using BrawlhallaStat.Domain;
-using BrawlhallaStat.Domain.Context;
-using Microsoft.EntityFrameworkCore;
+﻿using BrawlhallaStat.Domain.Context;
 using Microsoft.Extensions.Caching.Memory;
+#pragma warning disable CS8600
 
 namespace BrawlhallaStat.Api.Services.Cache;
 

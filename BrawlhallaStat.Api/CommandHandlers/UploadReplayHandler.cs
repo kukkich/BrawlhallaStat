@@ -1,13 +1,13 @@
-﻿using BrawlhallaStat.Api.Commands;
-using BrawlhallaStat.Api.Exceptions.ReplayHandling;
-using BrawlhallaStat.Domain;
-using BrawlhallaStat.Domain.Context;
-using MediatR;
-using BrawlhallaReplayReader.Deserializers;
+﻿using BrawlhallaReplayReader.Deserializers;
 using BrawlhallaReplayReader.Models;
 using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
+using BrawlhallaStat.Api.Commands;
+using BrawlhallaStat.Api.Exceptions.ReplayHandling;
+using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Base;
+using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Game;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Player = BrawlhallaStat.Domain.Game.Player;
 

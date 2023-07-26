@@ -7,7 +7,7 @@ public class EntityNotFoundException<TEntity, TId> : ApiException
 {
     private readonly TId _id;
 
-    public override string Message 
+    public override string Message
     {
         get
         {

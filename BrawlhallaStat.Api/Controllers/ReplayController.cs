@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Commands;
 using BrawlhallaStat.Domain;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Controllers;
 
@@ -25,7 +25,7 @@ public class ReplayController : ControllerBase
         {
             return BadRequest("Ошибка при загрузке файла");
         }
-        
+
         var user = new User()
         {
             Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5",

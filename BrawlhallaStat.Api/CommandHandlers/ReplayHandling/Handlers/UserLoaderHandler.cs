@@ -1,6 +1,4 @@
-﻿using BrawlhallaStat.Api.Services.Cache;
-using BrawlhallaStat.Domain;
-using BrawlhallaStat.Domain.Context;
+﻿using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
@@ -8,14 +6,10 @@ namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
 public class UserLoaderHandler : IReplayHandler
 {
     private readonly BrawlhallaStatContext _dbContext;
-    private readonly ICacheService<Legend> _legends;
-    private readonly ICacheService<Weapon> _weapons;
 
-    public UserLoaderHandler(BrawlhallaStatContext dbContext, ICacheService<Legend> legends, ICacheService<Weapon> weapons)
+    public UserLoaderHandler(BrawlhallaStatContext dbContext)
     {
         _dbContext = dbContext;
-        _legends = legends;
-        _weapons = weapons;
     }
 
     public async Task HandleAsync(ReplayHandlingContext context)
@@ -39,7 +33,7 @@ public class UserLoaderHandler : IReplayHandler
                 .Where(ls => ls.LegendId == legendId))
                 .ThenInclude(x => x.Statistic)
             .Include(x => x.LegendAgainstLegendStatistics
-                .Where(ll => ll.LegendId == legendId && 
+                .Where(ll => ll.LegendId == legendId &&
                              opponentLegendIds.Contains(ll.OpponentLegendId)))
                 .ThenInclude(x => x.Statistic)
             .Include(x => x.LegendAgainstWeaponStatistics

@@ -1,5 +1,5 @@
-﻿using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain;
+﻿using BrawlhallaStat.Domain;
+using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -9,9 +9,9 @@ public class LegendCacheService : MemCacheBase<Legend>
 {
     protected override string CacheKey => "LegendCache";
 
-    public LegendCacheService(IMemoryCache cache, BrawlhallaStatContext dbContext) 
+    public LegendCacheService(IMemoryCache cache, BrawlhallaStatContext dbContext)
         : base(cache, dbContext)
-        { }
+    { }
 
     protected override async Task<List<Legend>> LoadDataFromDatabaseAsync()
     {

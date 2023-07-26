@@ -11,7 +11,7 @@ public class WeaponCacheService : MemCacheBase<Weapon>
 
     public WeaponCacheService(IMemoryCache cache, BrawlhallaStatContext dbContext)
         : base(cache, dbContext)
-        { }
+    { }
 
     protected override async Task<List<Weapon>> LoadDataFromDatabaseAsync()
     {

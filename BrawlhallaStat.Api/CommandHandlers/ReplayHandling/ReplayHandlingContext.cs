@@ -1,7 +1,7 @@
 ﻿using BrawlhallaStat.Api.CommandHandlers.ReplayHandling.WinLoseCounting;
+using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Base;
 using BrawlhallaStat.Domain.Game;
-using BrawlhallaStat.Domain;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 
@@ -17,5 +17,5 @@ public class ReplayHandlingContext
     public Weapon[] Weapons { get; set; } = null!;
 
     public Legend[] OpponentLegends { get; set; } = null!;
-    public Weapon[] OpponentWeapons{ get; set; } = null!;
+    public Weapon[] OpponentWeapons { get; set; } = null!;
 }

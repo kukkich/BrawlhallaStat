@@ -27,6 +27,6 @@ public class UserController : ControllerBase
             Console.WriteLine(e);
             throw;
         }
-       
+
     }
 }
