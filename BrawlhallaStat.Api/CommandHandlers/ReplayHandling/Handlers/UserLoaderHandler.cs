@@ -22,8 +22,7 @@ public class UserLoaderHandler : IReplayHandler
         var opponentWeaponIds = context.OpponentWeapons.Select(x => x.Id).ToArray();
 
         var userId = context.ReplayAuthor.Id;
-
-        //TODO there exception cause dbContext already disposed
+        
         context.UserFromDb = await _dbContext.Users
             .Include(x => x.TotalStatistic)
             .Include(x => x.WeaponStatistics

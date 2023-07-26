@@ -24,5 +24,6 @@ public static class ServicesExtension
         services.AddScoped<IReplayHandler, WeaponAgainstLegendStatisticsHandler>();
         services.AddScoped<IReplayHandler, WeaponAgainstWeaponStatisticsHandler>();
 
+        services.AddScoped<IReplayHandler, LoggingHandler>();
     }
 }

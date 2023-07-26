@@ -1,5 +1,6 @@
 ﻿// ReSharper disable StringLiteralTypo
 
+using System.Diagnostics;
 using System.Text.Json;
 using BrawlhallaReplayReader.Deserializers;
 
@@ -99,11 +100,21 @@ internal class Program
             { fileContent, "file", Path.GetFileName(filePath) }
         };
 
-        var response = await httpClient.PostAsync(apiUrl, formData);
 
+        Console.WriteLine("Отправляю запрос");
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var requestTask = httpClient.PostAsync(apiUrl, formData);
+
+        var response = await requestTask;
+        stopwatch.Stop();
         Console.WriteLine(response.IsSuccessStatusCode
             ? "Файл успешно загружен на сервер"
             : "Ошибка при загрузке файла на сервер");
+
+        Console.WriteLine("Время выполнения запроса: " + stopwatch.Elapsed);
 
         Console.ReadLine();
     }
