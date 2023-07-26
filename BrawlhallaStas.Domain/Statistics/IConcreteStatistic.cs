@@ -2,6 +2,8 @@
 
 namespace BrawlhallaStat.Domain.Statistics;
 
+// TODO Make pair statistic 
+// with properties like: entity, AgainstEntity
 public interface IConcreteStatistic : IHaveId<string>
 {
     public string StatisticId { get; set; }

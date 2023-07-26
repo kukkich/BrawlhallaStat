@@ -1,7 +1,10 @@
-using BrawlhallaStat.Api.Commands;
+using BrawlhallaReplayReader.DependencyInjection;
+using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
+using BrawlhallaStat.Api.Factories;
+using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Domain.Context;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace BrawlhallaStat.Api;
 
@@ -12,18 +15,32 @@ public class Program
         services.AddDbContext<BrawlhallaStatContext>(options =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(
+                    connectionString,
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                )
+                .UseLoggerFactory(NullLoggerFactory.Instance); // for logging disable
+
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            //.UseLoggerFactory(new NullLoggerFactory()) for logging disable
         });
 
-        services.AddMediatR(cfg => {
+        services.AddMediatR(cfg =>
+        {
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
         });
+        services.AddAutoMapper(typeof(Program).Assembly);
+
         services.AddControllers();
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddReplayHandlingPipeline();
+        services.AddBrawlhallaReplayDeserializer();
+
+        services.AddFactories();
+        services.AddMemoryCache();
+        services.AddCaching();
     }
 
     public static void ConfigureApplication(WebApplication app)
@@ -32,6 +49,7 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseDeveloperExceptionPage();
         }
 
         app.UseHttpsRedirection();
@@ -39,9 +57,6 @@ public class Program
         app.MapControllers();
 
         using var scope = app.Services.CreateScope();
-
-        var m = scope.ServiceProvider.GetService<IMediator>();
-        m.Send(new TestMessageCommand("éîó"));
 
         scope.ServiceProvider.GetService<BrawlhallaStatContext>();
     }

@@ -1,5 +1,6 @@
 ﻿// ReSharper disable StringLiteralTypo
 
+using System.Diagnostics;
 using System.Text.Json;
 using BrawlhallaReplayReader.Deserializers;
 
@@ -32,32 +33,32 @@ internal class Program
     private static string InvalidMeOnWuShang = "[7.09] ShorwindFishing.replay";
     private static int ValidOffsets = 32;
 
-    static void Main()
+    static async Task Main()
     {
-        var path = GetReplayPath(LegendsExploring);
-        var lastMatchPath = GetNewestFile("C:/Users/vitia/BrawlhallaReplays");
-        var replayBinary = File.ReadAllBytes(path);
-        var reader = new BHReplayDeserializer();
-        var replay = reader.Deserialize(replayBinary);
-        //var heroId = replay.Players.First(x => x.Name == "Nasral V Szhopu")
-            //.Data
-            //.Heroes[0]
-            //.HeroId;
-        //Console.WriteLine(lastMatchPath);
-        //Console.WriteLine($"Nasral V Szhopu: {heroId}");
-        //var bot = replay.Players.Where(x => x.Name != "Nasral V Szhopu").Select(x => x.Data.Heroes[0])
-            //.First();
-        //Console.WriteLine($"Bot: {bot.HeroId}");
-
-        string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-        Console.WriteLine(json);
-        //Console.WriteLine(replay
-            //.Players.First(x => x.Name == "Nasral V Szhopu")
-            //.Data.Team);
-        Console.WriteLine("Hello, World!");
+        await SendToServer();
+        //var path = GetReplayPath(LegendsExploring);
+        //var lastMatchPath = GetNewestFile("C:/Users/vitia/BrawlhallaReplays");
+        //var replayBinary = File.ReadAllBytes(path);
+        //var reader = new BHReplayDeserializer();
+        //var replay = reader.Deserialize(replayBinary);
+        ////var heroId = replay.Players.First(x => x.Name == "Nasral V Szhopu")
+        ////.Data
+        ////.Heroes[0]
+        ////.HeroId;
+        ////Console.WriteLine(lastMatchPath);
+        ////Console.WriteLine($"Nasral V Szhopu: {heroId}");
+        ////var bot = replay.Players.Where(x => x.Name != "Nasral V Szhopu").Select(x => x.Data.Heroes[0])
+        ////.First();
+        ////Console.WriteLine($"Bot: {bot.HeroId}");
+        //string json = JsonSerializer.Serialize(replay, new JsonSerializerOptions
+        //{
+        //    WriteIndented = true
+        //});
+        //Console.WriteLine(json);
+        ////Console.WriteLine(replay
+        //    //.Players.First(x => x.Name == "Nasral V Szhopu")
+        //    //.Data.Team);
+        //Console.WriteLine("Hello, World!");
     }
 
     private static string GetReplayPath(string replayName)
@@ -84,5 +85,37 @@ internal class Program
         }
 
         return newestFile;
+    }
+
+    public static async Task SendToServer()
+    {
+        string filePath = GetNewestFile("C:/Users/vitia/BrawlhallaReplays");
+        string apiUrl = "http://localhost:5190/api/replay/upload";
+
+        using var httpClient = new HttpClient();
+        await using var fileStream = File.OpenRead(filePath);
+        var fileContent = new StreamContent(fileStream);
+        using var formData = new MultipartFormDataContent
+        {
+            { fileContent, "file", Path.GetFileName(filePath) }
+        };
+
+
+        Console.WriteLine("Отправляю запрос");
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var requestTask = httpClient.PostAsync(apiUrl, formData);
+
+        var response = await requestTask;
+        stopwatch.Stop();
+        Console.WriteLine(response.IsSuccessStatusCode
+            ? "Файл успешно загружен на сервер"
+            : "Ошибка при загрузке файла на сервер");
+
+        Console.WriteLine("Время выполнения запроса: " + stopwatch.Elapsed);
+
+        Console.ReadLine();
     }
 }
