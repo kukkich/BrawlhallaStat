@@ -17,7 +17,11 @@ public class Program
         services.AddDbContext<BrawlhallaStatContext>(options =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(
+                connectionString, 
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            );
+
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             //.UseLoggerFactory(new NullLoggerFactory()) for logging disable
         });
