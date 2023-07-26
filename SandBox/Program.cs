@@ -89,7 +89,7 @@ internal class Program
 
     public static async Task SendToServer()
     {
-        string filePath = GetReplayPath(InvalidReplay[0]);
+        string filePath = GetNewestFile("C:/Users/vitia/BrawlhallaReplays");
         string apiUrl = "http://localhost:5190/api/replay/upload";
 
         using var httpClient = new HttpClient();

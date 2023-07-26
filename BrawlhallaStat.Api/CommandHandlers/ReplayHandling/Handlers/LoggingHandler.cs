@@ -26,7 +26,6 @@ public class LoggingHandler : IReplayHandler
     private string CreateMessage(ReplayHandlingContext context)
     {
         var builder = new StringBuilder();
-
         builder.AppendLine(context.UserFromGame.IsWinner ? "WIN" : "LOSE");
         builder.AppendLine(BlockSeparator);
 
@@ -45,7 +44,7 @@ public class LoggingHandler : IReplayHandler
         AddWeapons(builder, context.OpponentWeapons);
 
         builder.AppendLine();
-        builder.AppendLine(BlockSeparator);
+        builder.Append(BlockSeparator);
 
         return builder.ToString();
     }
