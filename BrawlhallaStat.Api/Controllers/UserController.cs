@@ -35,7 +35,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpPost("register")]
+    [HttpPost]
     public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserCommand command)
     {
         var tokens = await _mediator.Send(command);
@@ -45,7 +45,7 @@ public class UserController : ControllerBase
         return Ok(tokens);
     }
 
-    [HttpPost("login")]
+    [HttpPost]
     public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserCommand command)
     {
         var tokens = await _mediator.Send(command);
@@ -55,7 +55,7 @@ public class UserController : ControllerBase
         return Ok(tokens);
     }
 
-    [HttpPost("refresh")]
+    [HttpPost]
     public async Task<ActionResult<TokenPair>> Refresh([FromBody] RefreshTokenCommand command)
     {
         var tokens = await _mediator.Send(command);
@@ -64,7 +64,7 @@ public class UserController : ControllerBase
         return Ok(tokens);
     }
 
-    [HttpPost("logout")]
+    [HttpPost]
     public async Task<ActionResult> Logout([FromBody] LogoutUserCommand command)
     {
         await _mediator.Send(command);
