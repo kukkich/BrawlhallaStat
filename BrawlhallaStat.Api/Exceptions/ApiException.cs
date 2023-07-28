@@ -1,6 +1,12 @@
 ﻿namespace BrawlhallaStat.Api.Exceptions;
 
-public class ApiException : Exception
-{
 
+public abstract class ApiException : Exception
+{
+    protected ApiException() { }
+    protected ApiException(string message)
+        : base(message)
+    {
+
+    }
 }

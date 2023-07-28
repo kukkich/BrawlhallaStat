@@ -5,9 +5,9 @@ namespace BrawlhallaReplayReader.Deserializers.ReadingStrategies;
 
 internal class ReadingStrategyAfterV7 : ReadingStrategyBase
 {
-    public ReadingStrategyAfterV7(BitStream stream) 
+    public ReadingStrategyAfterV7(BitStream stream)
         : base(stream)
-        { }
+    { }
 
     protected override void FillResults(ReplayInfo replayInfo)
     {

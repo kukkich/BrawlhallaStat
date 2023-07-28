@@ -50,7 +50,7 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
 
     protected virtual void ReadPlayerData(ReplayInfo destination)
     {
-        destination.GameSettings = ReadGameSettings(); 
+        destination.GameSettings = ReadGameSettings();
         destination.LevelId = Stream.ReadInt();
         destination.HeroCount = Stream.ReadShort();
         destination.Players.Clear();
@@ -182,12 +182,12 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
         checksum += playerData.LoseTaunt * 41;
 
         checksum += (
-            from taunt in playerData.OwnedTaunts 
-            select taunt - ((taunt >> 1) & 1431655765) 
-            into taunt 
-                select (taunt & 858993459) + ((taunt >> 2) & 858993459) 
-                into taunt 
-                    select (((taunt + (taunt >> 4)) & 252645135) * 16843009) >> 24
+            from taunt in playerData.OwnedTaunts
+            select taunt - ((taunt >> 1) & 1431655765)
+            into taunt
+            select (taunt & 858993459) + ((taunt >> 2) & 858993459)
+                into taunt
+            select (((taunt + (taunt >> 4)) & 252645135) * 16843009) >> 24
             )
             .Select((taunt, i) => taunt * (11 + i)).Sum();
 
@@ -228,9 +228,9 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
         }
 
         if (!Stream.ReadBoolean()) return;
-        
+
         destination.Results.Clear();
-        
+
         while (Stream.ReadBoolean())
         {
             var entityId = Stream.ReadBits(5);

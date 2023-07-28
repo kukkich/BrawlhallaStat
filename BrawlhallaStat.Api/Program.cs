@@ -1,6 +1,7 @@
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Factories;
+using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
@@ -45,12 +46,14 @@ public class Program
 
     public static void ConfigureApplication(WebApplication app)
     {
+        app.UseMiddleware<ApiExceptionMiddleware>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseDeveloperExceptionPage();
         }
+
 
         app.UseHttpsRedirection();
 

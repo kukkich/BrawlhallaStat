@@ -8,7 +8,7 @@ public static class StringBuilderExtensions
     {
         if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "count must be non negative");
 
-        
+
         var startIndex = sb.Length - count;
         if (startIndex >= 0)
         {

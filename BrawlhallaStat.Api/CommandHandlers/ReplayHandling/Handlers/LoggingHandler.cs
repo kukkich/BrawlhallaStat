@@ -1,7 +1,6 @@
-﻿using System.Text;
-using BrawlhallaStat.Api.Commands.BrawlhallaEntities;
-using BrawlhallaStat.Api.Extensions;
+﻿using BrawlhallaStat.Api.Extensions;
 using BrawlhallaStat.Domain;
+using System.Text;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
 
@@ -35,7 +34,7 @@ public class LoggingHandler : IReplayHandler
 
         builder.AppendLine();
         builder.AppendLine(BlockSeparator);
-        
+
         builder.AppendLine("--- Enemy ---");
         foreach (var legend in context.OpponentLegends)
         {

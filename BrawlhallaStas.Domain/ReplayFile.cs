@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using BrawlhallaStat.Domain.Base;
+﻿using BrawlhallaStat.Domain.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace BrawlhallaStat.Domain;
 
 public class ReplayFile : IHaveId<string>
 {
-    [Key] 
+    [Key]
     public string Id { get; set; } = null!;
 
     public string AuthorId { get; set; } = null!;

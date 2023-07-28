@@ -4,18 +4,16 @@ using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Commands;
 using BrawlhallaStat.Api.Exceptions.ReplayHandling;
 using BrawlhallaStat.Domain;
-using BrawlhallaStat.Domain.Base;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Game;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Player = BrawlhallaStat.Domain.Game.Player;
 
 namespace BrawlhallaStat.Api.CommandHandlers;
 
 public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
 {
-    
+
     private static readonly string[] AllowedPlaylistNames = { "2v2Ranked", "2v2Unranked", "1v1Ranked", "1v1Unranked" };
     private static readonly int[] AllowedResultKeys1V1 = { 1, 2 };
     private static readonly int[] AllowedResultKeys2V2 = { 1, 2, 3, 4 };
@@ -74,10 +72,10 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
 
             return fileModel.Id;
         }
-        catch (Exception e)
+        // TODO добавить отдельную ветку ошибок обработки реплея и отлавливать их отдельно
+        catch
         {
-            _logger.LogInformation("Error processing the replay");
-            Console.WriteLine(e);
+            _logger.LogWarning("Error processing the replay");
             throw;
         }
     }
@@ -100,11 +98,11 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         var name = replay.PlaylistName;
         if (!AllowedPlaylistNames.Any(name.Contains))
         {
-            throw new NotSupportedException("Not supported game type");
+            throw new NotSupportedGameException("Not supported game type");
         }
         if (!replay.Players.All(player => player.Data.Team is 1 or 2))
         {
-            throw new NotSupportedException("More than 2 team games not supported yet");
+            throw new NotSupportedGameException("More than 2 team games not supported yet");
         }
 
         int playersExpectedNumber;
@@ -117,16 +115,22 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
             playersExpectedNumber = 2;
         }
 
-        if (replay.Players.Count != playersExpectedNumber || replay.Results.Count != playersExpectedNumber)
+        if (replay.Players.Count != playersExpectedNumber)
         {
-            throw new Exception($"Game has unexpected players number. {playersExpectedNumber} expected but was {replay.Players.Count}");
+            throw new NotSupportedGameException(
+                $"Game has unexpected players number. {playersExpectedNumber} expected but was {replay.Players.Count}"
+                );
+        }
+        if (replay.Results.Count != playersExpectedNumber)
+        {
+            throw new UnfinishedGameException();
         }
         if (playersExpectedNumber == 2)
         {
             if (!replay.Results.Keys.SequenceEqual(AllowedResultKeys1V1) ||
                 !replay.Results.Values.OrderBy(x => x).SequenceEqual(AllowedResultValues1V1))
             {
-                throw new Exception($"Invalid results format");
+                throw new NotSupportedGameException($"Invalid results format");
             }
         }
         else
@@ -134,13 +138,13 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
             if (!replay.Results.Keys.SequenceEqual(AllowedResultKeys2V2) ||
                 !replay.Results.Values.OrderBy(x => x).SequenceEqual(AllowedResultValues2V2))
             {
-                throw new Exception($"Invalid results format");
+                throw new NotSupportedGameException($"Invalid results format");
             }
 
             if (!(replay.Results[1] == replay.Results[2] &&
                   replay.Results[3] == replay.Results[4]))
             {
-                throw new Exception($"Invalid results format");
+                throw new NotSupportedGameException($"Invalid results format");
             }
         }
     }

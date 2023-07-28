@@ -6,5 +6,5 @@ namespace BrawlhallaReplayReader.Deserializers;
 public interface IBHReplayDeserializer
 {
     public ReplayInfo Deserialize(byte[] bytes);
-    public Task<ReplayInfo> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken=null);
+    public Task<ReplayInfo> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken = null);
 }

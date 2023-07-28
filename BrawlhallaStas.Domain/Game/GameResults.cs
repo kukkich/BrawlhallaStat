@@ -5,5 +5,5 @@ namespace BrawlhallaStat.Domain.Game;
 [Owned]
 public class GameResults
 {
-    
+
 }

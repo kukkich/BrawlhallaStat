@@ -1,18 +1,16 @@
 ﻿// ReSharper disable StringLiteralTypo
 
 using System.Diagnostics;
-using System.Text.Json;
-using BrawlhallaReplayReader.Deserializers;
 
 namespace SandBox;
 
 internal class Program
 {
-    private static string LegendsExploring = "[7.09] CrystalTemple (6).replay";
-    private static string ValidReplay = "[6.11] SmallGalvanPrime (24).replay";
-    private static string ValidReplay2 = "[6.10] SmallGalvanPrime (31).replay";
+    private static readonly string LegendsExploring = "[7.09] CrystalTemple (6).replay";
+    private static readonly string ValidReplay = "[6.11] SmallGalvanPrime (24).replay";
+    private static readonly string ValidReplay2 = "[6.10] SmallGalvanPrime (31).replay";
 
-    private static string[] InvalidReplay = {
+    private static readonly string[] InvalidReplay = {
         "[7.09] SmallEnigma (2).replay",
         "[7.09] FlorenceTerrace.replay",
         "[7.09] Apocalypse (2).replay",
@@ -23,17 +21,17 @@ internal class Program
         "[7.09] MammothFortress (4).replay",
         "[7.09] SpiritRealm (2).replay",
     };
-    private static string[] CustomReplays = {
+    private static readonly string[] CustomReplays = {
         "[7.09] SmallBrawlhaven (1).replay",
         "[7.09] SmallKingsPass.replay",
         "[7.09] SmallBrawlhaven (2).replay",
         "[7.09] SmallEnigma (3).replay",
         "[7.09] SmallBrawlhaven (3).replay"
     };
-    private static string InvalidMeOnWuShang = "[7.09] ShorwindFishing.replay";
-    private static int ValidOffsets = 32;
+    private static readonly string InvalidMeOnWuShang = "[7.09] ShorwindFishing.replay";
+    private static readonly int ValidOffsets = 32;
 
-    static async Task Main()
+    private static async Task Main()
     {
         await SendToServer();
         //var path = GetReplayPath(LegendsExploring);
