@@ -31,19 +31,17 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, T
     public async Task<TokenPair> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var (login, password, email) = request;
+
         var createUserCommand = new RegisterUser
         {
             Email = email,
             Login = login,
             Password = password,
         };
-
         var user = await _mediator.Send(createUserCommand, cancellationToken);
 
-        var userClaims = _mapper.Map<List<Claim>>(user);
-        var tokenPair = _tokenService.GenerateTokenPair(userClaims);
-
-        await _tokenService.SaveToken(user.Id, tokenPair.Refresh);
+        var tokenPair = _tokenService.GenerateTokenPair(user);
+        //await _tokenService.SaveToken(user.Id, tokenPair.Refresh);
 
         _logger.LogInformation("Register user {role.Login} [{role.Id}]", user.Login, user.Id);
         

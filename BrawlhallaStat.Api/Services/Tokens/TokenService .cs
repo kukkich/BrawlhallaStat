@@ -14,21 +14,27 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
     private readonly BrawlhallaStatContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public TokenService(IConfiguration configuration, BrawlhallaStatContext dbContext)
+    public TokenService(IConfiguration configuration, BrawlhallaStatContext dbContext, IMapper mapper)
     {
         _configuration = configuration;
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
-    public TokenPair GenerateTokenPair(IEnumerable<Claim> userClaims)
+    public async Task<TokenPair> GenerateTokenPair(IUserIdentity user)
     {
-        var claimsArray = userClaims as Claim[] ?? userClaims.ToArray();
-        return new TokenPair
+        var userClaims = _mapper.Map<List<Claim>>(user);
+        var tokenPair = new TokenPair
         {
-            Access = CreateAccessToken(claimsArray),
-            Refresh = CreateRefreshToken(claimsArray)
+            Access = CreateAccessToken(userClaims),
+            Refresh = CreateRefreshToken(userClaims)
         };
+
+        await SaveToken(user.Id, tokenPair.Refresh);
+
+        return tokenPair;
     }
 
     private string CreateAccessToken(IEnumerable<Claim> claims)
@@ -46,7 +52,7 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
-    private static string CreateRefreshToken(IEnumerable<Claim> claims)
+    private string CreateRefreshToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
             issuer: TokenConfig.Issuer,
@@ -85,7 +91,7 @@ public class TokenService : ITokenService
         throw new NotImplementedException();
     }
 
-    public async Task<Token> SaveToken(string userId, string refreshToken)
+    private async Task<Token> SaveToken(string userId, string refreshToken)
     {
         var token = new Token
         {

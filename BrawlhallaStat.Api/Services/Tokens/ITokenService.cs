@@ -7,8 +7,8 @@ namespace BrawlhallaStat.Api.Services.Tokens;
 
 public interface ITokenService
 {
-    TokenPair GenerateTokenPair(IEnumerable<Claim> userClaims);
+    Task<TokenPair> GenerateTokenPair(IUserIdentity user);
     TokenPair RefreshAccessToken(string refreshToken);
     void RevokeRefreshToken(string refreshToken);
-    Task<Token> SaveToken(string userId, string refreshToken);
+    //Task<Token> SaveToken(string userId, string refreshToken);
 }

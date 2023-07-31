@@ -19,6 +19,7 @@ public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
 
     public async Task<IUserIdentity> Handle(RegisterUser request, CancellationToken cancellationToken)
     {
+        //TODO ensure there's no user with same email/login
         var userId = Guid.NewGuid().ToString();
         
         var user = new User
