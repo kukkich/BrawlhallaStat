@@ -9,6 +9,7 @@ using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Identity.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+#pragma warning disable IDE0270
 
 namespace BrawlhallaStat.Api.Services.Tokens;
 
@@ -45,7 +46,6 @@ public class TokenService : ITokenService
 
         return tokenPair;
     }
-
     private string CreateAccessToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
@@ -76,14 +76,70 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
+    private async Task SaveToken(string userId, string refreshToken)
+    {
+        var token = new Token
+        {
+            Id = Guid.NewGuid().ToString(),
+            RefreshToken = refreshToken,
+            UserId = userId
+        };
+        _dbContext.Tokens.Add(token);
+        await _dbContext.SaveChangesAsync();
+    }
 
     public async Task<TokenPair> RefreshAccessToken(string refreshToken)
     {
-        // Реализация логики обновления access токена по refresh токену
-        // ...
+        var isTokenValid = IsRefreshTokenValid(refreshToken, out _);
+        if (!isTokenValid)
+        {
+            throw new InvalidRefreshTokenException();
+        }
 
-        // Вернуть новые access и refresh токены
+        var tokenFromStorage = await _dbContext.Tokens
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
+        if (tokenFromStorage is null)
+        {
+            throw new TokenNotFoundException();
+        }
 
+        var user = tokenFromStorage.User;
+
+        var tokenPair = await GenerateTokenPair(user);
+
+        return tokenPair;
+    }
+    private bool IsRefreshTokenValid(string token, out ClaimsPrincipal? userClaimsPrincipal)
+    {
+        try
+        {
+            userClaimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(
+                token,
+                new TokenValidationParameters
+                {
+                    ValidIssuer = TokenConfig.Issuer,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = TokenConfig.Audience,
+                    ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = TokenConfig.GetSymmetricSecurityRefreshKey(),
+                },
+                out _
+            );
+
+            return true;
+        }
+        catch (SecurityTokenException)
+        {
+            userClaimsPrincipal = null;
+            return false;
+        }
+
+        _logger.LogError("Unexpected behaviour in token validation");
+        throw new Exception("Unexpected behaviour in token validation");
     }
 
     public async Task RevokeRefreshToken(string refreshToken)
@@ -97,18 +153,6 @@ public class TokenService : ITokenService
         }
 
         _dbContext.Tokens.Remove(token);
-        await _dbContext.SaveChangesAsync();
-    }
-
-    private async Task SaveToken(string userId, string refreshToken)
-    {
-        var token = new Token
-        {
-            Id = Guid.NewGuid().ToString(),
-            RefreshToken = refreshToken,
-            UserId = userId
-        };
-        _dbContext.Tokens.Add(token);
         await _dbContext.SaveChangesAsync();
     }
 }
