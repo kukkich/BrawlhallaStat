@@ -8,4 +8,11 @@ public class RegisterUserCommand : IRequest<TokenPair>
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string Email { get; set; } = null!;
+
+    public void Deconstruct(out string login, out string password, out string email)
+    {
+        login = Login;
+        password = Password; 
+        email = Email;
+    }
 }

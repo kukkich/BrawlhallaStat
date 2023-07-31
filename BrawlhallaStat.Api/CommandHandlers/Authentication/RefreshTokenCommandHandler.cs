@@ -1,5 +1,5 @@
 ﻿using BrawlhallaStat.Api.Commands.Authentication;
-using BrawlhallaStat.Api.Services.Token;
+using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 

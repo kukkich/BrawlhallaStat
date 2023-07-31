@@ -7,10 +7,9 @@ namespace BrawlhallaStat.Domain;
 public class User : IUserIdentity
 {
     public string Id { get; set; } = null!;
-    public string TelegramId { get; set; } = null!;
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public string NickName => Login;
+    public string NickName { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
 
     public string TotalStatisticId { get; set; } = null!;

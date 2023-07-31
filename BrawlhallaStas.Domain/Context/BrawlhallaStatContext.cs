@@ -1,4 +1,5 @@
-﻿using BrawlhallaStat.Domain.Statistics;
+﻿using BrawlhallaStat.Domain.Identity;
+using BrawlhallaStat.Domain.Statistics;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Domain.Context;
@@ -16,6 +17,10 @@ public class BrawlhallaStatContext : DbContext
     public DbSet<LegendAgainstWeaponStatistic> LegendAgainstWeaponStatistics { get; set; }
     public DbSet<LegendAgainstLegendStatistic> LegendAgainstLegendStatistics { get; set; }
     public DbSet<ReplayFile> Replays { get; set; }
+    
+    public DbSet<Token> Tokens { get; set; }
+    public DbSet<IdentityClaim> Claims { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
