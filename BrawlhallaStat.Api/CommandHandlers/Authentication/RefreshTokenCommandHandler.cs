@@ -16,13 +16,8 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, T
 
     public async Task<TokenPair> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        // Реализация логики обновления access токена по refresh токену
-        // ...
+        var tokenPair = await _tokenService.RefreshAccessToken(request.RefreshToken);
 
-        // Вернуть новые access и refresh токены
-
-        throw new NotImplementedException();
-
-        return _tokenService.RefreshAccessToken(request.RefreshToken);
+        return tokenPair;
     }
 }

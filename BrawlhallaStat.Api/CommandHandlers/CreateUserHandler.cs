@@ -17,6 +17,7 @@ public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
         _statisticFactory = statisticFactory;
     }
 
+    //TODO move in userFactory
     public async Task<IUserIdentity> Handle(RegisterUser request, CancellationToken cancellationToken)
     {
         //TODO ensure there's no user with same email/login

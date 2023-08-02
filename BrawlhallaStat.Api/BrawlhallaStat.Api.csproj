@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BrawlhallaReplayReader\BrawlhallaReplayReader.csproj" />
     <ProjectReference Include="..\BrawlhallaStas.Domain\BrawlhallaStat.Domain.csproj" />
   </ItemGroup>
