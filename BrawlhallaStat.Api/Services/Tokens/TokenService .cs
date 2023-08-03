@@ -44,13 +44,14 @@ public class TokenService : ITokenService
 
         return tokenPair;
     }
+
     private string CreateAccessToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
             issuer: TokenConfig.Issuer,
             audience: TokenConfig.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.Add(TokenConfig.LifeTime),
+            expires: DateTime.UtcNow.Add(TokenConfig.AccessLifeTime),
             signingCredentials: new SigningCredentials(
                 TokenConfig.GetSymmetricSecurityAccessKey(),
                 SecurityAlgorithms.HmacSha256
@@ -59,6 +60,7 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
+
     private string CreateRefreshToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
@@ -74,6 +76,7 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
+
     private async Task SaveToken(string userId, string refreshToken)
     {
         var token = new Token
@@ -108,6 +111,7 @@ public class TokenService : ITokenService
 
         return tokenPair;
     }
+
     private bool IsRefreshTokenValid(string token, out ClaimsPrincipal? userClaimsPrincipal)
     {
         try

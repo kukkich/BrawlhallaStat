@@ -12,4 +12,11 @@ public class SecretController : ControllerBase
     {
         return Ok("Авторизован");
     }
+
+    [HttpGet]
+    [Authorize("KukkichOnly")]
+    public ActionResult KukkichSecret()
+    {
+        return Ok("Вы Kukkich!");
+    }
 }

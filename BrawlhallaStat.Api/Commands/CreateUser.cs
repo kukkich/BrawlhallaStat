@@ -1,9 +1,9 @@
-﻿using BrawlhallaStat.Domain.Identity.Base;
+﻿using BrawlhallaStat.Domain;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Commands;
 
-public class RegisterUser : IRequest<IUserIdentity>
+public class CreateUser : IRequest<User>
 {
     public string Login { get; set; } = null!;
     public string Password {get; set;} = null!;

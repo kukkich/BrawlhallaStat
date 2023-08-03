@@ -1,6 +1,4 @@
 ﻿using BrawlhallaStat.Api.Commands;
-using BrawlhallaStat.Api.Commands.Authentication;
-using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +17,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> RegisterMoq([FromBody] RegisterUser request)
+    public async Task<IActionResult> RegisterMoq([FromBody] CreateUser request)
     {
         try
         {

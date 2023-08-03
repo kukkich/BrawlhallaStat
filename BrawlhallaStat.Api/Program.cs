@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Factories;
@@ -27,6 +28,7 @@ public class Program
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -42,6 +44,14 @@ public class Program
                     IssuerSigningKey = TokenConfig.GetSymmetricSecurityAccessKey(),
                 };
             });
+
+        services.AddAuthorization(option =>
+        {
+            option.AddPolicy("KukkichOnly", policy =>
+            {
+                policy.RequireClaim(ClaimTypes.Name, "kukkich");
+            });
+        });
 
         services.AddCors(options =>
         {

@@ -20,7 +20,11 @@ public class AddLegendHandler : IRequestHandler<AddLegend, int>
         var sameNameExist = _context.Legends.Any(x => x.Name == request.Name);
         if (sameNameExist)
         {
-            throw new AlreadyExistException($"LegendDetails {request.Name} already exists");
+            throw new AlreadyExistException(
+                who: nameof(Legend),
+                propertyName: nameof(Legend.Name),
+                value: request.Name
+            );
         }
 
         var legend = new Legend

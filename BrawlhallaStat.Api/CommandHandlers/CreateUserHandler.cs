@@ -2,25 +2,21 @@
 using BrawlhallaStat.Api.Factories;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Base;
 using MediatR;
 namespace BrawlhallaStat.Api.CommandHandlers;
 
-public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
+public class CreateUserHandler : IRequestHandler<CreateUser, User>
 {
-    private readonly BrawlhallaStatContext _dbContext;
     private readonly IStatisticFactory _statisticFactory;
 
-    public CreateUserHandler(BrawlhallaStatContext dbContext, IStatisticFactory statisticFactory)
+    public CreateUserHandler(IStatisticFactory statisticFactory)
     {
-        _dbContext = dbContext;
         _statisticFactory = statisticFactory;
     }
 
     //TODO move in userFactory
-    public async Task<IUserIdentity> Handle(RegisterUser request, CancellationToken cancellationToken)
+    public async Task<User> Handle(CreateUser request, CancellationToken cancellationToken)
     {
-        //TODO ensure there's no user with same email/login
         var userId = Guid.NewGuid().ToString();
         
         var user = new User
@@ -42,9 +38,6 @@ public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
             Roles = new(),
             Claims = new()
         };
-
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return user;
     }
