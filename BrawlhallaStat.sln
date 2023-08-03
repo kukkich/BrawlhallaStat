@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrawlhallaReplayReader.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandBox", "SandBox\SandBox.csproj", "{DDFF7CBC-B0FC-4837-B50B-76866A6F8405}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayWatcher", "ReplayWatcher\ReplayWatcher.csproj", "{4052C79E-41F4-443E-888A-999B5B05E343}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplayWatcher", "ReplayWatcher\ReplayWatcher.csproj", "{4052C79E-41F4-443E-888A-999B5B05E343}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D3340F62-7987-4972-A577-CEBB7C1F0009}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

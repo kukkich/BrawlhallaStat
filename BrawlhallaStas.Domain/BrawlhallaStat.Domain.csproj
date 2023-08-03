@@ -9,7 +9,7 @@
   <ItemGroup>
     <Folder Include="Context\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Views\" />
+    <Folder Include="Dto\" />
   </ItemGroup>
   <ItemGroup>
   	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />

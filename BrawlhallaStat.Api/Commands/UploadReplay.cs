@@ -1,4 +1,5 @@
 ﻿using BrawlhallaStat.Domain.Base;
+using BrawlhallaStat.Domain.Identity.Base;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Commands;

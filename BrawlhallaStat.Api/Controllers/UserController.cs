@@ -8,14 +8,16 @@ namespace BrawlhallaStat.Api.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(IMediator mediator)
+    public UserController(IMediator mediator, ILogger<UserController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register([FromBody] RegisterUser request)
+    public async Task<IActionResult> RegisterMoq([FromBody] CreateUser request)
     {
         try
         {
@@ -24,9 +26,8 @@ public class UserController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError(e, String.Empty);
             throw;
         }
-
     }
 }

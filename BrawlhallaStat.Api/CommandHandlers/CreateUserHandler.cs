@@ -5,25 +5,28 @@ using BrawlhallaStat.Domain.Context;
 using MediatR;
 namespace BrawlhallaStat.Api.CommandHandlers;
 
-public class RegisterUserHandler : IRequestHandler<RegisterUser, string>
+public class CreateUserHandler : IRequestHandler<CreateUser, User>
 {
-    private readonly BrawlhallaStatContext _dbContext;
     private readonly IStatisticFactory _statisticFactory;
 
-    public RegisterUserHandler(BrawlhallaStatContext dbContext, IStatisticFactory statisticFactory)
+    public CreateUserHandler(IStatisticFactory statisticFactory)
     {
-        _dbContext = dbContext;
         _statisticFactory = statisticFactory;
     }
 
-    public async Task<string> Handle(RegisterUser request, CancellationToken cancellationToken)
+    //TODO move in userFactory
+    public async Task<User> Handle(CreateUser request, CancellationToken cancellationToken)
     {
         var userId = Guid.NewGuid().ToString();
+        
         var user = new User
         {
             Id = userId,
             Login = request.Login,
-            TelegramId = request.TelegramId,
+            NickName = request.Login,
+            Email = request.Email,
+            PasswordHash = request.Password,
+
             TotalStatistic = _statisticFactory.CreateSimple(),
             WeaponStatistics = await _statisticFactory.CreateWeapon(userId),
             LegendStatistics = await _statisticFactory.CreateLegend(userId),
@@ -31,11 +34,11 @@ public class RegisterUserHandler : IRequestHandler<RegisterUser, string>
             LegendAgainstWeaponStatistics = await _statisticFactory.CreateLegendAgainstWeapon(userId),
             WeaponAgainstWeaponStatistics = await _statisticFactory.CreateWeaponAgainstWeapon(userId),
             WeaponAgainstLegendStatistics = await _statisticFactory.CreateWeaponAgainstLegend(userId),
+
+            Roles = new(),
+            Claims = new()
         };
 
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return userId;
+        return user;
     }
 }

@@ -20,7 +20,11 @@ public class AddWeaponHandler : IRequestHandler<AddWeapon, int>
         var sameNameExist = _context.Weapons.Any(x => x.Name == request.Name);
         if (sameNameExist)
         {
-            throw new AlreadyExistException($"Weapon {request.Name} already exists");
+            throw new AlreadyExistException(
+                who: nameof(Weapon),
+                propertyName: nameof(Weapon.Name),
+                value: request.Name
+            );
         }
 
         var weapon = new Weapon

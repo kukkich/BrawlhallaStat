@@ -8,4 +8,9 @@ public class AlreadyExistException : ApiException
     {
         Message = message;
     }
+
+    public AlreadyExistException(string who, string propertyName, string value)
+    {
+        Message = $"{who.ToLower()} with {propertyName.ToLower()} {value.ToLower()} already exists";
+    }
 }

@@ -1,0 +1,4 @@
+﻿[*.{cs,vb}]
+
+# IDE0270: Используйте выражение объединения
+dotnet_diagnostic.IDE0270.severity = silent
