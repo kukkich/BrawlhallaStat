@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using BrawlhallaStat.Api.Exceptions.Tokens;
 using BrawlhallaStat.Domain.Context;
@@ -9,7 +8,6 @@ using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Identity.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-#pragma warning disable IDE0270
 
 namespace BrawlhallaStat.Api.Services.Tokens;
 
@@ -155,19 +153,4 @@ public class TokenService : ITokenService
         _dbContext.Tokens.Remove(token);
         await _dbContext.SaveChangesAsync();
     }
-}
-
-//TODO replace to configuration
-internal static class TokenConfig
-{
-    public const string Issuer = "BHStat.Api";
-    public const string Audience = "BHStat.Client";
-    public static TimeSpan LifeTime => TimeSpan.FromMinutes(15);
-    public static TimeSpan RefreshLifeTime => TimeSpan.FromDays(30);
-
-    private const string AccessKey = "24e6b622-579e-44dd-a5de-3836da322ad5";
-    private const string RefreshKey = "24e6b622-579e-44dd-a5de-5436da322ad5";
-
-    public static SymmetricSecurityKey GetSymmetricSecurityAccessKey() => new(Encoding.UTF8.GetBytes(AccessKey));
-    public static SymmetricSecurityKey GetSymmetricSecurityRefreshKey() => new(Encoding.UTF8.GetBytes(RefreshKey));
 }
