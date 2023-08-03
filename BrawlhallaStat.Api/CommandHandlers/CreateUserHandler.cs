@@ -28,7 +28,9 @@ public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
             Id = userId,
             Login = request.Login,
             NickName = request.Login,
+            Email = request.Email,
             PasswordHash = request.Password,
+
             TotalStatistic = _statisticFactory.CreateSimple(),
             WeaponStatistics = await _statisticFactory.CreateWeapon(userId),
             LegendStatistics = await _statisticFactory.CreateLegend(userId),
@@ -36,6 +38,9 @@ public class CreateUserHandler : IRequestHandler<RegisterUser, IUserIdentity>
             LegendAgainstWeaponStatistics = await _statisticFactory.CreateLegendAgainstWeapon(userId),
             WeaponAgainstWeaponStatistics = await _statisticFactory.CreateWeaponAgainstWeapon(userId),
             WeaponAgainstLegendStatistics = await _statisticFactory.CreateWeaponAgainstLegend(userId),
+
+            Roles = new(),
+            Claims = new()
         };
 
         _dbContext.Users.Add(user);

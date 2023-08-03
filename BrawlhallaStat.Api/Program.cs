@@ -3,6 +3,7 @@ using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Factories;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Services.Cache;
+using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -42,6 +43,8 @@ public class Program
         services.AddFactories();
         services.AddMemoryCache();
         services.AddCaching();
+
+        services.AddTokenService();
     }
 
     public static void ConfigureApplication(WebApplication app)

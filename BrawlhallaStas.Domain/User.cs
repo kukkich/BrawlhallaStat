@@ -22,8 +22,8 @@ public class User : IUserIdentity
     public List<WeaponAgainstWeaponStatistic> WeaponAgainstWeaponStatistics { get; set; } = null!;
     public List<WeaponAgainstLegendStatistic> WeaponAgainstLegendStatistics { get; set; } = null!;
 
-    public List<Role> Roles { get; set; } = null!;
-    public List<IdentityClaim> Claims { get; set; } = null!;
+    public List<Role> Roles { get; set; } = new();
+    public List<IdentityClaim> Claims { get; set; } = new();
 
     IEnumerable<IRole> IUserIdentity.Roles => Roles;
     IEnumerable<IClaim> IUserIdentity.Claims => Claims;

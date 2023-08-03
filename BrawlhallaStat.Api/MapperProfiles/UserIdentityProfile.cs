@@ -16,9 +16,9 @@ public class UserIdentityProfile : Profile
     {
         var claimList = new List<Claim>
         {
-            new (ClaimTypes.Name, userIdentity.Id),
-            new (ClaimTypes.Email, userIdentity.Login),
-            new (ClaimTypes.NameIdentifier, userIdentity.Email)
+            new (ClaimTypes.NameIdentifier, userIdentity.Id),
+            new (ClaimTypes.Name, userIdentity.Login),
+            new (ClaimTypes.Email, userIdentity.Email)
         };
         claimList.AddRange(userIdentity.Roles.Select(role => 
             new Claim(ClaimTypes.Role, role.Name))
