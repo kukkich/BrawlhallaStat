@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Container, Paper, Tab, Tabs } from '@mui/material';
 import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
-import {lightTheme} from "../../theme";
-import {ThemeProvider} from "@mui/material/styles";
 
 const AuthTabs: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState(0);
