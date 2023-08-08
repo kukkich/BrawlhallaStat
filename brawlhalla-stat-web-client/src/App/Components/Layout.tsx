@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, List, ListItem, ListItemIcon, ListItemText} from '@mui/material';
+import {Grid, List, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import TopBar from "./TopBar";
 
 interface LayoutProps {
@@ -9,19 +9,15 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <Grid container>
-            {/* AppBar (Top Panel) */}
             <TopBar/>
 
             {/* Sidebar */}
             <Grid item xs={2}>
                 <List>
-                    {/* Add your sidebar items here */}
-                    <ListItem button>
-                        <ListItemIcon>
-                            {/* Add icon */}
-                        </ListItemIcon>
+                    <ListItemButton>
+                        <ListItemIcon/>
                         <ListItemText primary="Sidebar Item" />
-                    </ListItem>
+                    </ListItemButton>
                 </List>
             </Grid>
 
