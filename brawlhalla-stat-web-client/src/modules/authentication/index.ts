@@ -1,5 +1,5 @@
-import AuthTabs from "./components/AuthTabs";
+import AuthPage from "./components/AuthPage";
 import LoginForm from "./components/LoginForm";
 import RegistrationForm from "./components/RegistrationForm";
 
-export {AuthTabs, RegistrationForm, LoginForm};
+export {AuthPage, RegistrationForm, LoginForm};
