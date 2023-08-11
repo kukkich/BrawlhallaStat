@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="CommandHandlers\BrawlhallaEntities\" />
     <Folder Include="Commands\BrawlhallaEntities\" />
-    <Folder Include="MapperProfiles\" />
   </ItemGroup>
 
   <ItemGroup>

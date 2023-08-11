@@ -28,13 +28,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserCommand command)
+    public async Task<ActionResult<LoginResult>> Login([FromBody] LoginUserCommand command)
     {
-        var tokens = await _mediator.Send(command);
+        var loginResult = await _mediator.Send(command);
 
-        SetTokenInCookie(tokens);
+        SetTokenInCookie(loginResult.TokenPair);
 
-        return Ok(tokens);
+        return Ok(loginResult);
     }
 
     [HttpPost]

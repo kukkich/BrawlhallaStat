@@ -6,8 +6,8 @@ namespace BrawlhallaStat.Domain.Identity;
 public class AuthenticatedUser : IUserIdentity
 {
     public string Id { get; set; } = null!;
-    public string Login { get; } = null!;
-    public string NickName => Login;
+    public string Login { get; set; } = null!;
+    public string NickName { get; set; } = null!;
     public string Email { get; set; } = null!;
 
     public List<RoleDto> Roles { get; set; } = null!;

@@ -1,20 +1,38 @@
-import React from 'react';
-import { TextField, Button, Container } from '@mui/material';
+import React, {useState} from 'react';
+import {Button, Container, TextField} from '@mui/material';
 
 interface LoginFormProps {
-    onSubmit: () => void; // Передайте функцию для обработки отправки формы
+    onSubmit: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
+
+    const [username, setUsername] = useState(''); // Значение из поля Username
+    const [password, setPassword] = useState(''); // Значение из поля Password
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+
+        //...
+
+        onSubmit();
+    };
+
     return (
         <Container>
-            <form onSubmit={onSubmit}>
-                <TextField label="Username" fullWidth margin="normal" />
-                <TextField label="Password" type="password" fullWidth margin="normal" />
-                <Button type="submit" variant="contained" color="primary">
-                    Log In
-                </Button>
-            </form>
+            <TextField label="Username" fullWidth margin="normal"
+                       value={username}
+                       onChange={(e) => setUsername(e.target.value)}
+            />
+            <TextField label="Password" fullWidth margin="normal" type="password"
+                       value={password}
+                       onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button variant="contained" color="primary"
+                    onClick={handleSubmit}
+            >
+                Log In
+            </Button>
         </Container>
     );
 };
