@@ -11,6 +11,10 @@ const darkTheme: Theme = createTheme({
         secondary: {
             main: '#f50057',
         },
+        background: {
+            default: '#1b1b1d',
+            paper: '#1b1b1d',
+        },
     },
 });
 
