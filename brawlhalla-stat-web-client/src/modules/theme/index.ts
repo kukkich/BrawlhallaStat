@@ -1,7 +1,11 @@
 import lightTheme from './lightTheme'
 import darkTheme from './darkTheme'
 import getTheme from './getTheme'
-import themeReducer from './store'
-import {toggleTheme} from './store'
+import {themeActions, themeReducer } from './store'
 
-export {lightTheme, darkTheme, getTheme, themeReducer, toggleTheme}
+
+export {
+    lightTheme, darkTheme,
+    getTheme,
+    themeReducer, themeActions
+}

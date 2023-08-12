@@ -58,8 +58,8 @@ public class Program
             options.AddPolicy(name: "WebClient",
                 builder =>
                     builder.WithOrigins(
-                            "http://localhost:8080",
-                            "https://localhost:8080"
+                            "http://localhost:3000",
+                            "https://localhost:3000"
                         )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
@@ -90,6 +90,7 @@ public class Program
 
     public static void ConfigureApplication(WebApplication app)
     {
+        app.UseMiddleware<DelayMiddleware>();
         app.UseMiddleware<ApiExceptionMiddleware>();
 
         if (app.Environment.IsDevelopment())
