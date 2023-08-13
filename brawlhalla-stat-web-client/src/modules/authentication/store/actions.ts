@@ -1,6 +1,6 @@
 import AuthService from "../services/AuthService";
 import {AppDispatch} from "../../../store";
-import {userActions, userSlice} from "./reducer";
+import {userActions} from "./reducer";
 import {LoginRequest, RegisterRequest} from "../types";
 
 export const loginAction = (request: LoginRequest) => async (dispatch: AppDispatch) => {

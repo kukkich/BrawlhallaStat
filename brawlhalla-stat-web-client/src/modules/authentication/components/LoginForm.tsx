@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Button, CircularProgress, Container, TextField } from '@mui/material';
-import { useRootDispatch, useRootSelector } from '../../../store';
-import { loginAction } from '../store/actions';
-import { LoginStatus } from '../store/State';
+import React, {useEffect, useState} from 'react';
+import {Button, CircularProgress, Container, TextField} from '@mui/material';
+import {useRootDispatch, useRootSelector} from '../../../store';
+import {loginAction} from '../store/actions';
+import {LoginStatus} from '../store/State';
 
 interface LoginFormProps {
     onSubmit: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
     const dispatch = useRootDispatch();
     const userState = useRootSelector(state => state.userReducer);
 
@@ -35,6 +35,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             return () => clearTimeout(timeout);
         }
     }, [buttonColor]);
+    useEffect(() => {
+        if (userState.status === LoginStatus.authorized) {
+            setButtonColor('success');
+        }
+    }, [userState.status]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -58,13 +63,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
             return
         }
 
-        await dispatch(loginAction({ login, password }));
         onSubmit();
-
-        //Todo состояние не обновляется сразу, нужно исправить
-        if (userState.status === LoginStatus.authorized) {
-            setButtonColor('success');
-        }
+        dispatch(loginAction({login, password}));
     };
 
     return (
@@ -99,9 +99,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit }) => {
                 color={buttonColor}
                 onClick={handleSubmit}
                 disabled={userState.status === LoginStatus.loginning}
-                startIcon={userState.status === LoginStatus.loginning ? <CircularProgress size={20} color="inherit" /> : null}
+                startIcon={userState.status === LoginStatus.loginning
+                    ? <CircularProgress size={20} color="inherit"/>
+                    : null}
             >
-                {userState.status === LoginStatus.loginning ? 'Logging In' : 'Log In'}
+                Log In
             </Button>
         </Container>
     );

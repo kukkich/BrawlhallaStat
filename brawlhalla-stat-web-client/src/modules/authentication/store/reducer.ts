@@ -23,6 +23,7 @@ export const userSlice = createSlice({
             localStorage.setItem('token', action.payload.tokenPair.access)
             state.status = LoginStatus.authorized;
             state.user = action.payload.user;
+            console.log(state.status)
         },
         loginFailed(state, actions: PayloadAction<string>){
             state.status = LoginStatus.unauthorized
