@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Button, Container } from '@mui/material';
 
 interface RegistrationFormProps {
-    onSubmit: () => void; // Передайте функцию для обработки отправки формы
+    onSubmit: () => void;
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSubmit }) => {
