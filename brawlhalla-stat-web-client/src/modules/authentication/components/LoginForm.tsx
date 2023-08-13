@@ -69,23 +69,19 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
 
     return (
         <Container>
-            <TextField
-                label="Login"
-                fullWidth
-                margin="normal"
-                value={login}
-                onChange={(e) => {
-                    setLogin(e.target.value);
-                    setLoginError(null);
-                }}
-                error={Boolean(loginError)}
-                helperText={loginError}
+            <TextField label="Login"
+                       fullWidth margin="normal"
+                       value={login}
+                       onChange={(e) => {
+                           setLogin(e.target.value);
+                           setLoginError(null);
+                       }}
+                       error={Boolean(loginError)}
+                       helperText={loginError}
             />
             <TextField
-                label="Password"
-                fullWidth
-                margin="normal"
-                type="password"
+                label="Password" type="password"
+                fullWidth margin="normal"
                 value={password}
                 onChange={(e) => {
                     setPassword(e.target.value);
@@ -99,7 +95,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
                 color={buttonColor}
                 onClick={handleSubmit}
                 disabled={userState.status === LoginStatus.loginning}
-                startIcon={userState.status === LoginStatus.loginning
+                endIcon={userState.status === LoginStatus.loginning
                     ? <CircularProgress size={20} color="inherit"/>
                     : null}
             >
