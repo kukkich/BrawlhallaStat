@@ -3,7 +3,7 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.Commands.Authentication;
 
-public class RegisterUserCommand : IRequest<TokenPair>
+public class RegisterUserCommand : IRequest<LoginResult>
 {
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;

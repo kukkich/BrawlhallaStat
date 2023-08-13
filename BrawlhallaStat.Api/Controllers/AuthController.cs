@@ -18,13 +18,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserCommand command)
+    public async Task<ActionResult<LoginResult>> Register([FromBody] RegisterUserCommand command)
     {
-        var tokens = await _mediator.Send(command);
+        var result = await _mediator.Send(command);
 
-        SetTokenInCookie(tokens);
+        SetTokenInCookie(result.TokenPair);
 
-        return Ok(tokens);
+        return Ok(result);
     }
 
     [HttpPost]

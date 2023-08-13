@@ -1,4 +1,5 @@
-﻿using BrawlhallaStat.Api.Commands;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.Commands;
 using BrawlhallaStat.Api.Commands.Authentication;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.Identity.Dto;
@@ -7,30 +8,34 @@ using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
+using BrawlhallaStat.Domain.Identity;
 
 namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenPair>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, LoginResult>
 {
     private readonly ITokenService _tokenService;
     private readonly IMediator _mediator;
     private readonly ILogger<RefreshTokenCommandHandler> _logger;
+    private readonly IMapper _mapper;
     private readonly BrawlhallaStatContext _dbContext;
 
     public RegisterUserCommandHandler(
         ITokenService tokenService,
         BrawlhallaStatContext dbContext,
         IMediator mediator, 
-        ILogger<RefreshTokenCommandHandler> logger
+        ILogger<RefreshTokenCommandHandler> logger,
+        IMapper mapper
         )
     {
         _tokenService = tokenService;
         _dbContext = dbContext;
         _mediator = mediator;
         _logger = logger;
+        _mapper = mapper;
     }
 
-    public async Task<TokenPair> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<LoginResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var (login, password, email) = request;
 
@@ -65,7 +70,11 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, T
         var tokenPair = await _tokenService.GenerateTokenPair(user);
 
         _logger.LogInformation("Register user {role.Login} [{role.Id}]", user.Login, user.Id);
-        
-        return tokenPair;
+
+        return new LoginResult
+        {
+            TokenPair = tokenPair,
+            User = _mapper.Map<AuthenticatedUser>(user)
+        };
     }
 }
