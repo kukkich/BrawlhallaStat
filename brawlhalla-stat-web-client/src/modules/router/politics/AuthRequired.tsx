@@ -7,13 +7,13 @@ interface PrivateRouteProps {
     children: React.ReactNode;
 }
 
-export const RequireAuth: React.FC<PrivateRouteProps> = ({children}) => {
+export const AuthRequired: React.FC<PrivateRouteProps> = ({children}) => {
     const userState = useRootSelector(state => state.userReducer);
     const isAuth = userState.status !== LoginStatus.unauthorized
     let location = useLocation();
 
     if (!isAuth) {
-        return <Navigate to="/login" state={{from: location}} replace/>;
+        return <Navigate to="/auth" state={{from: location}} replace/>;
     }
 
     return <>{children}</>;
