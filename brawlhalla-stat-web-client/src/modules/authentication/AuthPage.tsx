@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid, Theme, useMediaQuery} from '@mui/material';
-import AuthTabs from "./AuthTabs";
+import AuthTabs from "./components/AuthTabs";
 
 const AuthPage: React.FC = () => {
     const isLargerMd = useMediaQuery((theme : Theme) => theme.breakpoints.up('md'));
