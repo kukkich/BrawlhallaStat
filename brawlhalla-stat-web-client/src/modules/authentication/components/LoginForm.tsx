@@ -3,6 +3,7 @@ import {Button, CircularProgress, Container, TextField} from '@mui/material';
 import {useRootDispatch, useRootSelector} from '../../../store';
 import {loginAction} from '../store/actions';
 import {LoginStatus} from '../store/State';
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
     onSubmit: () => void;
@@ -11,6 +12,8 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
     const dispatch = useRootDispatch();
     const userState = useRootSelector(state => state.userReducer);
+
+    const navigate = useNavigate();
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
@@ -22,6 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
         if (buttonColor === 'success') {
             const timeout = setTimeout(() => {
                 setButtonColor('primary');
+                navigate("/")
             }, 650);
 
             return () => clearTimeout(timeout);
@@ -43,20 +47,17 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (userState.status === LoginStatus.authorized) {return}
         let anyErrors: boolean = false;
 
         if (!/^[a-zA-Z0-9_.-]{4,}$/.test(login)) {
             setLoginError('Login must be at least 4 characters long and can only contain English letters, digits, and _-.');
             anyErrors = true
-        } else {
-            setLoginError(null);
         }
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
-            setPasswordError('Password must be at least 8 characters long and contain both letters and numbers.');
-            anyErrors = true
-        } else {
-            setPasswordError(null);
-        }
+        // if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
+        //     setPasswordError('Password must be at least 8 characters long and contain both letters and numbers.');
+        //     anyErrors = true
+        // }
 
         if (anyErrors) {
             setButtonColor('error');

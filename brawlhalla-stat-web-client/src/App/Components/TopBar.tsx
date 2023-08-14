@@ -3,6 +3,7 @@ import {AppBar, Grid, IconButton, Toolbar, Typography} from "@mui/material";
 import {Menu as MenuIcon} from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import {ThemeSwitch} from "./ThemeSwitch";
+import { Link } from 'react-router-dom';
 
 const TopBar: React.FC = () => {
     return (
@@ -21,8 +22,11 @@ const TopBar: React.FC = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         BHStats
                     </Typography>
+                    <Button component={Link} to="/" color="inherit">sandbox</Button>
+                    <Button component={Link} to="/protected" color="inherit">Protected</Button>
+
                     <ThemeSwitch/>
-                    <Button color="inherit">Login</Button>
+                    <Button component={Link} to="/auth" color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
         </Grid>

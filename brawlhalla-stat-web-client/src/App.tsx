@@ -4,7 +4,10 @@ import {ThemeProvider} from "@mui/material/styles";
 import Layout from "./App/Components/Layout";
 import {useRootSelector} from "./store";
 import {router} from "./modules/router";
-import {RouterProvider} from "react-router-dom";
+import {Route, RouterProvider, Routes} from "react-router-dom";
+import {AuthPage} from "./modules/authentication";
+import SandBoxPage from "./App/Components/SandBoxPage";
+import {AuthRequired} from "./modules/router/politics/AuthRequired";
 
 interface AppProps {
 }
@@ -15,9 +18,23 @@ const App: React.FC<AppProps> = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Layout>
-                <RouterProvider router={router} />
-            </Layout>
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route path="/" element={<SandBoxPage />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route
+                        path="/protected"
+                        element={
+                            <AuthRequired>
+                                <div>Protected</div>
+                            </AuthRequired>
+                        }
+                    />
+                </Route>
+            </Routes>
+            {/*<Layout>*/}
+            {/*    <RouterProvider router={router} />*/}
+            {/*</Layout>*/}
         </ThemeProvider>
     );
 }
