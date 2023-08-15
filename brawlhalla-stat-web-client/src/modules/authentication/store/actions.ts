@@ -2,6 +2,7 @@ import AuthService from "../services/AuthService";
 import {AppDispatch} from "../../../store";
 import {userActions} from "./reducer";
 import {LoginRequest, RegisterRequest} from "../types";
+import {getMessageFromError} from "../../../api/tools/getMessageFromError";
 
 export const loginAction = (request: LoginRequest) => async (dispatch: AppDispatch) => {
     try {
@@ -9,7 +10,7 @@ export const loginAction = (request: LoginRequest) => async (dispatch: AppDispat
         const response = await AuthService.login(request)
         dispatch(userActions.loginSuccess(response.data));
     } catch (e: any) {
-        dispatch(userActions.loginFailed(e.message))
+        dispatch(userActions.loginFailed(getMessageFromError(e)))
     }
 }
 
@@ -19,7 +20,7 @@ export const registerAction = (request: RegisterRequest) => async (dispatch: App
         const response = await AuthService.register(request)
         dispatch(userActions.loginSuccess(response.data));
     } catch (e: any) {
-        dispatch(userActions.loginFailed(e.message))
+        dispatch(userActions.loginFailed(getMessageFromError(e)))
     }
 }
 
