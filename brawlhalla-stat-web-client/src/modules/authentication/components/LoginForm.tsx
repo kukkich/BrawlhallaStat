@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Button, CircularProgress, Container, TextField} from '@mui/material';
+import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from '../../../store';
 import {loginAction} from '../store/actions';
 import {LoginStatus} from '../store/State';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface LoginFormProps {
     onSubmit: () => void;
@@ -44,10 +44,16 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
             setButtonColor('success');
         }
     }, [userState.status]);
-
+    useEffect(() => {
+        if (userState.errors.length > 0) {
+            setButtonColor('error');
+        }
+    }, [userState.errors]);
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (userState.status === LoginStatus.authorized) {return}
+        if (userState.status === LoginStatus.authorized) {
+            return
+        }
         let anyErrors: boolean = false;
 
         if (!/^[a-zA-Z0-9_.-]{4,}$/.test(login)) {
@@ -65,7 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
         }
 
         onSubmit();
-        dispatch(loginAction({login, password}));
+        await dispatch(loginAction({login, password}));
     };
 
     return (
@@ -91,6 +97,12 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
                 error={Boolean(passwordError)}
                 helperText={passwordError}
             />
+            {userState.errors.map(error =>
+                <Typography key={error} variant="body2" color="error">
+                    {error}
+                </Typography>)
+            }
+
             <Button
                 variant="contained"
                 color={buttonColor}

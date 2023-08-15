@@ -25,7 +25,7 @@ public class ApiExceptionMiddleware
 
             context.Response.StatusCode = 400;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync($"{{'error': {ex.Message}}}");
+            await context.Response.WriteAsync($"{{\"error\": \"{ex.Message}\"}}");
         }
     }
 
