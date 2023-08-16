@@ -1,6 +1,6 @@
 import React from 'react';
 import {Grid} from '@mui/material';
-import TopBar from "./TopBar";
+import TopBar from "../../modules/appBars/topBar/TopBar";
 import SideBar from "./SideBar";
 import { Outlet } from 'react-router-dom';
 
