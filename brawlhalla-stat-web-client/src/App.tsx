@@ -1,13 +1,8 @@
 import React from 'react';
 import {getTheme} from "./modules/theme";
 import {ThemeProvider} from "@mui/material/styles";
-import Layout from "./App/Components/Layout";
 import {useRootSelector} from "./store";
-import {Route, Routes} from "react-router-dom";
-import {AuthPage} from "./modules/authentication";
-import SandBoxPage from "./App/Components/SandBoxPage";
-import {AuthRequired} from "./modules/router/politics/AuthRequired";
-import {AnonymousOnly} from "./modules/router/politics/AnonymousOnly";
+import RouterView from "./modules/router/RouterView";
 
 interface AppProps {
 }
@@ -18,24 +13,7 @@ const App: React.FC<AppProps> = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Routes>
-                <Route element={<Layout />}>
-                    <Route path="/" element={<SandBoxPage />} />
-                    <Route path="/auth" element={
-                        <AnonymousOnly>
-                            <AuthPage />
-                        </AnonymousOnly>
-                    } />
-                    <Route path="/protected" element={
-                            <AuthRequired>
-                                <div>Protected</div>
-                            </AuthRequired>
-                    } />
-                </Route>
-            </Routes>
-            {/*<Layout>*/}
-            {/*    <RouterProvider router={router} />*/}
-            {/*</Layout>*/}
+            <RouterView/>
         </ThemeProvider>
     );
 }
