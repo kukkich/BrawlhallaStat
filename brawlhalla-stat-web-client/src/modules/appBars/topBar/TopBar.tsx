@@ -16,7 +16,7 @@ const TopBar: React.FC = () => {
 
     return (
         <Grid item xs={12}>
-            <AppBar position="static">
+            <AppBar position={"relative"}>
                 <Toolbar>
                     <IconButton
                         size="large"

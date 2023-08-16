@@ -1,14 +1,3 @@
-import {createBrowserRouter} from "react-router-dom";
-import SandBoxPage from "../../App/Components/SandBoxPage";
-import AuthPage from "../authentication/AuthPage";
+import RouterView from "./RouterView";
 
-export const router = createBrowserRouter([
-    {
-        path: "/auth",
-        element: <AuthPage/>
-    },
-    {
-        path: "/",
-        element: <SandBoxPage/>,
-    }
-]);
+export {RouterView}

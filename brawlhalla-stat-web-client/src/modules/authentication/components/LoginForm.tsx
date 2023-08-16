@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {FC, FormEvent, useEffect, useState} from 'react';
 import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from '../../../store';
 import {loginAction} from '../store/actions';
@@ -9,7 +9,7 @@ interface LoginFormProps {
     onSubmit: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
+const LoginForm: FC<LoginFormProps> = ({onSubmit}) => {
     const dispatch = useRootDispatch();
     const userState = useRootSelector(state => state.userReducer);
 
@@ -38,7 +38,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
 
             return () => clearTimeout(timeout);
         }
-    }, [buttonColor]);
+    }, [buttonColor, navigate]);
     useEffect(() => {
         if (userState.status === LoginStatus.authorized) {
             setButtonColor('success');
@@ -49,7 +49,8 @@ const LoginForm: React.FC<LoginFormProps> = ({onSubmit}) => {
             setButtonColor('error');
         }
     }, [userState.errors]);
-    const handleSubmit = async (event: React.FormEvent) => {
+
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (userState.status === LoginStatus.authorized) {
             return
