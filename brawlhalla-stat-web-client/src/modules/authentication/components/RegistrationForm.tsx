@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, CircularProgress, Container, TextField} from '@mui/material';
+import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {LoginStatus} from "../store/State";
 import {registerAction} from "../store/actions";
@@ -98,6 +98,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
                        error={Boolean(passwordError)}
                        helperText={passwordError}
             />
+            {userState.errors.map(error =>
+                <Typography key={error} variant="body2" color="error">
+                    {error}
+                </Typography>)
+            }
             <Button
                 variant="contained"
                 color={buttonColor}

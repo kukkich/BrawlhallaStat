@@ -3,7 +3,7 @@ import {Grid, Theme, useMediaQuery} from '@mui/material';
 import AuthTabs from "./components/AuthTabs";
 
 const AuthPage: React.FC = () => {
-    const isLargerMd = useMediaQuery((theme : Theme) => theme.breakpoints.up('md'));
+    const isLargerMd = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const topMargin = isLargerMd ? '10%' : '8px';
 
     return (
@@ -15,7 +15,7 @@ const AuthPage: React.FC = () => {
                   container direction="column"
                   justifyContent="space-evenly" alignItems="flex-end"
             >
-                <AuthTabs />
+                <AuthTabs/>
             </Grid>
         </Grid>
     );

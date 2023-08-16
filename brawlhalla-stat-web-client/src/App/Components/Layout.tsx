@@ -1,13 +1,10 @@
 import React from 'react';
 import {Grid} from '@mui/material';
-import TopBar from "./TopBar";
-import SideBar from "./SideBar";
+import TopBar from "../../modules/appBars/topBar/TopBar";
+import SideBar from "../../modules/appBars/sideBar/SideBar";
+import { Outlet } from 'react-router-dom';
 
-interface LayoutProps {
-    children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC = () => {
     return (
         <Grid container sx={{
             backgroundColor: 'background.paper',
@@ -19,9 +16,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             {/* Main Content */}
             <Grid item xs={10} >
+                {/*TODO Error source*/}
                 <Grid container xs={10}>
-                    {/* Content with 12 columns */}
-                    {children}
+                    <Outlet />
                 </Grid>
             </Grid>
         </Grid>
