@@ -26,14 +26,11 @@ const App: React.FC<AppProps> = () => {
                             <AuthPage />
                         </AnonymousOnly>
                     } />
-                    <Route
-                        path="/protected"
-                        element={
+                    <Route path="/protected" element={
                             <AuthRequired>
                                 <div>Protected</div>
                             </AuthRequired>
-                        }
-                    />
+                    } />
                 </Route>
             </Routes>
             {/*<Layout>*/}

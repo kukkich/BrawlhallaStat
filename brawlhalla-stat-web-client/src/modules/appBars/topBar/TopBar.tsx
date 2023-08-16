@@ -1,11 +1,19 @@
 import React from 'react';
-import {AppBar, Grid, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, Grid, IconButton, Toolbar} from "@mui/material";
 import {Menu as MenuIcon} from "@mui/icons-material";
 import Button from "@mui/material/Button";
-import {ThemeSwitch} from "./ThemeSwitch";
-import { Link } from 'react-router-dom';
+import {ThemeSwitch} from "../../../App/Components/ThemeSwitch";
+import {Link} from 'react-router-dom';
+import AvatarMenu from "./components/AvatarMenu";
+import {useRootSelector} from "../../../store";
+import {LoginStatus} from "../../authentication/store/State";
+import LoginButton from "./components/LoginButton";
+import Logo from "./components/Logo";
 
 const TopBar: React.FC = () => {
+    const userState = useRootSelector(state => state.userReducer);
+    const isAuth = userState.status === LoginStatus.authorized;
+
     return (
         <Grid item xs={12}>
             <AppBar position="static">
@@ -19,14 +27,17 @@ const TopBar: React.FC = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        BHStats
-                    </Typography>
+                    <Logo/>
+
                     <Button component={Link} to="/" color="inherit">sandbox</Button>
                     <Button component={Link} to="/protected" color="inherit">Protected</Button>
 
                     <ThemeSwitch/>
-                    <Button component={Link} to="/auth" color="inherit">Login</Button>
+
+                    {isAuth
+                        ? <AvatarMenu/>
+                        : <LoginButton/>
+                    }
                 </Toolbar>
             </AppBar>
         </Grid>
