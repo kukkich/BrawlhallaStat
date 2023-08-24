@@ -28,6 +28,7 @@ export const userSlice = createSlice({
             state.status = LoginStatus.unauthorized
             state.errors.push(actions.payload)
         },
+
         logoutStart(state){
             state.status = LoginStatus.logouting
         },
@@ -37,6 +38,14 @@ export const userSlice = createSlice({
             state.user = null
         },
         logoutFailed(state){
+            state.status = LoginStatus.authorized
+        },
+
+        checkAuthStart(state){
+            state.status = LoginStatus.authChecking
+        },
+        checkAuthFailed(state, error: any){
+            console.log(error.response?.data?.message);
             state.status = LoginStatus.authorized
         },
     }

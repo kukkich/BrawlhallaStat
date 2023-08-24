@@ -3,7 +3,7 @@ import {Grid, List, ListItemButton, ListItemIcon, ListItemText, Paper} from "@mu
 
 const SideBar: React.FC = () => {
     return (
-        <Grid item xs={2} sx={{height: '100vh'}}>
+        <Grid item xs={2}>
             <Paper elevation={2} sx={{height: '100vh'}}>
                 <List>
                     <ListItemButton>

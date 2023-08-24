@@ -11,7 +11,7 @@ public class DelayMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        await Task.Delay(1500);
+        await Task.Delay(500);
         await _next.Invoke(context);
     }
 }

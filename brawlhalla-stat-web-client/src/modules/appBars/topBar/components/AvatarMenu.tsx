@@ -1,8 +1,12 @@
 import React from 'react';
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
+import {useRootDispatch} from "../../../../store";
+import {logoutAction} from "../../../authentication/store/actions";
 
 const AvatarMenu: React.FC = () => {
+    const dispatch = useRootDispatch();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -12,6 +16,11 @@ const AvatarMenu: React.FC = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const handleLogout = async () => {
+        await dispatch(logoutAction())
+        handleClose()
+    };
+
     return (
         <div>
             <IconButton
@@ -39,8 +48,7 @@ const AvatarMenu: React.FC = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </div>
     );

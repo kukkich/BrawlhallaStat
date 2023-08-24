@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppBar, Grid, IconButton, Toolbar} from "@mui/material";
+import {AppBar, CircularProgress, Grid, IconButton, Toolbar} from "@mui/material";
 import {Menu as MenuIcon} from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import {ThemeSwitch} from "../../../App/Components/ThemeSwitch";
@@ -12,31 +12,33 @@ import Logo from "./components/Logo";
 
 const TopBar: React.FC = () => {
     const userState = useRootSelector(state => state.userReducer);
-    const isAuth = userState.status === LoginStatus.authorized;
 
     return (
         <Grid item xs={12}>
-            <AppBar position={"relative"}>
+            <AppBar position={"static"}>
                 <Toolbar>
                     <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
                         aria-label="menu"
-                        sx={{ mr: 2 }}
+                        sx={{mr: 2}}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Logo/>
 
                     <Button component={Link} to="/" color="inherit">sandbox</Button>
                     <Button component={Link} to="/protected" color="inherit">Protected</Button>
+                    <Button component={Link} to="/legends" color="inherit">Legends</Button>
 
                     <ThemeSwitch/>
 
-                    {isAuth
+                    {userState.status === LoginStatus.authorized
                         ? <AvatarMenu/>
-                        : <LoginButton/>
+                        : userState.status === LoginStatus.authChecking
+                            ? <CircularProgress color="inherit" />
+                            : <LoginButton/>
                     }
                 </Toolbar>
             </AppBar>
