@@ -4,7 +4,8 @@ export enum LoginStatus {
     unauthorized,
     loginning,
     authorized,
-    logouting
+    logouting,
+    authChecking
 }
 
 export interface UserState {
