@@ -6,6 +6,6 @@ namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 public interface ITokenService
 {
     Task<TokenPair> GenerateTokenPair(IUserIdentity user);
-    Task<TokenPair> RefreshAccessToken(string refreshToken);
+    Task<LoginResult> RefreshAccessToken(string refreshToken);
     Task RevokeRefreshToken(string refreshToken);
 }
