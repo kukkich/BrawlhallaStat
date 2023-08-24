@@ -37,6 +37,7 @@ const themeSlice = createSlice({
             } else {
                 state.mode = ThemeMode.Light;
             }
+            saveTheme(state.mode)
         },
     },
 });
