@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Refresh()
+    public async Task<ActionResult<LoginResult>> Refresh()
     {
         string? refreshToken = HttpContext.Request.Cookies[RefreshTokenCookieKey];
         if (refreshToken is null)
@@ -48,10 +48,10 @@ public class AuthController : ControllerBase
 
         var command = new RefreshTokenCommand { RefreshToken = refreshToken };
 
-        var tokens = await _mediator.Send(command);
-        SetTokenInCookie(tokens);
+        var loginResult = await _mediator.Send(command);
+        SetTokenInCookie(loginResult.TokenPair);
 
-        return Ok(tokens);
+        return Ok(loginResult);
     }
 
     [HttpPost]

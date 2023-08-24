@@ -89,7 +89,7 @@ public class TokenService : ITokenService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<TokenPair> RefreshAccessToken(string refreshToken)
+    public async Task<LoginResult> RefreshAccessToken(string refreshToken)
     {
         var isTokenValid = IsRefreshTokenValid(refreshToken, out _);
         if (!isTokenValid)
@@ -109,7 +109,11 @@ public class TokenService : ITokenService
 
         var tokenPair = await GenerateTokenPair(user);
 
-        return tokenPair;
+        return new LoginResult
+        {
+            TokenPair = tokenPair,
+            User = _mapper.Map<AuthenticatedUser>(user)
+        };
     }
 
     private bool IsRefreshTokenValid(string token, out ClaimsPrincipal? userClaimsPrincipal)

@@ -34,6 +34,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginRe
                 x => x.Login == request.Login,
                 cancellationToken: cancellationToken
             );
+
         if (user is null)
         {
             throw new UserNotExistException(request.Login);

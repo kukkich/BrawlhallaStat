@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenPair>
+public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, LoginResult>
 {
     private readonly ITokenService _tokenService;
 
@@ -14,10 +14,10 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, T
         _tokenService = tokenService;
     }
 
-    public async Task<TokenPair> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+    public async Task<LoginResult> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var tokenPair = await _tokenService.RefreshAccessToken(request.RefreshToken);
+        var loginResult = await _tokenService.RefreshAccessToken(request.RefreshToken);
 
-        return tokenPair;
+        return loginResult;
     }
 }
