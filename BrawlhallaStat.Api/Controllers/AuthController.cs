@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
         return Ok(loginResult);
     }
 
-    [HttpPost]
+    [HttpGet]
     public async Task<ActionResult<LoginResult>> Refresh()
     {
         string? refreshToken = HttpContext.Request.Cookies[RefreshTokenCookieKey];

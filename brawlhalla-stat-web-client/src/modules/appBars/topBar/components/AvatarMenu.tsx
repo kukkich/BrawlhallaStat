@@ -1,12 +1,12 @@
 import React from 'react';
-import {IconButton, Menu, MenuItem} from "@mui/material";
+import {IconButton, Menu, MenuItem, Typography} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
-import {useRootDispatch} from "../../../../store";
+import {useRootDispatch, useRootSelector} from "../../../../store";
 import {logoutAction} from "../../../authentication/store/actions";
 
 const AvatarMenu: React.FC = () => {
     const dispatch = useRootDispatch();
-
+    const nickName = useRootSelector(state => state.userReducer.user?.nickName);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,6 +31,9 @@ const AvatarMenu: React.FC = () => {
                 onClick={handleMenu}
                 color="inherit"
             >
+                <Typography variant="h6" style={{ marginRight: 8 }}>
+                    {nickName}
+                </Typography>
                 <AccountCircle/>
             </IconButton>
             <Menu
