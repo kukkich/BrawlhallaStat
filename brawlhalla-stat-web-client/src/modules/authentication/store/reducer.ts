@@ -45,8 +45,8 @@ export const userSlice = createSlice({
             state.status = LoginStatus.authChecking
         },
         checkAuthFailed(state, error: any){
+            state.status = LoginStatus.unauthorized
             console.log(error.response?.data?.message);
-            state.status = LoginStatus.authorized
         },
     }
 })
