@@ -40,7 +40,7 @@ export const logoutAction = () => async (dispatch: AppDispatch) => {
 export const checkAuthAction = () => async (dispatch: AppDispatch) => {
     try {
         dispatch(userActions.checkAuthStart())
-        const response = await axios.post<LoginResult>(`${API_URL}/auth/refresh`, {withCredentials: true})
+        const response = await AuthService.refresh();
         dispatch(userActions.loginSuccess(response.data));
     } catch (e: any) {
         dispatch(userActions.checkAuthFailed(e))
