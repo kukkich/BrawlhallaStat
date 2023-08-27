@@ -1,3 +1,3 @@
-import LegendsPage from "./LegendsPage";
+import LegendsStatisticContent from "./LegendsStatisticContent";
 
-export {LegendsPage}
+export {LegendsStatisticContent}

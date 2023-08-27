@@ -25,9 +25,6 @@ const AvatarMenu: React.FC = () => {
         <div>
             <IconButton
                 size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
             >
