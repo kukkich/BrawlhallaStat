@@ -17,10 +17,6 @@ export const ThemeSwitch: React.FC = () => {
 
     return (
         <Box
-            sx={{
-                justifyContent: 'center',
-                pr: 4
-            }}
         >
             <IconButton onClick={handleThemeToggle} color="inherit">
                 {themeMode === ThemeMode.Dark ? <Brightness7Icon /> : <Brightness4Icon />}

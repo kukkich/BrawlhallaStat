@@ -11,6 +11,9 @@ const lightTheme : Theme = createTheme({
             main: '#f50057',
         },
     },
+    typography: {
+        fontFamily: 'monospace',
+    },
 });
 
 export default lightTheme;

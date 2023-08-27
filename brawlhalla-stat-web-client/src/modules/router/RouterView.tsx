@@ -5,7 +5,7 @@ import SandBoxPage from "../../App/Components/SandBoxPage";
 import {AnonymousOnly} from "./politics/AnonymousOnly";
 import {AuthPage} from "../authentication";
 import {AuthRequired} from "./politics/AuthRequired";
-import { LegendsPage } from '../statistic/legend';
+import { StatisticPage } from '../statistic';
 
 const RouterView = () => {
     return (
@@ -22,8 +22,10 @@ const RouterView = () => {
                         <div>Protected</div>
                     </AuthRequired>
                 } />
-                <Route path="/legends" element={
-                        <LegendsPage/>
+                <Route path="/statistic" element={
+                    <AuthRequired>
+                        <StatisticPage/>
+                    </AuthRequired>
                 } />
             </Route>
         </Routes>
