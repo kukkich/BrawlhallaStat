@@ -6,9 +6,9 @@ import {LegendsStatisticContent} from "./legend";
 const StatisticPage = () => {
     const theme = useTheme();
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{height: '100%'}}>
             <SideBar/>
-            <Grid item xs sx={{mt: theme.spacing(2)}}>
+            <Grid item xs={10} sx={{mt: theme.spacing(2)}}>
                 <LegendsStatisticContent/>
             </Grid>
             <Grid item/>
