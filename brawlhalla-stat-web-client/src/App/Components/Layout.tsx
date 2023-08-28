@@ -11,12 +11,11 @@ const Layout: React.FC = () => {
                   color: 'white',
               }}
               columnSpacing={{xs: 1, sm: 2, md: 3}}
-
         >
             <TopBar/>
 
             {/* Main Content */}
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{height: "100vh"}}>
                 <Outlet/>
             </Grid>
         </Grid>
