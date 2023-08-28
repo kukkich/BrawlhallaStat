@@ -3,7 +3,6 @@ import LegendStatisticTable from "./components/LegendStatisticTable";
 import {LegendStatistic} from "../types/LegendStatistic";
 import {Paper, TableContainer} from "@mui/material";
 
-
 function generateRandomLegendStatistic(id: number): LegendStatistic {
     const legends: string[] = ['Legend A', 'Legend B', 'Legend C', 'Legend D', 'Legend E'];
     const wins: number = Math.floor(Math.random() * 20) + 1;

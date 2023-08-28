@@ -2,6 +2,7 @@ using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Factories;
+using BrawlhallaStat.Api.MapperProfiles;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Api.Services.Tokens;
