@@ -1,5 +1,5 @@
 ﻿using BrawlhallaStat.Domain.Base;
-using BrawlhallaStat.Domain.Game;
+using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;

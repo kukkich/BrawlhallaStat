@@ -1,15 +1,11 @@
-﻿using BrawlhallaStat.Api.CommandHandlers.ReplayHandling.WinLoseCounting;
-using BrawlhallaStat.Domain;
-using BrawlhallaStat.Domain.Base;
-using BrawlhallaStat.Domain.Game;
+﻿using BrawlhallaStat.Domain;
+using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 
 public class ReplayHandlingContext
 {
-    public IWinLoseCountStrategy WinLoseCounter { get; set; } = null!;
-
     public IUserIdentity ReplayAuthor { get; set; } = null!;
     public User UserFromDb { get; set; } = null!;
     public Player UserFromGame { get; set; } = null!;

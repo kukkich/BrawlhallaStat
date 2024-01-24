@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain.Game;
+namespace BrawlhallaStat.Domain.Games;
 
 public class Player : IHaveId<int>
 {

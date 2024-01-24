@@ -5,9 +5,10 @@ using BrawlhallaStat.Api.Commands;
 using BrawlhallaStat.Api.Exceptions.ReplayHandling;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Game;
+using BrawlhallaStat.Domain.Games;
 using MediatR;
-using Player = BrawlhallaStat.Domain.Game.Player;
+using GameSettings = BrawlhallaStat.Domain.Games.GameSettings;
+using Player = BrawlhallaStat.Domain.Games.Player;
 
 namespace BrawlhallaStat.Api.CommandHandlers;
 
@@ -65,7 +66,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
                 FileData = fileBytes,
             };
 
-            _dbContext.Replays.Add(fileModel);
+            _dbContext.ReplayFiles.Add(fileModel);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Replay was saved");
@@ -165,20 +166,6 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         game.Players = replay.Players.
             Select(player =>
             {
-                var domainPlayer = new Player
-                {
-                    NickName = player.Name,
-                    Team = player.Data.Team switch
-                    {
-                        1 => Team.Red,
-                        2 => Team.Blue,
-                        _ => throw new Exception("Unexpected exception. Game has more than 2 teams")
-                    },
-                    IsWinner = replay.Results[1] == player.Data.Team,
-                    Customization = new Customization(),
-                    Game = game
-                };
-
                 var customization = new Customization
                 {
                     ColorId = player.Data.ColorId,
@@ -197,29 +184,42 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
                     WeaponSkins = hero.WeaponSkins
                 };
 
+                var domainPlayer = new Player
+                {
+                    NickName = player.Name,
+                    Team = player.Data.Team switch
+                    {
+                        1 => Team.Red,
+                        2 => Team.Blue,
+                        _ => throw new Exception("Unexpected exception. Game has more than 2 teams")
+                    },
+                    IsWinner = replay.Results[1] == player.Data.Team, // TODO remember how it works
+                    Customization = customization,
+                    LegendDetails = legendDetails,
+                    Game = game
+                };
+
                 var deaths =
                     from death in replay.Deaths
                     where death.EntityId == player.Id
                     select new Death
                     {
                         TimeStamp = death.Timestamp,
-                        Player = domainPlayer,
-                        Game = game
+                        Player = domainPlayer
                     };
 
-                domainPlayer.Customization = customization;
-                domainPlayer.LegendDetails = legendDetails;
                 domainPlayer.Deaths = deaths.ToList();
 
                 return domainPlayer;
             })
             .ToList();
+
         game.Deaths = game.Players
             .SelectMany(x => x.Deaths)
             .OrderByDescending(x => x.TimeStamp)
             .ToList();
 
-        game.Settings = new Domain.Game.GameSettings
+        game.Settings = new GameSettings
         {
             Flags = replay.GameSettings.Flags,
             MaxPlayers = replay.GameSettings.MaxPlayers,

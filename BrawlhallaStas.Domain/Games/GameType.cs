@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Game;
+﻿namespace BrawlhallaStat.Domain.Games;
 
 public enum GameType
 {

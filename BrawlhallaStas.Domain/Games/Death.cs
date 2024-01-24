@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain.Game;
+namespace BrawlhallaStat.Domain.Games;
 
 public class Death : IHaveId<int>
 {
@@ -9,6 +9,7 @@ public class Death : IHaveId<int>
 
     public int PlayerId { get; set; }
     public Player Player { get; set; } = null!;
+
     public int GameId { get; set; }
     public Game Game { get; set; } = null!;
 }
