@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Api.Exceptions.ReplayHandling;
-using BrawlhallaStat.Api.Replays.ReplayHandling;
+﻿using BrawlhallaStat.Api.Replays.Exceptions;
 
 namespace BrawlhallaStat.Api.Replays.ReplayHandling.Handlers;
 

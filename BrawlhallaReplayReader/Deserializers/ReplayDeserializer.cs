@@ -6,7 +6,7 @@ using BrawlhallaReplayReader.Models;
 namespace BrawlhallaReplayReader.Deserializers;
 
 // ReSharper disable once InconsistentNaming
-public class BHReplayDeserializer : IBHReplayDeserializer
+public class ReplayDeserializer : IReplayDeserializer
 {
     private static readonly byte[] XorKey = {
         107, 16, 222, 60, 68, 75, 209, 70, 160, 16, 82, 193, 178, 49, 211, 106, 251,
@@ -30,16 +30,6 @@ public class BHReplayDeserializer : IBHReplayDeserializer
         SelectReadingStrategy(stream);
         _readingStrategy.Read(_result);
         return _result;
-    }
-
-    public Task<ReplayInfo> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken)
-    {
-        cancellationToken ??= CancellationToken.None;
-
-        return Task.Run(
-            () => Deserialize(bytes),
-            (CancellationToken)cancellationToken
-        );
     }
 
     private void ReadHeader(BitStream stream)

@@ -7,6 +7,6 @@ public static class Microsoft
 {
     public static void AddBrawlhallaReplayDeserializer(this IServiceCollection services)
     {
-        services.AddTransient<IBHReplayDeserializer, BHReplayDeserializer>();
+        services.AddTransient<IReplayDeserializer, ReplayDeserializer>();
     }
 }

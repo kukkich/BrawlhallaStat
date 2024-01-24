@@ -1,4 +1,6 @@
-﻿namespace BrawlhallaStat.Api.Exceptions.ReplayHandling;
+﻿using BrawlhallaStat.Api.Exceptions;
+
+namespace BrawlhallaStat.Api.Replays.Exceptions;
 
 public class NoUserInGameException : ApiException
 {

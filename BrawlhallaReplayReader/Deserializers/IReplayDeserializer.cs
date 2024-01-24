@@ -3,8 +3,7 @@
 namespace BrawlhallaReplayReader.Deserializers;
 
 // ReSharper disable once InconsistentNaming
-public interface IBHReplayDeserializer
+public interface IReplayDeserializer
 {
     public ReplayInfo Deserialize(byte[] bytes);
-    public Task<ReplayInfo> DeserializeAsync(byte[] bytes, CancellationToken? cancellationToken = null);
 }
