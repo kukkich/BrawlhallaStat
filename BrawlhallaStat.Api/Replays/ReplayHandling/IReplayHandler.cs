@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
+﻿namespace BrawlhallaStat.Api.Replays.ReplayHandling;
 
 public interface IReplayHandler
 {

@@ -1,18 +1,16 @@
 ﻿using BrawlhallaReplayReader.Deserializers;
 using BrawlhallaReplayReader.Models;
-using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
-using BrawlhallaStat.Api.Commands;
 using BrawlhallaStat.Api.Exceptions.ReplayHandling;
-using BrawlhallaStat.Domain;
+using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Games;
 using MediatR;
 using GameSettings = BrawlhallaStat.Domain.Games.GameSettings;
 using Player = BrawlhallaStat.Domain.Games.Player;
 
-namespace BrawlhallaStat.Api.CommandHandlers;
+namespace BrawlhallaStat.Api.Replays.Commands;
 
-public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
+public class UploadReplayHandler : IRequestHandler<UploadReplayCommand, string>
 {
 
     private static readonly string[] AllowedPlaylistNames = { "2v2Ranked", "2v2Unranked", "1v1Ranked", "1v1Unranked" };
@@ -39,7 +37,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         _logger = logger;
     }
 
-    public async Task<string> Handle(UploadReplay request, CancellationToken cancellationToken)
+    public async Task<string> Handle(UploadReplayCommand request, CancellationToken cancellationToken)
     {
         try
         {

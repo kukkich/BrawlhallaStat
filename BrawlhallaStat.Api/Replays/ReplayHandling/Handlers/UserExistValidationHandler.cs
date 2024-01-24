@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Api.Exceptions.ReplayHandling;
+using BrawlhallaStat.Api.Replays.ReplayHandling;
 
-namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
+namespace BrawlhallaStat.Api.Replays.ReplayHandling.Handlers;
 
 public class UserExistValidationHandler : IReplayHandler
 {

@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
-using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
 using BrawlhallaStat.Api.Middlewares;
-using BrawlhallaStat.Api.Services.Cache;
+using BrawlhallaStat.Api.Replays;
+using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -76,12 +76,11 @@ public class Program
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-
-        services.AddReplayHandlingPipeline();
+        
         services.AddBrawlhallaReplayDeserializer();
 
         services.AddMemoryCache();
-        services.AddCaching();
+        services.AddReplay();
 
         services.AddTokenService();
     }

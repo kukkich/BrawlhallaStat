@@ -2,7 +2,7 @@
 using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
 
-namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
+namespace BrawlhallaStat.Api.Replays.ReplayHandling;
 
 public class ReplayHandlingContext
 {

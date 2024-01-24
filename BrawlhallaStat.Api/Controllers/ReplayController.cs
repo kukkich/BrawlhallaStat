@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Commands;
+using BrawlhallaStat.Api.Replays.Commands;
 using BrawlhallaStat.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ public class ReplayController : ControllerBase
             Login = "Nasral V Szhopu"
         };
 
-        await _mediator.Send(new UploadReplay(user, file));
+        await _mediator.Send(new UploadReplayCommand(user, file));
 
         return Ok("Файл успешно загружен");
     }

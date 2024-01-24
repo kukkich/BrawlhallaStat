@@ -1,7 +1,8 @@
-﻿using BrawlhallaStat.Domain.Context;
+﻿using BrawlhallaStat.Api.Replays.ReplayHandling;
+using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling.Handlers;
+namespace BrawlhallaStat.Api.Replays.ReplayHandling.Handlers;
 
 public class UserLoaderHandler : IReplayHandler
 {

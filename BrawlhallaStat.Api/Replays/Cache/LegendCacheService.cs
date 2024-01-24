@@ -1,9 +1,10 @@
-﻿using BrawlhallaStat.Domain;
+﻿using BrawlhallaStat.Api.Caching;
+using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BrawlhallaStat.Api.Services.Cache;
+namespace BrawlhallaStat.Api.Replays.Cache;
 
 public class LegendCacheService : MemCacheBase<Legend>
 {
@@ -13,7 +14,7 @@ public class LegendCacheService : MemCacheBase<Legend>
         : base(cache, dbContext)
     { }
 
-    protected override async Task<List<Legend>> LoadDataFromDatabaseAsync()
+    protected override async Task<List<Legend>> LoadDataAsync()
     {
         return await DbContext.Legends
             .Include(x => x.FirstWeapon)

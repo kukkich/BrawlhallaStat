@@ -2,13 +2,14 @@
 using Microsoft.Extensions.Caching.Memory;
 #pragma warning disable CS8600
 
-namespace BrawlhallaStat.Api.Services.Cache;
+namespace BrawlhallaStat.Api.Caching;
 
 public abstract class MemCacheBase<T> : ICacheService<T>
 {
     private readonly IMemoryCache _cache;
     protected readonly BrawlhallaStatContext DbContext;
     protected abstract string CacheKey { get; }
+    protected virtual TimeSpan Expiration => TimeSpan.FromHours(1);
 
     protected MemCacheBase(IMemoryCache cache, BrawlhallaStatContext dbContext)
     {
@@ -21,15 +22,15 @@ public abstract class MemCacheBase<T> : ICacheService<T>
         if (_cache.TryGetValue(CacheKey, out List<T> data))
             return data!;
 
-        data = await LoadDataFromDatabaseAsync();
+        data = await LoadDataAsync();
 
         var cacheOptions = new MemoryCacheEntryOptions()
-            .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+            .SetAbsoluteExpiration(Expiration);
 
         _cache.Set(CacheKey, data, cacheOptions);
 
         return data;
     }
 
-    protected abstract Task<List<T>> LoadDataFromDatabaseAsync();
+    protected abstract Task<List<T>> LoadDataAsync();
 }
