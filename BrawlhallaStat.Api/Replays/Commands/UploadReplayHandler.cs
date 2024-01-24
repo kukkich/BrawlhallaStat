@@ -21,8 +21,9 @@ public class UploadReplayHandler : IRequestHandler<UploadReplayCommand, string>
     {
         try
         {
-            await _replayService.Upload(request.User, request.File);
+            var resultId = await _replayService.Upload(request.User, request.File);
             _logger.LogInformation("Replay was saved");
+            return resultId;
         }
         catch (Exception exception)
         {

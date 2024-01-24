@@ -68,14 +68,14 @@ public class DomainGameProfile : Profile
         {
             NickName = playerData.Name,
             Team = MapTeam(playerData.Data.Team),
-            IsWinner = replayInfo.Results[1] == playerData.Data.Team, // Assumed logic
+            IsWinner = replayInfo.Results[1] == playerData.Data.Team,
             Customization = customization,
             LegendDetails = legendDetails,
             GameDetail = gameDetail,
         };
         
         domainPlayer.Deaths = replayInfo.Deaths
-            .Where(death => death.EntityId == playerData.Id)
+            .Where(death => death.EntityId == playerData.InGameId)
             .Select(death => MapDeath(death, domainPlayer)).ToList();
         return domainPlayer;
     }

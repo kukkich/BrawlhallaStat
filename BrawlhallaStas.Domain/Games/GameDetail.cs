@@ -13,6 +13,7 @@ public class GameDetail : IHaveId<string>
     public int LevelId { get; set; }
     public int EndOfMatchFanfareId { get; set; }
     public string PlaylistName { get; set; } = null!;
+    public Team AuthorTeam { get; set; }
 
     public List<Player> Players { get; set; } = null!;
     [NotMapped]

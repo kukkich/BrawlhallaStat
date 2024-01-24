@@ -6,6 +6,7 @@ using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
+using Player = BrawlhallaStat.Domain.Games.Player;
 
 namespace BrawlhallaStat.Api.Replays.Services;
 
@@ -49,7 +50,11 @@ public class ReplayService : IReplayService
         var game = _mapper.Map<GameDetail>(replay);
         game.Id = Guid.NewGuid().ToString();
 
-        await _replayHandlingPipeline.Invoke(author, game);
+        var nickName = author.NickName;
+        var authorAsPlayer = GetAuthorFromGame(game, nickName);
+        game.AuthorTeam = authorAsPlayer.Team;
+
+        game.Type = ...;
 
         var fileModel = new ReplayFile
         {
@@ -62,6 +67,24 @@ public class ReplayService : IReplayService
         await _dbContext.SaveChangesAsync();
 
         return fileModel.Id;
+    }
+
+    private static Player GetAuthorFromGame(GameDetail game, string nickName)
+    {
+        try
+        {
+            var userFromGame = game.Players
+                .SingleOrDefault(x => x.NickName == nickName);
+            if (userFromGame is null)
+            {
+                throw new NoUserInGameException(nickName);
+            }
+            return userFromGame;
+        }
+        catch (InvalidOperationException)
+        {
+            throw new MultiplePlayersWithAuthorNickName(nickName);
+        }
     }
 
     private static void ValidateFile(IFormFile file)
