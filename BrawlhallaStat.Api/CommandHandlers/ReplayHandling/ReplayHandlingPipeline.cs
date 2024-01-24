@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Domain.Base;
-using BrawlhallaStat.Domain.Games;
+﻿using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
@@ -13,12 +12,12 @@ public class ReplayHandlingPipeline
         _pipeline = pipeline;
     }
 
-    public async Task Invoke(IUserIdentity author, Game game)
+    public async Task Invoke(IUserIdentity author, GameDetail gameDetail)
     {
         var context = new ReplayHandlingContext
         {
             ReplayAuthor = author,
-            Game = game
+            GameDetail = gameDetail
         };
 
         foreach (var handler in _pipeline)

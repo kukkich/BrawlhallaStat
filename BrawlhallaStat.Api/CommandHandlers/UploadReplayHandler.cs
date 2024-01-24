@@ -61,7 +61,6 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
             var fileModel = new ReplayFile
             {
                 Id = Guid.NewGuid().ToString(),
-                AuthorId = request.User.Id,
                 FileName = file.FileName,
                 FileData = fileBytes,
             };
@@ -150,16 +149,16 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
         }
     }
 
-    private Game MapToDomainGame(ReplayInfo replay)
+    private GameDetail MapToDomainGame(ReplayInfo replay)
     {
-        var game = new Game
+        var game = new GameDetail
         {
             Id = Guid.NewGuid().ToString(),
             RandomSeed = replay.RandomSeed,
             Version = replay.Version,
             OnlineGame = replay.OnlineGame,
             LevelId = replay.LevelId,
-            EndOfMatchFanfare = replay.EndOfMatchFanfare,
+            EndOfMatchFanfareId = replay.EndOfMatchFanfare,
             PlaylistName = replay.PlaylistName
         };
 
@@ -196,7 +195,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplay, string>
                     IsWinner = replay.Results[1] == player.Data.Team, // TODO remember how it works
                     Customization = customization,
                     LegendDetails = legendDetails,
-                    Game = game
+                    GameDetail = game
                 };
 
                 var deaths =

@@ -9,7 +9,7 @@ public class ReplayHandlingContext
     public IUserIdentity ReplayAuthor { get; set; } = null!;
     public User UserFromDb { get; set; } = null!;
     public Player UserFromGame { get; set; } = null!;
-    public Game Game { get; set; } = null!;
+    public GameDetail GameDetail { get; set; } = null!;
     public Legend Legend { get; set; } = null!;
     public Weapon[] Weapons { get; set; } = null!;
 

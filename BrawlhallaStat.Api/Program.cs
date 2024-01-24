@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.CommandHandlers.ReplayHandling;
-using BrawlhallaStat.Api.Factories;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Services.Cache;
 using BrawlhallaStat.Api.Services.Tokens;
@@ -81,7 +80,6 @@ public class Program
         services.AddReplayHandlingPipeline();
         services.AddBrawlhallaReplayDeserializer();
 
-        services.AddFactories();
         services.AddMemoryCache();
         services.AddCaching();
 

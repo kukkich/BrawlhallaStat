@@ -11,5 +11,5 @@ public class Death : IHaveId<int>
     public Player Player { get; set; } = null!;
 
     public int GameId { get; set; }
-    public Game Game { get; set; } = null!;
+    public GameDetail GameDetail { get; set; } = null!;
 }

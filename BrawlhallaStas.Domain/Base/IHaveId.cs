@@ -1,7 +1,6 @@
 ﻿namespace BrawlhallaStat.Domain.Base;
 
-public interface IHaveId<T>
+public interface IHaveId<out T>
 {
-    //Todo remove set and remake dependent troubles
-    public T Id { get; set; }
+    public T Id { get; }
 }

@@ -1,16 +1,12 @@
 ﻿using BrawlhallaStat.Api.Commands;
-using BrawlhallaStat.Api.Factories;
 using BrawlhallaStat.Domain;
 using MediatR;
 namespace BrawlhallaStat.Api.CommandHandlers;
 
 public class CreateUserHandler : IRequestHandler<CreateUser, User>
 {
-    private readonly IStatisticFactory _statisticFactory;
-
-    public CreateUserHandler(IStatisticFactory statisticFactory)
+    public CreateUserHandler()
     {
-        _statisticFactory = statisticFactory;
     }
 
     public async Task<User> Handle(CreateUser request, CancellationToken cancellationToken)
