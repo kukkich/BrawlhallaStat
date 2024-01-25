@@ -1,6 +1,5 @@
 ﻿using BrawlhallaStat.Api.Caching;
 using BrawlhallaStat.Api.Replays.Cache;
-using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Api.Replays.Services;
 using BrawlhallaStat.Domain;
 
@@ -13,7 +12,5 @@ public static class ServicesExtension
         services.AddScoped<ICacheService<Weapon>, WeaponCacheService>();
         services.AddScoped<ICacheService<Legend>, LegendCacheService>();
         services.AddScoped<IReplayService, ReplayService>();
-
-        services.AddReplayHandlingPipeline();
     }
 }

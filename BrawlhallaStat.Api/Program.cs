@@ -2,7 +2,6 @@ using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Replays;
-using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

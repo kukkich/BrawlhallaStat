@@ -2,7 +2,6 @@
 using BrawlhallaReplayReader.Deserializers;
 using BrawlhallaReplayReader.Models;
 using BrawlhallaStat.Api.Replays.Exceptions;
-using BrawlhallaStat.Api.Replays.ReplayHandling;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity.Base;
@@ -39,7 +38,7 @@ public class ReplayService : IReplayService
         _mapper = mapper;
     }
 
-    public async Task<string> Upload(IUserIdentity author, IFormFile file)
+    public async Task<Game> Upload(IUserIdentity author, IFormFile file)
     {
         ValidateFile(file);
 
@@ -50,26 +49,33 @@ public class ReplayService : IReplayService
 
         EnsureThatSupports(replay);
 
-        var game = _mapper.Map<GameDetail>(replay);
-        game.Id = Guid.NewGuid().ToString();
+        var gameDetail = _mapper.Map<GameDetail>(replay);
+        gameDetail.Id = Guid.NewGuid().ToString();
 
         var nickName = author.NickName;
-        var authorAsPlayer = GetAuthorFromGame(game, nickName);
-        game.AuthorPlayer = authorAsPlayer;
+        var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
+        gameDetail.AuthorPlayer = authorAsPlayer;
 
-        game.Type = GameTypes[replay.PlaylistName];
+        gameDetail.Type = GameTypes[replay.PlaylistName];
 
-        var fileModel = new ReplayFile
+        var replayFile = new ReplayFile
         {
             Id = Guid.NewGuid().ToString(),
             FileName = file.FileName,
             FileData = fileBytes,
         };
 
-        _dbContext.ReplayFiles.Add(fileModel);
+        var game = new Game
+        {
+            AuthorId = author.Id,
+            Detail = gameDetail,
+            ReplayFile = replayFile
+        };
+
+        _dbContext.Games.Add(game);
         await _dbContext.SaveChangesAsync();
 
-        return fileModel.Id;
+        return game;
     }
 
     private static Player GetAuthorFromGame(GameDetail game, string nickName)
