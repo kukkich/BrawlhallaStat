@@ -12,26 +12,29 @@ namespace BrawlhallaStat.Api.Replays.Services;
 
 public class ReplayService : IReplayService
 {
-    private static readonly string[] AllowedPlaylistNames = { "2v2Ranked", "2v2Unranked", "1v1Ranked", "1v1Unranked" };
+    private static readonly Dictionary<string, GameType> GameTypes = new()
+    {
+        ["2v2Ranked"] = GameType.Ranked2V2,
+        ["2v2Unranked"] = GameType.Unranked2V2,
+        ["1v1Ranked"] = GameType.Ranked1V1,
+        ["1v1Unranked"] = GameType.Unranked1V1
+    };
     private static readonly int[] AllowedResultKeys1V1 = { 1, 2 };
     private static readonly int[] AllowedResultKeys2V2 = { 1, 2, 3, 4 };
     private static readonly int[] AllowedResultValues1V1 = { 1, 2 };
     private static readonly int[] AllowedResultValues2V2 = { 1, 1, 2, 2 };
 
     private readonly IReplayDeserializer _replayDeserializer;
-    private readonly ReplayHandlingPipeline _replayHandlingPipeline;
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IMapper _mapper;
 
     public ReplayService(
         IReplayDeserializer replayDeserializer,
-        ReplayHandlingPipeline replayHandlingPipeline,
         BrawlhallaStatContext dbContext,
         IMapper mapper
     )
     {
         _replayDeserializer = replayDeserializer;
-        _replayHandlingPipeline = replayHandlingPipeline;
         _dbContext = dbContext;
         _mapper = mapper;
     }
@@ -52,9 +55,9 @@ public class ReplayService : IReplayService
 
         var nickName = author.NickName;
         var authorAsPlayer = GetAuthorFromGame(game, nickName);
-        game.AuthorTeam = authorAsPlayer.Team;
+        game.AuthorPlayer = authorAsPlayer;
 
-        game.Type = ...;
+        game.Type = GameTypes[replay.PlaylistName];
 
         var fileModel = new ReplayFile
         {
@@ -104,7 +107,7 @@ public class ReplayService : IReplayService
     private static void EnsureThatSupports(ReplayInfo replay)
     {
         var name = replay.PlaylistName;
-        if (!AllowedPlaylistNames.Any(name.Contains))
+        if (!GameTypes.TryGetValue(name, out var gameType))
         {
             throw new NotSupportedGameException("Not supported game type");
         }
@@ -114,15 +117,12 @@ public class ReplayService : IReplayService
             throw new NotSupportedGameException("More than 2 team games not supported yet");
         }
 
-        int playersExpected;
-        if (name.Contains("2v2Ranked") || name.Contains("2v2Unranked"))
+        var playersExpected = gameType switch
         {
-            playersExpected = 4;
-        }
-        else
-        {
-            playersExpected = 2;
-        }
+            GameType.Ranked2V2 or GameType.Unranked2V2 => 4,
+            GameType.Ranked1V1 or GameType.Unranked1V1 => 2,
+            _ => throw new Exception()
+        };
 
         if (replay.Players.Count != playersExpected)
         {
