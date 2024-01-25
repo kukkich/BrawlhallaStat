@@ -54,7 +54,6 @@ public class ReplayService : IReplayService
 
         var nickName = author.NickName;
         var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
-        gameDetail.AuthorPlayer = authorAsPlayer;
 
         gameDetail.Type = GameTypes[replay.PlaylistName];
 
@@ -68,6 +67,7 @@ public class ReplayService : IReplayService
         var game = new Game
         {
             AuthorId = author.Id,
+            AuthorPlayer = authorAsPlayer,
             Detail = gameDetail,
             ReplayFile = replayFile
         };

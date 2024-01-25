@@ -1,22 +1,18 @@
-﻿using AutoMapper;
-using BrawlhallaStat.Api.Commands;
-using BrawlhallaStat.Api.Replays.Commands;
+﻿using BrawlhallaStat.Api.Replays.Commands;
 using BrawlhallaStat.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BrawlhallaStat.Api.Controllers;
+namespace BrawlhallaStat.Api.Replays;
 
 [Route("api/[controller]/[action]")]
 public class ReplayController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
 
-    public ReplayController(IMediator mediator, IMapper mapper)
+    public ReplayController(IMediator mediator)
     {
         _mediator = mediator;
-        _mapper = mapper;
     }
 
     [HttpPost]
@@ -24,10 +20,10 @@ public class ReplayController : ControllerBase
     {
         if (file is null || file.Length <= 0)
         {
-            return BadRequest("Ошибка при загрузке файла");
+            return BadRequest("Incorrect file");
         }
 
-        var user = new User()
+        var user = new User
         {
             Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5",
             Login = "Nasral V Szhopu"
