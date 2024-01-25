@@ -1,12 +1,8 @@
-﻿using BrawlhallaStat.Api.Exceptions;
+﻿namespace BrawlhallaStat.Api.Replays.Exceptions;
 
-namespace BrawlhallaStat.Api.Replays.Exceptions;
-
-public class NotSupportedGameException : ApiException
+public class NotSupportedGameException : ReplayUploadException
 {
     public NotSupportedGameException(string message)
         : base(message)
-    {
-
-    }
+    { }
 }

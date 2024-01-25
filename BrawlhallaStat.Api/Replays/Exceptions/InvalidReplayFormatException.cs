@@ -1,8 +1,6 @@
-﻿using BrawlhallaStat.Api.Exceptions;
+﻿namespace BrawlhallaStat.Api.Replays.Exceptions;
 
-namespace BrawlhallaStat.Api.Replays.Exceptions;
-
-public class InvalidReplayFormatException : ApiException
+public class InvalidReplayFormatException : ReplayUploadException
 {
     public override string Message => "Invalid replay format";
 }
