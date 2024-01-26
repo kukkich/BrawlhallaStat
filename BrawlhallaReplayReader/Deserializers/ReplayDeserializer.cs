@@ -54,15 +54,12 @@ public class ReplayDeserializer : IReplayDeserializer
 
     private void SelectReadingStrategy(BitStream stream)
     {
-        //TODO correct versions
-        if (_result.Version > 215)
+        _readingStrategy = _result.Version switch
         {
-            _readingStrategy = new ReadingStrategyAfterV7(stream);
-        }
-        else
-        {
-            _readingStrategy = new ReadingStrategyBeforeV7(stream);
-        }
+            >= 228 => new ReadingStrategyAfterV7dot13(stream),
+            > 215 and < 228 => new ReadingStrategyAfterV7(stream),
+            <= 215 => new ReadingStrategyBeforeV7(stream),
+        };
     }
 
     private static void XorData(BitStream stream)
@@ -88,5 +85,17 @@ public class ReplayDeserializer : IReplayDeserializer
         ZLibFacade.CompressData(buffer, out var compressed);
 
         stream.Data = compressed;
+    }
+
+    // only for debug if new version not supported
+    private static void SaveDecompressedFile(byte[] byteArray, string filePath)
+    {
+        var directory = Path.GetDirectoryName(filePath)!;
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        File.WriteAllBytes(filePath, byteArray);
     }
 }

@@ -113,9 +113,13 @@ public class ReplayService : IReplayService
     private static void EnsureThatSupports(ReplayInfo replay)
     {
         var name = replay.PlaylistName;
+        if (String.IsNullOrEmpty(replay.PlaylistName))
+        {
+            throw new NotSupportedGameException("Game type is empty or custom lobby");
+        }
         if (!GameTypes.TryGetValue(name, out var gameType))
         {
-            throw new NotSupportedGameException("Not supported game type");
+            throw new NotSupportedGameException($"Not supported game type {name}");
         }
         
         if (!replay.Players.All(player => player.Data.Team is 1 or 2))

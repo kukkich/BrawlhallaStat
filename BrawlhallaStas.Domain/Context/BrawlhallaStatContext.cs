@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace BrawlhallaStat.Domain.Context;
 
@@ -10,20 +11,20 @@ public class BrawlhallaStatContext : DbContext
     public DbSet<Weapon> Weapons { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
 
-    public DbSet<Game> Games { get; set; }
-    public DbSet<ReplayFile> ReplayFiles { get; set; }
-    public DbSet<Death> Deaths { get; set; }
-    public DbSet<GameDetail> GameDetails { get; set; }
-    public DbSet<Player> Players { get; set; }
+    public DbSet<Game> Games { get; set; } = null!;
+    public DbSet<ReplayFile> ReplayFiles { get; set; } = null!;
+    public DbSet<Death> Deaths { get; set; } = null!;
+    public DbSet<GameDetail> GameDetails { get; set; } = null!;
+    public DbSet<Player> Players { get; set; } = null!;
 
-    public DbSet<Token> Tokens { get; set; }
-    public DbSet<IdentityClaim> Claims { get; set; }
-    public DbSet<Role> Roles { get; set; }
+    public DbSet<Token> Tokens { get; set; } = null!;
+    public DbSet<IdentityClaim> Claims { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
 
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
     {
-        Database.EnsureDeleted();
+        //Database.EnsureDeleted();
         if (!Database.EnsureCreated()) return;
     }
 }
