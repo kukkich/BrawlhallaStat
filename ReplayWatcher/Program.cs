@@ -57,6 +57,10 @@ internal class Program
 
                 ReWriteLine("Наблюдение остановлено");
             }),
+            new("Good replay", () =>
+            {
+                UploadFile(FolderPath + "\\[8.01] SmallEnigma (3).replay");
+            }),
             new("[7.10]", () =>
             {
                 UploadFile(FolderPath + "\\[7.10] SmallBrawlhaven (11).replay");

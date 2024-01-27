@@ -31,10 +31,10 @@ public class UploadReplayHandler : IRequestHandler<UploadReplayCommand, string>
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation(
                 "Replay was saved. Author {Author}, details {Details}, file {File}",
-                game.AuthorId, game.GameDetailsId, game.ReplayFileId
+                game.AuthorId, game.DetailId, game.ReplayFileId
             );
 
-            return game.GameDetailsId;
+            return game.DetailId;
         }
         catch (Exception exception)
         {

@@ -25,7 +25,7 @@ public class ReplayController : ControllerBase
 
         var user = new User
         {
-            Id = "8857f722-6a29-4c87-9ef2-42ab8c6fa2e5",
+            Id = "6809e90a-90e3-4106-8072-4038f51917f9",
             Login = "Nasral V Szhopu"
         };
 

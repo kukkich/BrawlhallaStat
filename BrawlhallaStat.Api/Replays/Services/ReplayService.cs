@@ -13,10 +13,10 @@ public class ReplayService : IReplayService
 {
     private static readonly Dictionary<string, GameType> GameTypes = new()
     {
-        ["2v2Ranked"] = GameType.Ranked2V2,
-        ["2v2Unranked"] = GameType.Unranked2V2,
-        ["1v1Ranked"] = GameType.Ranked1V1,
-        ["1v1Unranked"] = GameType.Unranked1V1
+        ["PlaylistType_2v2Ranked_DisplayName"] = GameType.Ranked2V2,
+        ["PlaylistType_2v2Unranked_DisplayName"] = GameType.Unranked2V2,
+        ["PlaylistType_1v1Ranked_DisplayName"] = GameType.Ranked1V1,
+        ["PlaylistType_1v1Unranked_DisplayName"] = GameType.Unranked1V1
     };
     private static readonly int[] AllowedResultKeys1V1 = { 1, 2 };
     private static readonly int[] AllowedResultKeys2V2 = { 1, 2, 3, 4 };
@@ -49,10 +49,11 @@ public class ReplayService : IReplayService
 
         EnsureThatSupports(replay);
 
-        var gameDetail = _mapper.Map<GameDetail>(replay);
+        //var gameDetail = _mapper.Map<GameDetail>(replay);
+        var gameDetail = MapToDomainGame(replay);
         gameDetail.Id = Guid.NewGuid().ToString();
 
-        var nickName = author.NickName;
+        var nickName = author.Login;
         var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
 
         gameDetail.Type = GameTypes[replay.PlaylistName];
@@ -166,5 +167,92 @@ public class ReplayService : IReplayService
                 throw new NotSupportedGameException($"Invalid results");
             }
         }
+    }
+
+    private GameDetail MapToDomainGame(ReplayInfo replay)
+    {
+        var game = new GameDetail()
+        {
+            Id = Guid.NewGuid().ToString(),
+            RandomSeed = replay.RandomSeed,
+            Version = replay.Version,
+            OnlineGame = replay.OnlineGame,
+            LevelId = replay.LevelId,
+            EndOfMatchFanfareId = replay.EndOfMatchFanfare,
+            PlaylistName = replay.PlaylistName
+        };
+
+        game.Players = replay.Players.
+            Select(player =>
+            {
+                var domainPlayer = new Player
+                {
+                    NickName = player.Name,
+                    Team = player.Data.Team switch
+                    {
+                        1 => Team.Red,
+                        2 => Team.Blue,
+                        _ => throw new Exception("Unexpected exception. Game has more than 2 teams")
+                    },
+                    IsWinner = replay.Results[1] == player.Data.Team,
+                    Customization = new Customization(),
+                    GameDetail = game
+                };
+
+                var customization = new Customization
+                {
+                    ColorId = player.Data.ColorId,
+                    ThemeId = player.Data.PlayerThemeId,
+                    WinTaunt = player.Data.WinTaunt,
+                    LoseTaunt = player.Data.LoseTaunt,
+                    AvatarId = player.Data.AvatarId
+                };
+
+                var hero = player.Data.Heroes[0];
+                var legendDetails = new LegendDetails
+                {
+                    LegendId = hero.HeroId,
+                    CostumeId = hero.CostumeId,
+                    Stance = hero.Stance,
+                    WeaponSkins = hero.WeaponSkins
+                };
+
+                var deaths =
+                    from death in replay.Deaths
+                    where death.EntityId == player.InGameId
+                    select new Death
+                    {
+                        TimeStamp = death.Timestamp,
+                        Player = domainPlayer,
+                        GameDetail = game
+                    };
+
+                domainPlayer.Customization = customization;
+                domainPlayer.LegendDetails = legendDetails;
+                domainPlayer.Deaths = deaths.ToList();
+
+                return domainPlayer;
+            })
+            .ToList();
+        game.Deaths = game.Players
+            .SelectMany(x => x.Deaths)
+            .OrderByDescending(x => x.TimeStamp)
+            .ToList();
+
+        game.Settings = new Domain.Games.GameSettings
+        {
+            Flags = replay.GameSettings.Flags,
+            MaxPlayers = replay.GameSettings.MaxPlayers,
+            Duration = replay.GameSettings.Duration,
+            RoundDuration = replay.GameSettings.RoundDuration,
+            StartingLives = replay.GameSettings.StartingLives,
+            ScoringType = replay.GameSettings.ScoringType,
+            ScoreToWin = replay.GameSettings.ScoreToWin,
+            GameSpeed = replay.GameSettings.GameSpeed,
+            DamageRatio = replay.GameSettings.DamageRatio,
+            LevelSetId = replay.GameSettings.LevelSetId
+        };
+
+        return game;
     }
 }
