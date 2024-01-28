@@ -1,5 +1,4 @@
 ﻿using BrawlhallaStat.Api.Replays.Commands;
-using BrawlhallaStat.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,11 +22,7 @@ public class ReplayController : ControllerBase
             return BadRequest("Incorrect file");
         }
 
-        var user = new User
-        {
-            Id = "3a54046f-a17b-4757-87e9-3b3a7847d8e3",
-            Login = "Nasral V Szhopu"
-        };
+        var user = TestUser.Instance;
 
         await _mediator.Send(new UploadReplayCommand(user, file));
 

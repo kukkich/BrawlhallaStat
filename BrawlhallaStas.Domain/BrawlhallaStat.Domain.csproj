@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dto\**" />
+    <EmbeddedResource Remove="Dto\**" />
+    <None Remove="Dto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Dto\" />
   </ItemGroup>
   <ItemGroup>
   	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
