@@ -1,4 +1,5 @@
 ﻿using BrawlhallaStat.Domain.Games;
+using BrawlhallaStat.Domain.Games.Views;
 using BrawlhallaStat.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 // ReSharper disable VirtualMemberCallInConstructor
@@ -21,10 +22,22 @@ public class BrawlhallaStatContext : DbContext
     public DbSet<IdentityClaim> Claims { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
 
+    public DbSet<GameStatisticView> GameStatistics { get; set; } = null!;
+
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
     {
         //Database.EnsureDeleted();
         if (!Database.EnsureCreated()) return;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder
+            .Entity<GameStatisticView>()
+            .ToView("GameStatisticView")
+            .HasNoKey();
     }
 }
