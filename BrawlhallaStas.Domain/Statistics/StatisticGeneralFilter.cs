@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using BrawlhallaStat.Domain.Games;
+﻿using BrawlhallaStat.Domain.Games;
 using BrawlhallaStat.Domain.Games.Views;
 
 namespace BrawlhallaStat.Domain.Statistics;
@@ -51,6 +50,25 @@ public class StatisticGeneralFilter
 
     public bool IsValid()
     {
-        throw new NotImplementedException();
+        if (LegendId is not null && WeaponId is not null)
+        {
+            return false;
+        }
+        if (EnemyLegendId is not null && EnemyWeaponId is not null)
+        {
+            return false;
+        }
+        if (TeammateLegendId is not null && TeammateWeaponId is not null)
+        {
+            return false;
+        }
+
+        if ((TeammateLegendId is not null || TeammateWeaponId is not null) &&
+            GameType is not (Games.GameType.Ranked2V2 or Games.GameType.Unranked2V2))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
