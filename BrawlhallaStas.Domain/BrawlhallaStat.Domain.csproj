@@ -8,13 +8,11 @@
 
   <ItemGroup>
     <Compile Remove="Dto\**" />
+    <Compile Remove="Exceptions\**" />
     <EmbeddedResource Remove="Dto\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
     <None Remove="Dto\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Games\Dtos\" />
+    <None Remove="Exceptions\**" />
   </ItemGroup>
   <ItemGroup>
   	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />

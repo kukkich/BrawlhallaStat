@@ -1,6 +1,6 @@
-﻿using BrawlhallaStat.Domain.Games.Dtos;
+﻿using BrawlhallaStat.Domain;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public record LegendsQuery() : IRequest<List<LegendDto>>;
+public record LegendsQuery() : IRequest<List<Legend>>;

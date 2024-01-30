@@ -1,12 +1,22 @@
-﻿using BrawlhallaStat.Domain.Games.Dtos;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.BrawlhallaEntities.Services;
+using BrawlhallaStat.Domain;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public class LegendsQueryHandler : IRequestHandler<LegendsQuery, List<LegendDto>>
+public class LegendsQueryHandler : IRequestHandler<LegendsQuery, List<Legend>>
 {
-    public Task<List<LegendDto>> Handle(LegendsQuery request, CancellationToken cancellationToken)
+    private readonly IBrawlhallaEntitiesService _entitiesService;
+
+    public LegendsQueryHandler(IBrawlhallaEntitiesService entitiesService)
     {
-        throw new NotImplementedException();
+        _entitiesService = entitiesService;
+    }
+
+    public async Task<List<Legend>> Handle(LegendsQuery request, CancellationToken cancellationToken)
+    {
+        var legends = await _entitiesService.GetLegends();
+        return legends;
     }
 }

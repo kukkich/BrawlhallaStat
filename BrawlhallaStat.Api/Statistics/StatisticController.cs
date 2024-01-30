@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Statistics;
 
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 public class StatisticController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -16,7 +16,7 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Upload(StatisticGeneralFilter filter)
+    public async Task<IActionResult> FilteredStatistic(StatisticGeneralFilter filter)
     {
         var user = TestUser.Instance;
 

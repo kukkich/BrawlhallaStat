@@ -4,18 +4,20 @@ using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BrawlhallaStat.Api.BrawlhallaData.Cache;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Cache;
 
-public class WeaponCacheService : MemCacheBase<List<Weapon>>
+public class WeaponsCache : MemCacheBase<List<Weapon>>
 {
     protected override string CacheKey => "WeaponCache";
 
-    public WeaponCacheService(IMemoryCache cache, BrawlhallaStatContext dbContext)
+    public WeaponsCache(IMemoryCache cache, BrawlhallaStatContext dbContext)
         : base(cache, dbContext)
     { }
 
     protected override async Task<List<Weapon>> LoadDataAsync()
     {
-        return await DbContext.Weapons.AsNoTracking().ToListAsync();
+        return await DbContext.Weapons
+            .AsNoTracking()
+            .ToListAsync();
     }
 }
