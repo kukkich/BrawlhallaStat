@@ -3,6 +3,7 @@ using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Services.Tokens;
+using BrawlhallaStat.Api.Statistics;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -79,7 +80,9 @@ public class Program
         services.AddBrawlhallaReplayDeserializer();
 
         services.AddMemoryCache();
+        
         services.AddReplay();
+        services.AddStatistic();
 
         services.AddTokenService();
     }

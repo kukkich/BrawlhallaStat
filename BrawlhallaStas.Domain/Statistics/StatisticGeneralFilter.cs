@@ -13,7 +13,7 @@ public class StatisticGeneralFilter
     public int? TeammateLegendId { get; set; }
     public int? TeammateWeaponId { get; set; }
 
-    public IQueryable<GameStatisticView> ApplyFilterExpression(IQueryable<GameStatisticView> source)
+    internal IQueryable<GameStatisticView> ApplyFilterExpression(IQueryable<GameStatisticView> source)
     {
         var result = source;
         if (GameType is not null)

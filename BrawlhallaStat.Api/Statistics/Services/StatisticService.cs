@@ -1,4 +1,5 @@
 ﻿using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +14,13 @@ public class StatisticService : IStatisticService
         _dbContext = dbContext;
     }
 
-    public async Task<Statistic> GetStatisticsAsync(StatisticGeneralFilter filter)
+    public async Task<Statistic> GetStatisticsAsync(StatisticGeneralFilter filter, IUserIdentity user)
     {
-        var filteredGames = filter.ApplyFilterExpression(_dbContext.GameStatistics.AsNoTracking())
-            .DistinctBy(x => x.GameDetailId);
+        var filteredGames = _dbContext.GameStatistics
+            .Where(x => x.UserId == user.Id)
+            .ApplyFilter(filter)
+            .Select(x => new {x.GameDetailId, x.IsWin})
+            .Distinct();
 
         return new Statistic
         {
