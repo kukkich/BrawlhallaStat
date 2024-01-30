@@ -4,9 +4,9 @@ using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BrawlhallaStat.Api.Replays.Cache;
+namespace BrawlhallaStat.Api.BrawlhallaData.Cache;
 
-public class WeaponCacheService : MemCacheBase<Weapon>
+public class WeaponCacheService : MemCacheBase<List<Weapon>>
 {
     protected override string CacheKey => "WeaponCache";
 

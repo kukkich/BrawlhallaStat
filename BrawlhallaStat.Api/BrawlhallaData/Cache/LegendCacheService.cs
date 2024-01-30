@@ -4,9 +4,9 @@ using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BrawlhallaStat.Api.Replays.Cache;
+namespace BrawlhallaStat.Api.BrawlhallaData.Cache;
 
-public class LegendCacheService : MemCacheBase<Legend>
+public class LegendCacheService : MemCacheBase<List<Legend>>
 {
     protected override string CacheKey => "LegendCache";
 
