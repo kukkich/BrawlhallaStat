@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Api.Commands.BrawlhallaEntities;
+﻿using BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +15,7 @@ public class WeaponController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] AddWeapon request)
+    public async Task<IActionResult> Add([FromBody] AddWeaponQuery request)
     {
         var id = await _mediator.Send(request);
         return Ok(id);

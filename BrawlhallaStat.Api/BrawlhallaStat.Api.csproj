@@ -24,9 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BrawlhallaData\Services\" />
-    <Folder Include="CommandHandlers\BrawlhallaEntities\" />
-    <Folder Include="Commands\BrawlhallaEntities\" />
     <Folder Include="MapperProfiles\" />
   </ItemGroup>
 
