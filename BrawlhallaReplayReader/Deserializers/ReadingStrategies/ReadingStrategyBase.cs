@@ -50,10 +50,7 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
 
     protected virtual void ReadPlayerData(ReplayInfo destination)
     {
-        destination.GameSettings = ReadGameSettings();
-        destination.LevelId = Stream.ReadInt();
-        destination.HeroCount = Stream.ReadShort();
-        destination.Players.Clear();
+        ReadGeneral(destination);
 
         var calculatedChecksum = 0;
 
@@ -90,6 +87,15 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
             //TODO extract into logger
             Console.WriteLine($"[DEV WARNING] Data checksums don't match: Got {checksum}, calculated {calculatedChecksum}");
         }
+    }
+
+    protected virtual void ReadGeneral(ReplayInfo destination)
+    {
+        destination.GameSettings = ReadGameSettings();
+
+        destination.LevelId = Stream.ReadInt();
+        destination.HeroCount = Stream.ReadShort();
+        destination.Players.Clear();
     }
 
     protected virtual GameSettings ReadGameSettings()

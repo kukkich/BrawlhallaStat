@@ -21,8 +21,6 @@ public class ApiExceptionMiddleware
         }
         catch (ApiException ex)
         {
-            _logger.LogWarning(ex.Message);
-
             context.Response.StatusCode = 400;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync($"{{'error': {ex.Message}}}");
