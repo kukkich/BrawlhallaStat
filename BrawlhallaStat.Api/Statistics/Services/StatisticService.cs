@@ -15,7 +15,7 @@ public class StatisticService : IStatisticService
 
     public async Task<Statistic> GetStatisticsAsync(StatisticGeneralFilter filter)
     {
-        var filteredGames = filter.ApplyFilterExpression(_dbContext.GameStatistics)
+        var filteredGames = filter.ApplyFilterExpression(_dbContext.GameStatistics.AsNoTracking())
             .DistinctBy(x => x.GameDetailId);
 
         return new Statistic

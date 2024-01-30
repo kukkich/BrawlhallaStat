@@ -10,6 +10,6 @@ public class GameStatisticView
     public int WeaponId { get; set; }
     public int EnemyLegendId { get; set; }
     public int EnemyWeaponId { get; set; }
-    public int TeammateLegendId { get; set; }
-    public int TeammateWeaponId { get; set; }
+    public int? TeammateLegendId { get; set; }
+    public int? TeammateWeaponId { get; set; }
 }
