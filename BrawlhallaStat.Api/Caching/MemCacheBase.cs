@@ -17,9 +17,9 @@ public abstract class MemCacheBase<T> : ICacheService<T>
         DbContext = dbContext;
     }
 
-    public async Task<List<T>> GetDataAsync()
+    public async Task<T> GetDataAsync()
     {
-        if (_cache.TryGetValue(CacheKey, out List<T> data))
+        if (_cache.TryGetValue(CacheKey, out T data))
             return data!;
 
         data = await LoadDataAsync();
@@ -32,5 +32,5 @@ public abstract class MemCacheBase<T> : ICacheService<T>
         return data;
     }
 
-    protected abstract Task<List<T>> LoadDataAsync();
+    protected abstract Task<T> LoadDataAsync();
 }

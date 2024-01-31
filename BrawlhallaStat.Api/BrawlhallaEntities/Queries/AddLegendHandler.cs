@@ -1,12 +1,11 @@
-﻿using BrawlhallaStat.Api.Commands.BrawlhallaEntities;
-using BrawlhallaStat.Api.Exceptions;
+﻿using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 
-namespace BrawlhallaStat.Api.CommandHandlers.BrawlhallaEntities;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public class AddLegendHandler : IRequestHandler<AddLegend, int>
+public class AddLegendHandler : IRequestHandler<AddLegendRequest, int>
 {
     private readonly BrawlhallaStatContext _context;
 
@@ -15,7 +14,7 @@ public class AddLegendHandler : IRequestHandler<AddLegend, int>
         _context = context;
     }
 
-    public async Task<int> Handle(AddLegend request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddLegendRequest request, CancellationToken cancellationToken)
     {
         var sameNameExist = _context.Legends.Any(x => x.Name == request.Name);
         if (sameNameExist)

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
+using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Services.Tokens;
@@ -83,6 +84,7 @@ public class Program
         
         services.AddReplay();
         services.AddStatistic();
+        services.AddBrawlhallaEntities();
 
         services.AddTokenService();
     }

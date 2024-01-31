@@ -1,12 +1,11 @@
-﻿using BrawlhallaStat.Api.Commands.BrawlhallaEntities;
-using BrawlhallaStat.Api.Exceptions;
+﻿using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 
-namespace BrawlhallaStat.Api.CommandHandlers.BrawlhallaEntities;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public class AddWeaponHandler : IRequestHandler<AddWeapon, int>
+public class AddWeaponHandler : IRequestHandler<AddWeaponRequest, int>
 {
     private readonly BrawlhallaStatContext _context;
 
@@ -15,7 +14,7 @@ public class AddWeaponHandler : IRequestHandler<AddWeapon, int>
         _context = context;
     }
 
-    public async Task<int> Handle(AddWeapon request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddWeaponRequest request, CancellationToken cancellationToken)
     {
         var sameNameExist = _context.Weapons.Any(x => x.Name == request.Name);
         if (sameNameExist)
