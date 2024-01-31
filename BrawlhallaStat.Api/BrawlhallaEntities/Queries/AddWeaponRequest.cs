@@ -2,4 +2,4 @@
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public record AddWeaponQuery(string Name) : IRequest<int>;
+public record AddWeaponRequest(string Name) : IRequest<int>;

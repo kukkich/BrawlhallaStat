@@ -5,16 +5,16 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public class AddWeaponQueryHandler : IRequestHandler<AddWeaponQuery, int>
+public class AddWeaponHandler : IRequestHandler<AddWeaponRequest, int>
 {
     private readonly BrawlhallaStatContext _context;
 
-    public AddWeaponQueryHandler(BrawlhallaStatContext context)
+    public AddWeaponHandler(BrawlhallaStatContext context)
     {
         _context = context;
     }
 
-    public async Task<int> Handle(AddWeaponQuery request, CancellationToken cancellationToken)
+    public async Task<int> Handle(AddWeaponRequest request, CancellationToken cancellationToken)
     {
         var sameNameExist = _context.Weapons.Any(x => x.Name == request.Name);
         if (sameNameExist)

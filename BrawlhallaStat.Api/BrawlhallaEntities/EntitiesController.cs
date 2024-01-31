@@ -29,4 +29,21 @@ public class EntitiesController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost]
+    [ActionName("weapons")]
+    public async Task<IActionResult> AddWeapons([FromBody] AddWeaponRequest request)
+    {
+        // Todo implement into service
+        var id = await _mediator.Send(request);
+        return Ok(id);
+    }
+
+    [HttpPost]
+    [ActionName("legends")]
+    public async Task<IActionResult> AddLegends([FromBody] AddLegendRequest request)
+    {
+        var id = await _mediator.Send(request);
+        return Ok(id);
+    }
 }
