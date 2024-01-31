@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BrawlhallaStat.Api.BrawlhallaEntities.Services;
+﻿using BrawlhallaStat.Api.BrawlhallaEntities.Services;
 using BrawlhallaStat.Domain;
 using MediatR;
 

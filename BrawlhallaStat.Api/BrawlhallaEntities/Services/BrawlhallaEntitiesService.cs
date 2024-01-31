@@ -34,9 +34,10 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
         throw new NotImplementedException();
     }
 
-    public Task<List<Weapon>> GetWeapons()
+    public async Task<List<Weapon>> GetWeapons()
     {
-        throw new NotImplementedException();
+        var weapons = await _weaponsCache.GetDataAsync();
+        return weapons;
     }
 
     public Task<Legend> AddWeapon()

@@ -25,7 +25,7 @@ public class EntitiesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Weapons()
     {
-        var result = await _mediator.Send(new LegendsQuery());
+        var result = await _mediator.Send(new WeaponsQuery());
 
         return Ok(result);
     }

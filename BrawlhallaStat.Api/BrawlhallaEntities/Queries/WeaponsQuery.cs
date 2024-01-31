@@ -3,4 +3,4 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 
-public record LegendsQuery : IRequest<List<Legend>>;
+public record WeaponsQuery : IRequest<List<Weapon>>;
