@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReplayWatcher.Desktop"
         mc:Ignorable="d"
-        ShowInTaskbar="False" Title="ReplayWatcher" Height="450" Width="800">
+        Title="ReplayWatcher" Height="450" Width="800">
     <Grid>
 
     </Grid>
