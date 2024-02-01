@@ -1,23 +1,49 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using ReplayWatcher.Desktop.Watcher;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using ReplayWatcher.Desktop.WindowComponents.Commands;
+using ReplayWatcher.Desktop.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ReplayWatcher.Desktop;
 
 public partial class MainWindow : Window
 {
-    private readonly TaskbarIcon _taskbar;
     private bool Hidden => !ShowInTaskbar;
+    private readonly List<IDisposable> _disposeRequired = new ();
+    private readonly ReplayWatcherService _replayWatcher;
+    private readonly TaskbarIcon _taskbar;
+    private readonly ConfigurationManager _configurationManager;
 
-    public MainWindow()
+    private bool _isPathInitialized = false;
+
+    public MainWindow(ReplayWatcherService replayWatcher, ConfigurationManager configurationManager)
     {
+        _replayWatcher = replayWatcher;
+        _configurationManager = configurationManager;
+
         _taskbar = CreateTaskbar();
+
+        _disposeRequired.Add(_taskbar);
+        _disposeRequired.Add(replayWatcher);
+
         InitializeComponent();
     }
 
     protected override void OnInitialized(EventArgs e)
     {
+        try
+        {
+            _replayWatcher.Start();
+            _isPathInitialized = true;
+        }
+        catch (InvalidOperationException)
+        {
+            _isPathInitialized = false;
+        }
+
         CreateContextMenu();
         base.OnInitialized(e);
     }
@@ -50,7 +76,7 @@ public partial class MainWindow : Window
             HideWindow();
             return;
         }
-        _taskbar.Dispose();
+        Dispose();
         base.OnClosing(e);
     }
 
@@ -74,5 +100,13 @@ public partial class MainWindow : Window
                 new() { Header = "Exit", Command = new ActionCommand(ShutDown) }
             }
         };
+    }
+
+    private void Dispose()
+    {
+        foreach (var disposable in _disposeRequired)
+        {
+            disposable.Dispose();
+        }
     }
 }

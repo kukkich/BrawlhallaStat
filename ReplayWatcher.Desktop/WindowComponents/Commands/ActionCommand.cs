@@ -6,19 +6,16 @@ public class ActionCommand : ICommand
 {
     private readonly Action _execute;
 
-    public event EventHandler CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;
 
     public ActionCommand(Action execute)
     {
         _execute = execute ?? throw new ArgumentNullException(nameof(execute));
     }
 
-    public bool CanExecute(object parameter)
-    {
-        return true;
-    }
+    public bool CanExecute(object? _) => true;
 
-    public void Execute(object parameter)
+    public void Execute(object? parameter)
     {
         _execute();
     }
