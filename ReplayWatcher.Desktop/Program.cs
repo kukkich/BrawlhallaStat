@@ -44,6 +44,16 @@ public class Program
             .Get<AppConfiguration>()!;
         services.AddSingleton(appSettings);
         services.AddSingleton<Configuration.ConfigurationManager>();
+
+        services.AddLogging(builder =>
+        {
+            builder.AddConsole();
+            builder.AddDebug();
+
+            builder.SetMinimumLevel(LogLevel.Debug);
+        });
+
+
         services.AddSingleton<ReplayWatcherService>();
 
         services.AddSingleton<App>();
