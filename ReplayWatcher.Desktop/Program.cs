@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using ReplayWatcher.Desktop.Model.Authentication;
 using ReplayWatcher.Desktop.Model.ReplayService;
 using ReplayWatcher.Desktop.Model.Watcher;
+using ReplayWatcher.Desktop.ViewModel;
 
 namespace ReplayWatcher.Desktop;
 
@@ -56,8 +57,10 @@ public class Program
 
         services.AddSingleton<IReplayService, LoggerReplayService>();
         services.AddSingleton<ReplayWatcherService>();
+        services.AddTransient<IAuthService, LoggerAuthService>();
         services.AddTransient<JwtDelegatingHandler>();
 
+        services.AddTransient<IAppViewModel, AppViewModel>();
 
         services.AddHttpClient("MyApiClient", (services, client) =>
         {

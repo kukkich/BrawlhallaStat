@@ -2,6 +2,8 @@
 
 public interface IAuthService
 {
-    public Task<string> GetToken();
-    public Task<string> RefreshToken();
+    public Task<AuthenticationResult> Login(LoginRequest request);
+    public Task<AuthenticationResult> Register(RegisterRequest request);
+    public Task<AuthenticationResult> RefreshToken();
+    public Task Logout();
 }

@@ -11,17 +11,27 @@ public class LoggerAuthService : IAuthService
         _logger = logger;
     }
 
-    public Task<string> GetToken()
+    public Task<AuthenticationResult> Login(LoginRequest request)
     {
-        _logger.LogInformation("Got JWT");
-
-        return Task.FromResult("jwt token");
+        _logger.LogInformation("Login");
+        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
     }
 
-    public Task<string> RefreshToken()
+    public Task<AuthenticationResult> Register(RegisterRequest request)
     {
-        _logger.LogInformation("Refreshed JWT");
+        _logger.LogInformation("Register");
+        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
+    }
 
-        return Task.FromResult("refreshed jwt token");
+    Task<AuthenticationResult> IAuthService.RefreshToken()
+    {
+        _logger.LogInformation("RefreshToken");
+        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
+    }
+
+    public Task Logout()
+    {
+        _logger.LogInformation("Logout");
+        return Task.CompletedTask;
     }
 }

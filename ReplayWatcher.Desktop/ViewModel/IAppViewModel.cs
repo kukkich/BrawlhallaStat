@@ -1,6 +1,11 @@
-﻿namespace ReplayWatcher.Desktop.ViewModel;
+﻿using ReactiveUI;
+using ReplayWatcher.Desktop.Model.Authentication;
+using System.Reactive;
+
+namespace ReplayWatcher.Desktop.ViewModel;
 
 public interface IAppViewModel
 {
-    public Task StartApplication();
+    public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; }
+    public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; }
 }

@@ -1,26 +1,24 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using System.ComponentModel;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
-using ReplayWatcher.Desktop.Configuration;
-using ReplayWatcher.Desktop.Model.Watcher;
 using ReplayWatcher.Desktop.ViewModel;
 
 namespace ReplayWatcher.Desktop;
 
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     private bool Hidden => !ShowInTaskbar;
-    private readonly List<IDisposable> _disposeRequired = new ();
-    private readonly IAppViewModel _viewModel;
+    private readonly List<IDisposable> _disposeRequired = new();
     private readonly TaskbarIcon _taskbar;
 
     private bool _isPathInitialized = false;
 
     public MainWindow(IAppViewModel viewModel)
     {
-        _viewModel = viewModel;
+        ViewModel = viewModel;
 
         _taskbar = CreateTaskbar();
 
@@ -29,14 +27,13 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    protected override void OnInitialized(EventArgs e)
+    protected override async void OnInitialized(EventArgs e)
     {
-        _viewModel.StartApplication();
-
-        CreateContextMenu();
         base.OnInitialized(e);
+
+        await ViewModel!.StartApplicationCommand.Execute();
     }
-    
+
     private void ShowWindow()
     {
         ShowInTaskbar = true;
@@ -71,24 +68,22 @@ public partial class MainWindow : Window
 
     private TaskbarIcon CreateTaskbar()
     {
-        var taskbar = new TaskbarIcon();
-        taskbar.Icon = System.Drawing.SystemIcons.Application;
-        taskbar.ToolTipText = "Replay Watcher";
-        taskbar.DoubleClickCommand = new ActionCommand(ShowWindow);
-
-        return taskbar;
-    }
-
-    private void CreateContextMenu()
-    {
-        _taskbar.ContextMenu = new ContextMenu
+        var taskbar = new TaskbarIcon
         {
-            ItemsSource = new MenuItem[]
+            Icon = System.Drawing.SystemIcons.Application,
+            ToolTipText = "Replay Watcher",
+            DoubleClickCommand = new ActionCommand(ShowWindow),
+            ContextMenu = new ContextMenu
             {
-                new() { Header = "Open", Command = new ActionCommand(ShowWindow) },
-                new() { Header = "Exit", Command = new ActionCommand(ShutDown) }
+                ItemsSource = new MenuItem[]
+                {
+                    new() { Header = "Open", Command = new ActionCommand(ShowWindow) },
+                    new() { Header = "Exit", Command = new ActionCommand(ShutDown) }
+                }
             }
         };
+
+        return taskbar;
     }
 
     private void Dispose()

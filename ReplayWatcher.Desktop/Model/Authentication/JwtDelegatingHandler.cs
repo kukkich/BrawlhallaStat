@@ -6,7 +6,7 @@ namespace ReplayWatcher.Desktop.Model.Authentication;
 
 public class JwtDelegatingHandler : DelegatingHandler
 {
-    private string _token;
+    private TokenPair _tokens;
     private readonly IAuthService _authService;
 
     public JwtDelegatingHandler(IAuthService authService)
@@ -16,12 +16,13 @@ public class JwtDelegatingHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(_token))
+        if (string.IsNullOrWhiteSpace(_tokens.Access))
         {
-            _token = await _authService.GetToken();
+            var loginResult = await _authService.Login(new LoginRequest(null, null));
+            _tokens = loginResult.Tokens;
         }
         
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.Access);
         var response = await base.SendAsync(request, cancellationToken);
 
         if (response.StatusCode != HttpStatusCode.Unauthorized)
@@ -29,9 +30,10 @@ public class JwtDelegatingHandler : DelegatingHandler
             return response;
         }
         
-        _token = await _authService.RefreshToken();
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-
+        var refreshResult = await _authService.RefreshToken();
+        _tokens = refreshResult.Tokens;
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.Access);
+        
         response = await base.SendAsync(request, cancellationToken);
 
         return response;
