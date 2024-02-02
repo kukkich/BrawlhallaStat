@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.FileSystemGlobbing;
+﻿using System.IO;
 using Microsoft.Extensions.Logging;
 using ReplayWatcher.Desktop.Configuration;
 
-namespace ReplayWatcher.Desktop.Watcher;
+namespace ReplayWatcher.Desktop.Model.Watcher;
 
 public class ReplayWatcherService : IDisposable
 {
@@ -13,7 +11,7 @@ public class ReplayWatcherService : IDisposable
         get => _watcher.Path;
         set
         {
-            _logger.LogInformation("Path changing from {OldPath} \n   to {NewPath}", _watcher.Path, value);
+            _logger.LogInformation("Path changing from \"{OldPath}\" \n   to \"{NewPath}\"", _watcher.Path, value);
             _watcher.Path = value;
         }
     }
@@ -37,7 +35,7 @@ public class ReplayWatcherService : IDisposable
 
     public void Start()
     {
-        if (String.IsNullOrEmpty(Path) || !File.Exists(Path))
+        if (string.IsNullOrEmpty(Path) || !File.Exists(Path))
         {
             throw new InvalidOperationException("Directory for watching is empty");
         }

@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using ReplayWatcher.Desktop.Configuration;
 using System.IO;
 using Microsoft.Extensions.Logging;
-using ReplayWatcher.Desktop.Watcher;
+using ReplayWatcher.Desktop.Model.Authentication;
+using ReplayWatcher.Desktop.Model.ReplayService;
+using ReplayWatcher.Desktop.Model.Watcher;
 
 namespace ReplayWatcher.Desktop;
 
@@ -20,7 +22,7 @@ public class Program
         });
 
         var app = provider.GetRequiredService<App>();
-        
+
         try
         {
             app?.Run();
@@ -49,12 +51,20 @@ public class Program
         {
             builder.AddConsole();
             builder.AddDebug();
-
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
-
+        services.AddSingleton<IReplayService, LoggerReplayService>();
         services.AddSingleton<ReplayWatcherService>();
+        services.AddTransient<JwtDelegatingHandler>();
+
+
+        services.AddHttpClient("MyApiClient", (services, client) =>
+        {
+            var configuration = services.GetRequiredService<AppConfiguration>();
+            client.BaseAddress = new Uri(configuration.ApiUrl);
+        })
+        .AddHttpMessageHandler<JwtDelegatingHandler>();
 
         services.AddSingleton<App>();
         services.AddSingleton<MainWindow>();

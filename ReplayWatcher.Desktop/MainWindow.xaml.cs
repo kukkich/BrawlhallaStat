@@ -1,11 +1,11 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
-using ReplayWatcher.Desktop.Watcher;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
 using ReplayWatcher.Desktop.Configuration;
-using Microsoft.Extensions.Logging;
+using ReplayWatcher.Desktop.Model.Watcher;
+using ReplayWatcher.Desktop.ViewModel;
 
 namespace ReplayWatcher.Desktop;
 
@@ -13,36 +13,25 @@ public partial class MainWindow : Window
 {
     private bool Hidden => !ShowInTaskbar;
     private readonly List<IDisposable> _disposeRequired = new ();
-    private readonly ReplayWatcherService _replayWatcher;
+    private readonly IAppViewModel _viewModel;
     private readonly TaskbarIcon _taskbar;
-    private readonly ConfigurationManager _configurationManager;
 
     private bool _isPathInitialized = false;
 
-    public MainWindow(ReplayWatcherService replayWatcher, ConfigurationManager configurationManager)
+    public MainWindow(IAppViewModel viewModel)
     {
-        _replayWatcher = replayWatcher;
-        _configurationManager = configurationManager;
+        _viewModel = viewModel;
 
         _taskbar = CreateTaskbar();
 
         _disposeRequired.Add(_taskbar);
-        _disposeRequired.Add(replayWatcher);
 
         InitializeComponent();
     }
 
     protected override void OnInitialized(EventArgs e)
     {
-        try
-        {
-            _replayWatcher.Start();
-            _isPathInitialized = true;
-        }
-        catch (InvalidOperationException)
-        {
-            _isPathInitialized = false;
-        }
+        _viewModel.StartApplication();
 
         CreateContextMenu();
         base.OnInitialized(e);
