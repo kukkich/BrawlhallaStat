@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using ReactiveUI;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
 using ReplayWatcher.Desktop.ViewModel;
 
@@ -16,22 +17,23 @@ public partial class MainWindow
 
     private bool _isPathInitialized = false;
 
-    public MainWindow(IAppViewModel viewModel)
+    public MainWindow(AppViewModel viewModel)
     {
         ViewModel = viewModel;
+        DataContext = ViewModel;
 
         _taskbar = CreateTaskbar();
 
         _disposeRequired.Add(_taskbar);
-
         InitializeComponent();
     }
 
     protected override async void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-
-        await ViewModel!.StartApplicationCommand.Execute();
+        var x = ViewModel.LoginCommand.CanExecute
+            .Subscribe(t => MessageBox.Show(t.ToString()));
+        //await ViewModel!.StartApplicationCommand.Execute();
     }
 
     private void ShowWindow()

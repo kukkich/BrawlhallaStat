@@ -1,8 +1,10 @@
-﻿using ReplayWatcher.Desktop.Model.Authentication;
+﻿using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using ReplayWatcher.Desktop.Model.Authentication;
 
 namespace ReplayWatcher.Desktop.ViewModel;
 
-public class AuthState
+public class AuthState : ReactiveObject
 {
-    public TokenPair Tokens { get; set; }
+    [Reactive] public TokenPair? Tokens { get; set; }
 }

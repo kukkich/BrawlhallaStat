@@ -60,7 +60,7 @@ public class Program
         services.AddTransient<IAuthService, LoggerAuthService>();
         services.AddTransient<JwtDelegatingHandler>();
 
-        services.AddTransient<IAppViewModel, AppViewModel>();
+        services.AddTransient<AppViewModel>();
 
         services.AddHttpClient("MyApiClient", (services, client) =>
         {
