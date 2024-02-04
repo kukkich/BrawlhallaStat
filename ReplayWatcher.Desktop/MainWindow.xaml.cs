@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using ReactiveUI;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
 using ReplayWatcher.Desktop.ViewModel;
+using System.Reactive.Disposables;
 
 namespace ReplayWatcher.Desktop;
 
@@ -26,13 +27,24 @@ public partial class MainWindow
 
         _disposeRequired.Add(_taskbar);
         InitializeComponent();
+        this.WhenActivated(disposables =>
+        {
+            this.Bind(ViewModel, vm => vm.Login, view => view.UsernameTextBox.Text)
+                .DisposeWith(disposables);
+            PasswordBox.Events().PasswordChanged
+                .Subscribe(_ =>
+                {
+                    ViewModel.Password = PasswordBox.Password;
+                })
+                .DisposeWith(disposables);
+            this.BindCommand(ViewModel, vm => vm.LoginCommand, view => view.LoginButton)
+                .DisposeWith(disposables);
+        });
     }
 
     protected override async void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        var x = ViewModel.LoginCommand.CanExecute
-            .Subscribe(t => MessageBox.Show(t.ToString()));
         //await ViewModel!.StartApplicationCommand.Execute();
     }
 

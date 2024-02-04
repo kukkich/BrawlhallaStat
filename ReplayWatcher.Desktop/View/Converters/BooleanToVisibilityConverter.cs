@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace ReplayWatcher.Desktop.View.Converters;
 
-public class InvertedBooleanToVisibilityConverter : IValueConverter
+public class BooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

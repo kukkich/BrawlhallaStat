@@ -10,33 +10,27 @@
     xmlns:converters="clr-namespace:ReplayWatcher.Desktop.View.Converters"
     Title="ReplayWatcher" Height="450" Width="800">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-        <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBoolToVisConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="InvertedBoolToVisConverter" />
     </Window.Resources>
 
-    <Grid>
+    <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" x:Name="LoginPanel" 
-              Visibility="{Binding IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter},
-            ConverterParameter=False}">
-            <TextBox>123</TextBox>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="200" Width="3*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" Grid.Column="1" x:Name="LoginPanel" 
+              Visibility="{Binding IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}, ConverterParameter=True}">
+            <StackPanel Margin="10">
+                <TextBox Padding="5" Height="30" x:Name="UsernameTextBox" />
+                <PasswordBox Padding="5" Height="30" Margin="0 10 0 0" x:Name="PasswordBox"/>
+                <Button Height="30" x:Name="LoginButton" Content="Login" Margin="0 30 0 0" />
+            </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" x:Name="LoginPanel2" 
-              Visibility="{Binding IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter},
-    ConverterParameter=True}">
-            <TextBox>1234545</TextBox>
-        </Grid>
-        <Grid Grid.Row="2" x:Name="LoginPanel3" 
-              Visibility="{Binding IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}}">
-            <TextBox>3838928</TextBox>
-        </Grid>
-        <Button Grid.Row="3" Command="{Binding LoginCommand}"></Button>
-        <!-- Остальной пользовательский интерфейс -->
-        <!-- ... -->
     </Grid>
 </reactiveUi:ReactiveWindow>

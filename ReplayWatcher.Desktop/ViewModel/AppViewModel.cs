@@ -11,28 +11,10 @@ namespace ReplayWatcher.Desktop.ViewModel;
 public class AppViewModel : ReactiveObject, IAppViewModel
 {
     [Reactive] public bool IsPathInitialized { get; set; }
-
-    [Reactive]
-    public string Login
-    {
-        get; 
-        set;
-    } = "123";
-
-    [Reactive]
-    public string Password
-    {
-        get;
-        set;
-    } = "123";
+    [Reactive] public string Login { get; set; } = null!;
+    [Reactive] public string Password { get; set; } = null!;
     [Reactive] private bool IsApplicationRunning { get; set; }
-
-    [Reactive]
-    public bool IsAuthenticated
-    {
-        get; 
-        set;
-    }
+    [Reactive] public bool IsAuthenticated { get; set; }
 
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; }
     public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; set; }
@@ -56,17 +38,16 @@ public class AppViewModel : ReactiveObject, IAppViewModel
         _logger = logger;
 
         LoginCommand = ReactiveCommand.CreateFromTask(
-            () => LoginAsync(new LoginRequest(Login, Password)),
+            () => LoginAsync(new LoginRequest(Login!, Password!)),
             this.WhenAnyValue(x => x.IsAuthenticated, x => x.Login, x => x.Password,
-                (isAuth, login, password) => 
-                    !isAuth && 
+                (isAuth, login, password) =>
+                    !isAuth &&
                     !String.IsNullOrWhiteSpace(login) &&
                     !String.IsNullOrWhiteSpace(password)
             ));
         LoginCommand.Subscribe(result =>
         {
             _logger.LogInformation("Authenticated");
-
             _authState.Tokens = result.Tokens;
         });
         _authState.WhenAnyValue(x => x.Tokens, (TokenPair? pair) => pair is not null)
@@ -78,7 +59,7 @@ public class AppViewModel : ReactiveObject, IAppViewModel
 
         StartApplicationCommand = ReactiveCommand.CreateFromTask(
             StartApplication,
-            this.WhenAnyValue(x => x.IsApplicationRunning)
+            this.WhenAnyValue(x => x.IsApplicationRunning, value => !value)
         );
     }
 
