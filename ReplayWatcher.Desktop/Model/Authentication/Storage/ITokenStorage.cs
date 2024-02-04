@@ -2,6 +2,6 @@
 
 public interface ITokenStorage
 {
-    public Task<string> GetToken();
+    public Task<string?> GetToken();
     public Task SaveToken(string token);
 }

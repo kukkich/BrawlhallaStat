@@ -61,7 +61,7 @@ public class Program
 
         services.AddSingleton<IReplayService, LoggerReplayService>();
         services.AddSingleton<ReplayWatcherService>();
-        services.AddTransient<IAuthService, LoggerAuthService>();
+        services.AddTransient<IAuthService, AuthenticationService>();
         services.AddSingleton<ITokenStorage, InMemoryTokenStorage>();
         services.AddTransient<JwtDelegatingHandler>();
 
@@ -71,13 +71,12 @@ public class Program
         {
             var configuration = services.GetRequiredService<AppConfiguration>();
             client.BaseAddress = new Uri(configuration.ApiUrl);
-        })
+        }).AddHttpMessageHandler<JwtDelegatingHandler>()
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
         {
             UseCookies = true,
             CookieContainer = new CookieContainer()
-        })
-        .AddHttpMessageHandler<JwtDelegatingHandler>();
+        });
 
 
         services.AddSingleton<App>();

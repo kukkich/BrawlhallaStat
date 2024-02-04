@@ -4,13 +4,8 @@ public class InMemoryTokenStorage : ITokenStorage
 {
     private string? _token;
     
-    public Task<string> GetToken()
+    public Task<string?> GetToken()
     {
-        if (_token is null)
-        {
-            throw new InvalidOperationException("token not initialized");
-        }
-
         return Task.FromResult(_token);
     }
 

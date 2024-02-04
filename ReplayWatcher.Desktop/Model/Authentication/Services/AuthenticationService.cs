@@ -38,18 +38,17 @@ public class AuthenticationService : IAuthService
         };
 
         var response = await httpClient.SendAsync(httpRequest);
-        var json = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
         {
+            var json = await response.Content.ReadAsStringAsync();
             var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
-
             _logger.LogDebug("Error while logging");
 
             return new AuthenticationResult(false, new() { error.Text });
         }
 
-        var accessToken = JsonConvert.DeserializeObject<string>(json)!;
+        var accessToken = await response.Content.ReadAsStringAsync();
         await _tokenStorage.SaveToken(accessToken);
 
         _logger.LogDebug("Login succeed");

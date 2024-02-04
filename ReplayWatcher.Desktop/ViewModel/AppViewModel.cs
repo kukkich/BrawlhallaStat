@@ -1,4 +1,6 @@
-﻿using System.Reactive;
+﻿using System.Net.Http;
+using System.Reactive;
+using System.Windows;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -18,11 +20,13 @@ public class AppViewModel : ReactiveObject, IAppViewModel
 
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; }
     public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; set; }
 
     private readonly ReplayWatcherService _replayWatcher;
     private readonly ConfigurationManager _configurationManager;
     private readonly IAuthService _authService;
     private readonly ILogger<AppViewModel> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     [Reactive] public AuthState AuthState { get; set; } = new();
 
@@ -30,12 +34,14 @@ public class AppViewModel : ReactiveObject, IAppViewModel
         ReplayWatcherService replayWatcher,
         ConfigurationManager configurationManager,
         IAuthService authService,
-        ILogger<AppViewModel> logger)
+        ILogger<AppViewModel> logger, 
+        IHttpClientFactory httpClientFactory)
     {
         _replayWatcher = replayWatcher;
         _configurationManager = configurationManager;
         _authService = authService;
         _logger = logger;
+        _httpClientFactory = httpClientFactory;
 
         LoginCommand = ReactiveCommand.CreateFromTask(
             () => LoginAsync(new LoginRequest(Login!, Password!)),
@@ -48,13 +54,30 @@ public class AppViewModel : ReactiveObject, IAppViewModel
         LoginCommand.Subscribe(result =>
         {
             _logger.LogInformation("Authenticated");
-            AuthState.IsAuthenticated = true;
+
+            if (!result.IsSucceed)
+            {
+                foreach (var error in result.Errors!)
+                {
+                    _logger.LogInformation("Error while login: {message}", error);
+                }
+            }
+
+            AuthState.IsAuthenticated = result.IsSucceed;
         });
 
         StartApplicationCommand = ReactiveCommand.CreateFromTask(
             StartApplication,
             this.WhenAnyValue(x => x.IsApplicationRunning, value => !value)
         );
+
+        GetSecureDataCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var client = _httpClientFactory.CreateClient("GeneralApiClient");
+            var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "api/Secret/SimpleSecret"));
+
+            MessageBox.Show(await response.Content.ReadAsStringAsync());
+        });
     }
 
     public Task StartApplication()

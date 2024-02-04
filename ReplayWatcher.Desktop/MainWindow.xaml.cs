@@ -39,6 +39,9 @@ public partial class MainWindow
                 .DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.LoginCommand, view => view.LoginButton)
                 .DisposeWith(disposables);
+
+            this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
+                .DisposeWith(disposables);
         });
     }
 
