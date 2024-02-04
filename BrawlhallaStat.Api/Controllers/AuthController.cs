@@ -22,9 +22,9 @@ public class AuthController : ControllerBase
     {
         var tokens = await _mediator.Send(command);
 
-        SetTokenInCookie(tokens);
+        SetTokenInCookie(tokens.Refresh);
 
-        return Ok(tokens);
+        return Ok(tokens.Access);
     }
 
     [HttpPost]
@@ -32,9 +32,9 @@ public class AuthController : ControllerBase
     {
         var tokens = await _mediator.Send(command);
 
-        SetTokenInCookie(tokens);
+        SetTokenInCookie(tokens.Refresh);
 
-        return Ok(tokens);
+        return Ok(tokens.Access);
     }
 
     [HttpPost]
@@ -49,9 +49,9 @@ public class AuthController : ControllerBase
         var command = new RefreshTokenCommand { RefreshToken = refreshToken };
 
         var tokens = await _mediator.Send(command);
-        SetTokenInCookie(tokens);
+        SetTokenInCookie(tokens.Refresh);
 
-        return Ok(tokens);
+        return Ok(tokens.Access);
     }
 
     [HttpPost]
@@ -72,11 +72,11 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    private void SetTokenInCookie(TokenPair tokens)
+    private void SetTokenInCookie(string token)
     {
         HttpContext.Response.Cookies.Append(
             key: RefreshTokenCookieKey,
-            value: tokens.Refresh,
+            value: token,
             new CookieOptions
             {
                 MaxAge = TimeSpan.FromDays(10), //Todo take from configuration

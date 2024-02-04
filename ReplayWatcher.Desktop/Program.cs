@@ -2,8 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using ReplayWatcher.Desktop.Configuration;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using ReplayWatcher.Desktop.Model.Authentication;
+using ReplayWatcher.Desktop.Model.Authentication.Services;
+using ReplayWatcher.Desktop.Model.Authentication.Storage;
 using ReplayWatcher.Desktop.Model.ReplayService;
 using ReplayWatcher.Desktop.Model.Watcher;
 using ReplayWatcher.Desktop.ViewModel;
@@ -58,16 +62,23 @@ public class Program
         services.AddSingleton<IReplayService, LoggerReplayService>();
         services.AddSingleton<ReplayWatcherService>();
         services.AddTransient<IAuthService, LoggerAuthService>();
+        services.AddSingleton<ITokenStorage, InMemoryTokenStorage>();
         services.AddTransient<JwtDelegatingHandler>();
 
         services.AddTransient<AppViewModel>();
 
-        services.AddHttpClient("MyApiClient", (services, client) =>
+        services.AddHttpClient("GeneralApiClient", (services, client) =>
         {
             var configuration = services.GetRequiredService<AppConfiguration>();
             client.BaseAddress = new Uri(configuration.ApiUrl);
         })
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            UseCookies = true,
+            CookieContainer = new CookieContainer()
+        })
         .AddHttpMessageHandler<JwtDelegatingHandler>();
+
 
         services.AddSingleton<App>();
         services.AddSingleton<MainWindow>();

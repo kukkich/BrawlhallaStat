@@ -1,4 +1,4 @@
-﻿namespace ReplayWatcher.Desktop.Model.Authentication;
+﻿namespace ReplayWatcher.Desktop.Model.Authentication.Services;
 
 public interface IAuthService
 {

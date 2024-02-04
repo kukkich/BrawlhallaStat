@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace ReplayWatcher.Desktop.Model.Authentication;
+namespace ReplayWatcher.Desktop.Model.Authentication.Services;
 
 public class LoggerAuthService : IAuthService
 {
@@ -14,19 +14,19 @@ public class LoggerAuthService : IAuthService
     public Task<AuthenticationResult> Login(LoginRequest request)
     {
         _logger.LogInformation("Login");
-        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
+        return Task.FromResult(new AuthenticationResult(true, null));
     }
 
     public Task<AuthenticationResult> Register(RegisterRequest request)
     {
         _logger.LogInformation("Register");
-        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
+        return Task.FromResult(new AuthenticationResult(true, null));
     }
 
-    Task<AuthenticationResult> IAuthService.RefreshToken()
+    public Task<AuthenticationResult> RefreshToken()
     {
         _logger.LogInformation("RefreshToken");
-        return Task.FromResult(new AuthenticationResult(new TokenPair("Access", "Refresh")));
+        return Task.FromResult(new AuthenticationResult(true, null));
     }
 
     public Task Logout()

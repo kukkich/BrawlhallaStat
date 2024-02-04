@@ -25,7 +25,7 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="1" Grid.Column="1" x:Name="LoginPanel" 
-              Visibility="{Binding IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}, ConverterParameter=True}">
+              Visibility="{Binding AuthState.IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}, ConverterParameter=True}">
             <StackPanel Margin="10">
                 <TextBox Padding="5" Height="30" x:Name="UsernameTextBox" />
                 <PasswordBox Padding="5" Height="30" Margin="0 10 0 0" x:Name="PasswordBox"/>

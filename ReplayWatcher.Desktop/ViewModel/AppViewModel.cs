@@ -4,6 +4,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using ReplayWatcher.Desktop.Configuration;
 using ReplayWatcher.Desktop.Model.Authentication;
+using ReplayWatcher.Desktop.Model.Authentication.Services;
 using ReplayWatcher.Desktop.Model.Watcher;
 
 namespace ReplayWatcher.Desktop.ViewModel;
@@ -14,7 +15,6 @@ public class AppViewModel : ReactiveObject, IAppViewModel
     [Reactive] public string Login { get; set; } = null!;
     [Reactive] public string Password { get; set; } = null!;
     [Reactive] private bool IsApplicationRunning { get; set; }
-    [Reactive] public bool IsAuthenticated { get; set; }
 
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; }
     public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; set; }
@@ -24,7 +24,7 @@ public class AppViewModel : ReactiveObject, IAppViewModel
     private readonly IAuthService _authService;
     private readonly ILogger<AppViewModel> _logger;
 
-    private AuthState _authState { get; } = new();
+    [Reactive] public AuthState AuthState { get; set; } = new();
 
     public AppViewModel(
         ReplayWatcherService replayWatcher,
@@ -39,7 +39,7 @@ public class AppViewModel : ReactiveObject, IAppViewModel
 
         LoginCommand = ReactiveCommand.CreateFromTask(
             () => LoginAsync(new LoginRequest(Login!, Password!)),
-            this.WhenAnyValue(x => x.IsAuthenticated, x => x.Login, x => x.Password,
+            this.WhenAnyValue(x => x.AuthState.IsAuthenticated, x => x.Login, x => x.Password,
                 (isAuth, login, password) =>
                     !isAuth &&
                     !String.IsNullOrWhiteSpace(login) &&
@@ -48,14 +48,8 @@ public class AppViewModel : ReactiveObject, IAppViewModel
         LoginCommand.Subscribe(result =>
         {
             _logger.LogInformation("Authenticated");
-            _authState.Tokens = result.Tokens;
+            AuthState.IsAuthenticated = true;
         });
-        _authState.WhenAnyValue(x => x.Tokens, (TokenPair? pair) => pair is not null)
-            .Subscribe(pairIsNotNull =>
-            {
-                _logger.LogDebug("IsAuthenticated changed from {IsAuthenticated} to {NewIsAuth}", IsAuthenticated, pairIsNotNull);
-                IsAuthenticated = pairIsNotNull;
-            });
 
         StartApplicationCommand = ReactiveCommand.CreateFromTask(
             StartApplication,

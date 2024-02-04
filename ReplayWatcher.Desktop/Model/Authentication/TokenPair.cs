@@ -1,3 +1,3 @@
 ﻿namespace ReplayWatcher.Desktop.Model.Authentication;
 
-public record TokenPair(string Access, string Refresh);
+public record TokenPair(string Token, string Refresh);

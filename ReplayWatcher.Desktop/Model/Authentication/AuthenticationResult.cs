@@ -1,3 +1,4 @@
 ﻿namespace ReplayWatcher.Desktop.Model.Authentication;
 
-public record AuthenticationResult(TokenPair Tokens);
+public record AuthenticationResult(bool IsSucceed, List<string>? Errors) 
+    : RequestResult(IsSucceed, Errors);

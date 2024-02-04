@@ -1,0 +1,73 @@
+﻿using System.Net;
+using System.Net.Http;
+using System.Text;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using ReplayWatcher.Desktop.Model.Authentication.Storage;
+
+namespace ReplayWatcher.Desktop.Model.Authentication.Services;
+
+public class AuthenticationService : IAuthService
+{
+    private readonly ILogger<AuthenticationService> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ITokenStorage _tokenStorage;
+    private const string ApiClientName = "GeneralApiClient";
+
+    public AuthenticationService(
+        ILogger<AuthenticationService> logger,
+        IHttpClientFactory httpClientFactory,
+        ITokenStorage tokenStorage)
+    {
+        _logger = logger;
+        _httpClientFactory = httpClientFactory;
+        _tokenStorage = tokenStorage;
+    }
+
+    public async Task<AuthenticationResult> Login(LoginRequest request)
+    {
+        _logger.LogDebug("Login begin");
+
+        var httpClient = _httpClientFactory.CreateClient(ApiClientName);
+        var jsonContent = JsonConvert.SerializeObject(request);
+        var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Login")
+        {
+            Content = content
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+        var json = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
+
+            _logger.LogDebug("Error while logging");
+
+            return new AuthenticationResult(false, new() { error.Text });
+        }
+
+        var accessToken = JsonConvert.DeserializeObject<string>(json)!;
+        await _tokenStorage.SaveToken(accessToken);
+
+        _logger.LogDebug("Login succeed");
+        return new AuthenticationResult(true, null);
+    }
+
+    public Task<AuthenticationResult> Register(RegisterRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<AuthenticationResult> RefreshToken()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Logout()
+    {
+        throw new NotImplementedException();
+    }
+}

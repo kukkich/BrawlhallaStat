@@ -1,41 +1,55 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net;
+using ReplayWatcher.Desktop.Model.Authentication.Exceptions;
+using ReplayWatcher.Desktop.Model.Authentication.Services;
+using ReplayWatcher.Desktop.Model.Authentication.Storage;
 
 namespace ReplayWatcher.Desktop.Model.Authentication;
 
 public class JwtDelegatingHandler : DelegatingHandler
 {
-    private TokenPair _tokens;
     private readonly IAuthService _authService;
+    private readonly ITokenStorage _tokenStorage;
 
-    public JwtDelegatingHandler(IAuthService authService)
+    public JwtDelegatingHandler(IAuthService authService, ITokenStorage tokenStorage)
     {
         _authService = authService;
+        _tokenStorage = tokenStorage;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(_tokens.Access))
+        if (request.RequestUri!.PathAndQuery.Contains("/api/Auth/Login") ||
+            request.RequestUri.PathAndQuery.Contains("/api/Auth/Register"))
         {
-            var loginResult = await _authService.Login(new LoginRequest(null, null));
-            _tokens = loginResult.Tokens;
+            return await base.SendAsync(request, cancellationToken);
         }
-        
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.Access);
+
+        var token = await _tokenStorage.GetToken();
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await base.SendAsync(request, cancellationToken);
 
-        if (response.StatusCode != HttpStatusCode.Unauthorized)
+        if (response.StatusCode is not HttpStatusCode.Unauthorized)
         {
             return response;
         }
         
         var refreshResult = await _authService.RefreshToken();
-        _tokens = refreshResult.Tokens;
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _tokens.Access);
-        
-        response = await base.SendAsync(request, cancellationToken);
+        if (!refreshResult.IsSucceed)
+        {
+            throw new UnauthorizedException();
+        }
+        var newToken = await _tokenStorage.GetToken();
 
-        return response;
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
+
+        return await base.SendAsync(request, cancellationToken);
     }
 }
