@@ -15,16 +15,14 @@ public class InMemoryTokenStorage : ITokenStorage
         _configuration = configuration;
     }
 
-    public Task<string?> GetAccessToken()
+    public string? GetAccessToken()
     {
-        return Task.FromResult(_accessToken);
+        return _accessToken;
     }
 
-    public Task SaveAccessToken(string token)
+    public void SaveAccessToken(string token)
     {
         _accessToken = token;
-
-        return Task.CompletedTask;
     }
 
     public void RemoveAccessToken()

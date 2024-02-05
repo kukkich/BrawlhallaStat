@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ReplayWatcher.Desktop.Model.Authentication.Storage;
@@ -11,16 +13,21 @@ public class AuthenticationService : IAuthService
     private readonly ILogger<AuthenticationService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ITokenStorage _tokenStorage;
+    private readonly CookieContainer _cookieContainer;
+
     private const string ApiClientName = "GeneralApiClient";
+    private const string RefreshTokenCookieKey = "refreshToken";
 
     public AuthenticationService(
         ILogger<AuthenticationService> logger,
         IHttpClientFactory httpClientFactory,
-        ITokenStorage tokenStorage)
+        ITokenStorage tokenStorage,
+        CookieContainer cookieContainer)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _tokenStorage = tokenStorage;
+        _cookieContainer = cookieContainer;
     }
 
     public async Task<AuthenticationResult> Login(LoginRequest request)
@@ -48,7 +55,7 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveAccessToken(accessToken);
+        _tokenStorage.SaveAccessToken(accessToken);
 
         _logger.LogDebug("Login succeed");
         return new AuthenticationResult(true, null);
@@ -79,7 +86,7 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveAccessToken(accessToken);
+        _tokenStorage.SaveAccessToken(accessToken);
 
         _logger.LogDebug("Register succeed");
         return new AuthenticationResult(true, null);
@@ -90,7 +97,7 @@ public class AuthenticationService : IAuthService
         _logger.LogDebug("Refresh begin");
 
         var httpClient = _httpClientFactory.CreateClient(ApiClientName);
-
+        
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Refresh");
 
         var response = await httpClient.SendAsync(httpRequest);
@@ -105,11 +112,27 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveAccessToken(accessToken);
+        _tokenStorage.SaveAccessToken(accessToken);
+
+        var baseAddress = new Uri(httpClient.BaseAddress.GetLeftPart(UriPartial.Authority)); // Получение базового адреса запроса (схема + хост)
+        var cookies = _cookieContainer.GetCookies(baseAddress); // Получение кук для базового адреса
+        var refreshTokenCookie = cookies[RefreshTokenCookieKey];
+        if (refreshTokenCookie != null)
+        {
+            string refreshToken = refreshTokenCookie.Value;
+            await _tokenStorage.SaveRefreshToken(refreshToken);
+            _logger.LogDebug($"RefreshToken extracted: {refreshToken}");
+        }
+        else
+        {
+            _logger.LogWarning("RefreshToken cookie not found");
+            return new AuthenticationResult(false, new() { "RefreshToken cookie not found" });
+        }
 
         _logger.LogDebug("Refresh succeed");
         return new AuthenticationResult(true, null);
     }
+
 
     public Task Logout()
     {

@@ -25,7 +25,7 @@ public class JwtDelegatingHandler : DelegatingHandler
             return await base.SendAsync(request, cancellationToken);
         }
 
-        var token = await _tokenStorage.GetAccessToken();
+        var token = _tokenStorage.GetAccessToken();
 
         if (string.IsNullOrWhiteSpace(token))
         {
@@ -45,7 +45,7 @@ public class JwtDelegatingHandler : DelegatingHandler
         {
             return response;
         }
-        var newToken = await _tokenStorage.GetAccessToken();
+        var newToken = _tokenStorage.GetAccessToken();
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
 

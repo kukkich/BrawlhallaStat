@@ -2,8 +2,8 @@
 
 public interface ITokenStorage
 {
-    public Task<string?> GetAccessToken();
-    public Task SaveAccessToken(string token);
+    public string? GetAccessToken();
+    public void SaveAccessToken(string token);
     public void RemoveAccessToken();
 
     public Task<string?> GetRefreshToken();

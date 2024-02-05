@@ -67,6 +67,8 @@ public class Program
 
         services.AddTransient<AppViewModel>();
 
+        var cookieContainer = new CookieContainer();
+        services.AddSingleton<CookieContainer>(cookieContainer);
         services.AddHttpClient("GeneralApiClient", (services, client) =>
         {
             var configuration = services.GetRequiredService<AppConfiguration>();
@@ -75,7 +77,7 @@ public class Program
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
         {
             UseCookies = true,
-            CookieContainer = new CookieContainer()
+            CookieContainer = cookieContainer
         });
 
 

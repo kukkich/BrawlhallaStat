@@ -8,7 +8,7 @@ internal static class TokenConfig
 {
     public const string Issuer = "BHStat.Api";
     public const string Audience = "BHStat.Client";
-    public static TimeSpan AccessLifeTime => TimeSpan.FromMinutes(15);
+    public static TimeSpan AccessLifeTime => TimeSpan.FromSeconds(15);
     public static TimeSpan RefreshLifeTime => TimeSpan.FromDays(30);
 
     private const string AccessKey = "24e6b622-579e-44dd-a5de-3836da322ad5";
