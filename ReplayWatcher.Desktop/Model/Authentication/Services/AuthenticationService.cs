@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -55,9 +54,35 @@ public class AuthenticationService : IAuthService
         return new AuthenticationResult(true, null);
     }
 
-    public Task<AuthenticationResult> Register(RegisterRequest request)
+    public async Task<AuthenticationResult> Register(RegisterRequest request)
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Register begin");
+
+        var httpClient = _httpClientFactory.CreateClient(ApiClientName);
+        var jsonContent = JsonConvert.SerializeObject(request);
+        var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Register")
+        {
+            Content = content
+        };
+
+        var response = await httpClient.SendAsync(httpRequest);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
+            _logger.LogDebug("Error while register");
+
+            return new AuthenticationResult(false, new() { error.Text });
+        }
+
+        var accessToken = await response.Content.ReadAsStringAsync();
+        await _tokenStorage.SaveToken(accessToken);
+
+        _logger.LogDebug("Login succeed");
+        return new AuthenticationResult(true, null);
     }
 
     public Task<AuthenticationResult> RefreshToken()

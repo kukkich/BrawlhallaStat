@@ -1,13 +1,12 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using System.ComponentModel;
-using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ReactiveUI;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
 using ReplayWatcher.Desktop.ViewModel;
 using System.Reactive.Disposables;
-using ReplayWatcher.Desktop.ViewModel.Auth;
+using System.Windows.Controls.Primitives;
 
 namespace ReplayWatcher.Desktop;
 
@@ -37,7 +36,6 @@ public partial class MainWindow
             this.Bind(ViewModel, vm => vm.AuthContext.Email, view => view.RegisterEmailTextBox.Text)
                 .DisposeWith(disposables);
             
-
             LoginPasswordBox.Events().PasswordChanged
                 .Subscribe(_ =>
                 {
@@ -47,7 +45,7 @@ public partial class MainWindow
             RegisterPasswordBox.Events().PasswordChanged
                 .Subscribe(_ =>
                 {
-                    ViewModel.AuthContext.Password = LoginPasswordBox.Password;
+                    ViewModel.AuthContext.Password = RegisterPasswordBox.Password;
                 })
                 .DisposeWith(disposables);
 
@@ -56,6 +54,14 @@ public partial class MainWindow
             this.BindCommand(ViewModel, vm => vm.RegisterCommand, view => view.RegisterButton)
                 .DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
+                .DisposeWith(disposables);
+
+            AuthTabs.Events().SelectionChanged
+                .Subscribe(_ =>
+                {
+                    LoginPasswordBox.Clear();
+                    RegisterPasswordBox.Clear();
+                })
                 .DisposeWith(disposables);
         });
     }
@@ -124,5 +130,11 @@ public partial class MainWindow
         {
             disposable.Dispose();
         }
+    }
+
+    private void AuthTabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        
+
     }
 }
