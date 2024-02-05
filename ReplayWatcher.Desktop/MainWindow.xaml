@@ -8,7 +8,7 @@
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:viewModel="clr-namespace:ReplayWatcher.Desktop.ViewModel" 
     xmlns:converters="clr-namespace:ReplayWatcher.Desktop.View.Converters"
-    Title="ReplayWatcher" Height="450" Width="800">
+    Title="ReplayWatcher" MinHeight="620" MinWidth="1000">
     <Window.Resources>
         <converters:BooleanToVisibilityConverter x:Key="InvertedBoolToVisConverter" />
     </Window.Resources>
@@ -25,15 +25,43 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="1" Grid.Column="1" x:Name="LoginPanel" 
-              Visibility="{Binding AuthState.IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}, ConverterParameter=True}">
-            <StackPanel Margin="10">
-                <TextBox Padding="5" Height="30" x:Name="UsernameTextBox" />
-                <PasswordBox Padding="5" Height="30" Margin="0 10 0 0" x:Name="PasswordBox"/>
-                <Button Height="30" x:Name="LoginButton" Content="Login" Margin="0 30 0 0" />
-            </StackPanel>
+              Visibility="{Binding AuthContext.IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}, ConverterParameter=True}">
+            <TabControl x:Name="products">
+                <TabItem x:Name="LoginTab">
+                    <TabItem.Header>
+                        <TextBlock Margin="3">Login</TextBlock>
+                    </TabItem.Header>
+                    <TabItem.Content>
+                        <DockPanel Margin="10">
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight">Login</TextBlock>
+                            <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="LoginLoginTextBox" Margin="0 4 0 0" />
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Password</TextBlock>
+                            <PasswordBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="LoginPasswordBox" Margin="0 4 0 0" />
+                            <Button VerticalAlignment="Bottom" Height="30" x:Name="LoginButton" Content="Login" Margin="0 0 0 15" />
+                        </DockPanel>
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem x:Name="RegistrationTab">
+                    <TabItem.Header>
+                        <TextBlock Margin="3">Register</TextBlock>
+                    </TabItem.Header>
+                    <TabItem.Content>
+                        <DockPanel Margin="10">
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight">Login</TextBlock>
+                            <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterLoginTextBox" Margin="0 4 0 0" />
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Email</TextBlock>
+                            <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterEmailTextBox" Margin="0 4 0 0"/>
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Password</TextBlock>
+                            <PasswordBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterPasswordBox" Margin="0 4 0 0" />
+                            <Button VerticalAlignment="Bottom" Height="30" x:Name="RegisterButton" Content="Login" Margin="0 0 0 15" />
+                        </DockPanel>
+                    </TabItem.Content>
+                </TabItem>
+            </TabControl>
+            
         </Grid>
         <TextBlock Grid.Row="1" Grid.Column="1" 
-                   Visibility="{Binding AuthState.IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}}"
+                   Visibility="{Binding AuthContext.IsAuthenticated, Converter={StaticResource InvertedBoolToVisConverter}}"
                    >
             Authorized
         </TextBlock>

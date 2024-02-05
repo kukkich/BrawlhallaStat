@@ -7,6 +7,7 @@ using ReactiveUI;
 using ReplayWatcher.Desktop.WindowComponents.Commands;
 using ReplayWatcher.Desktop.ViewModel;
 using System.Reactive.Disposables;
+using ReplayWatcher.Desktop.ViewModel.Auth;
 
 namespace ReplayWatcher.Desktop;
 
@@ -29,17 +30,31 @@ public partial class MainWindow
         InitializeComponent();
         this.WhenActivated(disposables =>
         {
-            this.Bind(ViewModel, vm => vm.Login, view => view.UsernameTextBox.Text)
+            this.Bind(ViewModel, vm => vm.AuthContext.Login, view => view.LoginLoginTextBox.Text)
                 .DisposeWith(disposables);
-            PasswordBox.Events().PasswordChanged
+            this.Bind(ViewModel, vm => vm.AuthContext.Login, view => view.RegisterLoginTextBox.Text)
+                .DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.AuthContext.Email, view => view.RegisterEmailTextBox.Text)
+                .DisposeWith(disposables);
+            
+
+            LoginPasswordBox.Events().PasswordChanged
                 .Subscribe(_ =>
                 {
-                    ViewModel.Password = PasswordBox.Password;
+                    ViewModel.AuthContext.Password = LoginPasswordBox.Password;
                 })
                 .DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm.LoginCommand, view => view.LoginButton)
+            RegisterPasswordBox.Events().PasswordChanged
+                .Subscribe(_ =>
+                {
+                    ViewModel.AuthContext.Password = LoginPasswordBox.Password;
+                })
                 .DisposeWith(disposables);
 
+            this.BindCommand(ViewModel, vm => vm.LoginCommand, view => view.LoginButton)
+                .DisposeWith(disposables);
+            this.BindCommand(ViewModel, vm => vm.RegisterCommand, view => view.RegisterButton)
+                .DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
                 .DisposeWith(disposables);
         });

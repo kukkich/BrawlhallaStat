@@ -8,18 +8,19 @@ using ReplayWatcher.Desktop.Configuration;
 using ReplayWatcher.Desktop.Model.Authentication;
 using ReplayWatcher.Desktop.Model.Authentication.Services;
 using ReplayWatcher.Desktop.Model.Watcher;
+using ReplayWatcher.Desktop.ViewModel.Auth;
 
 namespace ReplayWatcher.Desktop.ViewModel;
 
-public class AppViewModel : ReactiveObject, IAppViewModel
+public class AppViewModel : ReactiveObject
 {
     [Reactive] public bool IsPathInitialized { get; set; }
-    [Reactive] public string Login { get; set; } = null!;
-    [Reactive] public string Password { get; set; } = null!;
     [Reactive] private bool IsApplicationRunning { get; set; }
+    [Reactive] public AuthContext AuthContext { get; set; } = new();
 
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; }
     public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; set; }
+    public ReactiveCommand<Unit, AuthenticationResult> RegisterCommand { get; set; }
     public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; set; }
 
     private readonly ReplayWatcherService _replayWatcher;
@@ -28,7 +29,6 @@ public class AppViewModel : ReactiveObject, IAppViewModel
     private readonly ILogger<AppViewModel> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    [Reactive] public AuthState AuthState { get; set; } = new();
 
     public AppViewModel(
         ReplayWatcherService replayWatcher,
@@ -44,8 +44,8 @@ public class AppViewModel : ReactiveObject, IAppViewModel
         _httpClientFactory = httpClientFactory;
 
         LoginCommand = ReactiveCommand.CreateFromTask(
-            () => LoginAsync(new LoginRequest(Login!, Password!)),
-            this.WhenAnyValue(x => x.AuthState.IsAuthenticated, x => x.Login, x => x.Password,
+            () => LoginAsync(new LoginRequest(AuthContext.Login, AuthContext.Password)),
+            this.WhenAnyValue(x => x.AuthContext.IsAuthenticated, x => x.AuthContext.Login, x => x.AuthContext.Password,
                 (isAuth, login, password) =>
                     !isAuth &&
                     !String.IsNullOrWhiteSpace(login) &&
@@ -63,7 +63,31 @@ public class AppViewModel : ReactiveObject, IAppViewModel
                 }
             }
 
-            AuthState.IsAuthenticated = result.IsSucceed;
+            AuthContext.IsAuthenticated = result.IsSucceed;
+        });
+        RegisterCommand = ReactiveCommand.CreateFromTask(
+            () => RegisterAsync(new RegisterRequest(AuthContext.Login, AuthContext.Email, AuthContext.Password)),
+            this.WhenAnyValue(x => x.AuthContext.IsAuthenticated, 
+                x=> x.AuthContext.Email, x => x.AuthContext.Login, x => x.AuthContext.Password,
+                (isAuth, login, email, password) =>
+                    !isAuth &&
+                    !String.IsNullOrWhiteSpace(login) &&
+                    !String.IsNullOrWhiteSpace(email) &&
+                    !String.IsNullOrWhiteSpace(password) 
+            ));
+        RegisterCommand.Subscribe(result =>
+        {
+            _logger.LogInformation("Registered");
+
+            if (!result.IsSucceed)
+            {
+                foreach (var error in result.Errors!)
+                {
+                    _logger.LogInformation("Error while register: {message}", error);
+                }
+            }
+
+            AuthContext.IsAuthenticated = result.IsSucceed;
         });
 
         StartApplicationCommand = ReactiveCommand.CreateFromTask(
@@ -79,6 +103,8 @@ public class AppViewModel : ReactiveObject, IAppViewModel
             MessageBox.Show(await response.Content.ReadAsStringAsync());
         });
     }
+
+    
 
     public Task StartApplication()
     {
@@ -98,5 +124,10 @@ public class AppViewModel : ReactiveObject, IAppViewModel
     private async Task<AuthenticationResult> LoginAsync(LoginRequest request)
     {
         return await _authService.Login(request);
+    }
+
+    private async Task<AuthenticationResult> RegisterAsync(RegisterRequest request)
+    {
+        return await _authService.Register(request);
     }
 }
