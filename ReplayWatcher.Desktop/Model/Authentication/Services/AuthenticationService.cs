@@ -48,7 +48,7 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveToken(accessToken);
+        await _tokenStorage.SaveAccessToken(accessToken);
 
         _logger.LogDebug("Login succeed");
         return new AuthenticationResult(true, null);
@@ -79,7 +79,7 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveToken(accessToken);
+        await _tokenStorage.SaveAccessToken(accessToken);
 
         _logger.LogDebug("Register succeed");
         return new AuthenticationResult(true, null);
@@ -105,7 +105,7 @@ public class AuthenticationService : IAuthService
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
-        await _tokenStorage.SaveToken(accessToken);
+        await _tokenStorage.SaveAccessToken(accessToken);
 
         _logger.LogDebug("Refresh succeed");
         return new AuthenticationResult(true, null);

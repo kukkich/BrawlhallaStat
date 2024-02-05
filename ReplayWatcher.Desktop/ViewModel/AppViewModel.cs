@@ -104,8 +104,6 @@ public class AppViewModel : ReactiveObject
         });
     }
 
-    
-
     public Task StartApplication()
     {
         try
