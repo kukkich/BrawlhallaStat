@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net;
-using ReplayWatcher.Desktop.Model.Authentication.Exceptions;
 using ReplayWatcher.Desktop.Model.Authentication.Services;
 using ReplayWatcher.Desktop.Model.Authentication.Storage;
 
@@ -44,7 +43,7 @@ public class JwtDelegatingHandler : DelegatingHandler
         var refreshResult = await _authService.RefreshToken();
         if (!refreshResult.IsSucceed)
         {
-            throw new UnauthorizedException();
+            return response;
         }
         var newToken = await _tokenStorage.GetToken();
 

@@ -81,13 +81,34 @@ public class AuthenticationService : IAuthService
         var accessToken = await response.Content.ReadAsStringAsync();
         await _tokenStorage.SaveToken(accessToken);
 
-        _logger.LogDebug("Login succeed");
+        _logger.LogDebug("Register succeed");
         return new AuthenticationResult(true, null);
     }
 
-    public Task<AuthenticationResult> RefreshToken()
+    public async Task<AuthenticationResult> RefreshToken()
     {
-        throw new NotImplementedException();
+        _logger.LogDebug("Refresh begin");
+
+        var httpClient = _httpClientFactory.CreateClient(ApiClientName);
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Refresh");
+
+        var response = await httpClient.SendAsync(httpRequest);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogDebug("Error while refresh");
+            var json = await response.Content.ReadAsStringAsync();
+            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
+
+            return new AuthenticationResult(false, new() { error.Text });
+        }
+
+        var accessToken = await response.Content.ReadAsStringAsync();
+        await _tokenStorage.SaveToken(accessToken);
+
+        _logger.LogDebug("Refresh succeed");
+        return new AuthenticationResult(true, null);
     }
 
     public Task Logout()
