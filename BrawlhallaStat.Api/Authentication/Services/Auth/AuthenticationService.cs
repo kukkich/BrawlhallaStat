@@ -3,6 +3,7 @@ using BrawlhallaStat.Api.Exceptions.Authentication;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.Authentication.Services.Auth;
@@ -50,9 +51,9 @@ public class AuthenticationService : IAuthenticationService
         return newTokenPair;
     }
 
-    public Task<TokenPair> Logout(string refreshToken)
+    public async Task Logout(string refreshToken)
     {
-        throw new NotImplementedException();
+        await _tokenService.RevokeRefreshToken(refreshToken);
     }
 
     public Task<TokenPair> RefreshTokens(string refreshToken)
