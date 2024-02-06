@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Windows.Forms;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ReplayWatcher.Desktop.Model.Authentication.Storage;

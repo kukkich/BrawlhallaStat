@@ -2,5 +2,5 @@
 
 public interface IReplayService
 {
-    public Task Upload(string filePath);
+    public Task<UploadReplayResult> Upload(string filePath);
 }

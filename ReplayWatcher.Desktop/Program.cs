@@ -59,7 +59,7 @@ public class Program
             builder.SetMinimumLevel(LogLevel.Debug);
         });
 
-        services.AddSingleton<IReplayService, LoggerReplayService>();
+        services.AddSingleton<IReplayService, ReplayService>();
         services.AddSingleton<ReplayWatcherService>();
         services.AddTransient<IAuthService, AuthenticationService>();
         services.AddSingleton<ITokenStorage, InMemoryTokenStorage>();

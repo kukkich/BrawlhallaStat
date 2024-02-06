@@ -11,10 +11,10 @@ public class LoggerReplayService : IReplayService
         _logger = logger;
     }
 
-    public Task Upload(string filePath)
+    public Task<UploadReplayResult> Upload(string filePath)
     {
         _logger.LogInformation("\"{filePath}\" uploaded", filePath);
 
-        return Task.CompletedTask;
+        return Task.FromResult(new UploadReplayResult(false, null));
     }
 }

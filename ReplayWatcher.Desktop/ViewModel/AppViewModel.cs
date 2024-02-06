@@ -28,7 +28,7 @@ public class AppViewModel : ReactiveObject
     public ReactiveCommand<Unit, AuthenticationResult> RegisterCommand { get; private set; }
     public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; private set; }
     public ReactiveCommand<Unit, Unit> SelectPathCommand { get; private set; }
-    public ReactiveCommand<string, Unit> UploadCommand { get; private set; }
+    public ReactiveCommand<string, Unit> UploadReplayCommand { get; private set; }
 
     public readonly IObservable<EventPattern<FileSystemEventArgs>> ReplayCreatedObservable;
 
@@ -58,7 +58,7 @@ public class AppViewModel : ReactiveObject
         StartApplicationCommand = ReactiveCommand.CreateFromTask(StartApplication);
         SelectPathCommand = ReactiveCommand.Create(SelectReplaysDirectory);
 
-        UploadCommand = ReactiveCommand.CreateFromTask<string>(async path =>
+        UploadReplayCommand = ReactiveCommand.CreateFromTask<string>(async path =>
         {
             logger.LogInformation("File created: {path}", path);
 
@@ -69,7 +69,7 @@ public class AppViewModel : ReactiveObject
                 handler => _replayWatcher.FileCreated += handler,
                 handler => _replayWatcher.FileCreated -= handler
             )
-            .Subscribe(pattern => UploadCommand.Execute(pattern.EventArgs.FullPath).Subscribe());
+            .Subscribe(pattern => UploadReplayCommand.Execute(pattern.EventArgs.FullPath).Subscribe());
     }
 
     private void ConfigureAuthentication()
