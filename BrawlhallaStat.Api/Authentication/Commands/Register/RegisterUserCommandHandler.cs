@@ -1,14 +1,13 @@
-﻿using BrawlhallaStat.Api.Commands;
-using BrawlhallaStat.Api.Commands.Authentication;
+﻿using BrawlhallaStat.Api.Authentication.Commands.Refresh;
 using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Domain.Identity.Dto;
-using MediatR;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity.Dto;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
+namespace BrawlhallaStat.Api.Authentication.Commands.Register;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenPair>
 {

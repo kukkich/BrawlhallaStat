@@ -1,4 +1,7 @@
-﻿using BrawlhallaStat.Api.Commands.Authentication;
+﻿using BrawlhallaStat.Api.Authentication.Commands.Login;
+using BrawlhallaStat.Api.Authentication.Commands.Logout;
+using BrawlhallaStat.Api.Authentication.Commands.Refresh;
+using BrawlhallaStat.Api.Authentication.Commands.Register;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

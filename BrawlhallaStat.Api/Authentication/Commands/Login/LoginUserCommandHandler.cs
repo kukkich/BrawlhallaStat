@@ -1,12 +1,11 @@
-﻿using BrawlhallaStat.Api.Commands.Authentication;
-using BrawlhallaStat.Api.Exceptions.Authentication;
+﻿using BrawlhallaStat.Api.Exceptions.Authentication;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
+namespace BrawlhallaStat.Api.Authentication.Commands.Login;
 
 public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenPair>
 {

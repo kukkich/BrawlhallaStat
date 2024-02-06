@@ -1,8 +1,7 @@
-﻿using BrawlhallaStat.Api.Commands.Authentication;
-using BrawlhallaStat.Api.Services.Tokens;
+﻿using BrawlhallaStat.Api.Services.Tokens;
 using MediatR;
 
-namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
+namespace BrawlhallaStat.Api.Authentication.Commands.Logout;
 
 public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand>
 {

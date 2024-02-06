@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace BrawlhallaStat.Api.Commands.Authentication;
+namespace BrawlhallaStat.Api.Authentication.Commands.Logout;
 
 public class LogoutUserCommand : IRequest
 {

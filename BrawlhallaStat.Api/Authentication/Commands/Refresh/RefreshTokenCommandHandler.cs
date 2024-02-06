@@ -1,9 +1,8 @@
-﻿using BrawlhallaStat.Api.Commands.Authentication;
-using BrawlhallaStat.Api.Services.Tokens;
+﻿using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 
-namespace BrawlhallaStat.Api.CommandHandlers.Authentication;
+namespace BrawlhallaStat.Api.Authentication.Commands.Refresh;
 
 public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenPair>
 {
