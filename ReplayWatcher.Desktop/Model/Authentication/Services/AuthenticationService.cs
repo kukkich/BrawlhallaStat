@@ -97,35 +97,29 @@ public class AuthenticationService : IAuthService
         _logger.LogDebug("Refresh begin");
 
         var httpClient = _httpClientFactory.CreateClient(ApiClientName);
-        
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Refresh");
 
+        if (!await TryLoadRefreshTokenIfNotExist(httpClient))
+        {
+            return new AuthenticationResult(false, new() { "RefreshToken not found in cookie and storage" });
+        }
+
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Refresh");
         var response = await httpClient.SendAsync(httpRequest);
 
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogDebug("Error while refresh");
             var json = await response.Content.ReadAsStringAsync();
-            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
+            var error = JsonConvert.DeserializeObject<ErrorResult>(json);
 
-            return new AuthenticationResult(false, new() { error.Text });
+            return new AuthenticationResult(false, new() { error?.Text! });
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
         _tokenStorage.SaveAccessToken(accessToken);
 
-        var baseAddress = new Uri(httpClient.BaseAddress.GetLeftPart(UriPartial.Authority)); // Получение базового адреса запроса (схема + хост)
-        var cookies = _cookieContainer.GetCookies(baseAddress); // Получение кук для базового адреса
-        var refreshTokenCookie = cookies[RefreshTokenCookieKey];
-        if (refreshTokenCookie != null)
+        if (!await SaveRefreshToken(httpClient))
         {
-            string refreshToken = refreshTokenCookie.Value;
-            await _tokenStorage.SaveRefreshToken(refreshToken);
-            _logger.LogDebug($"RefreshToken extracted: {refreshToken}");
-        }
-        else
-        {
-            _logger.LogWarning("RefreshToken cookie not found");
             return new AuthenticationResult(false, new() { "RefreshToken cookie not found" });
         }
 
@@ -133,6 +127,56 @@ public class AuthenticationService : IAuthService
         return new AuthenticationResult(true, null);
     }
 
+    private async Task<bool> SaveRefreshToken(HttpClient httpClient)
+    {
+        var baseAddress = new Uri(httpClient.BaseAddress.GetLeftPart(UriPartial.Authority));
+        var cookies = _cookieContainer.GetCookies(baseAddress);
+        var refreshTokenCookie = cookies[RefreshTokenCookieKey];
+        if (refreshTokenCookie is not null)
+        {
+            var refreshToken = refreshTokenCookie.Value;
+            await _tokenStorage.SaveRefreshToken(refreshToken);
+            _logger.LogDebug("RefreshToken extracted: {refreshToken}", refreshToken);
+        }
+        else
+        {
+            _logger.LogWarning("RefreshToken cookie not found");
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private async Task<bool> TryLoadRefreshTokenIfNotExist(HttpClient httpClient)
+    {
+        var baseAddress = new Uri(httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority));
+        var cookies = _cookieContainer.GetCookies(baseAddress);
+        var refreshTokenCookie = cookies[RefreshTokenCookieKey];
+
+        if (refreshTokenCookie is not null)
+        {
+            return true;
+        }
+
+        var refreshTokenFromStorage = await _tokenStorage.GetRefreshToken();
+        if (refreshTokenFromStorage is not null)
+        {
+            _cookieContainer.Add(new Cookie(RefreshTokenCookieKey, refreshTokenFromStorage)
+            {
+                Domain = baseAddress.Host,
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now + TimeSpan.FromDays(10)
+            });
+            _logger.LogDebug("RefreshToken loaded from storage and added to cookies.");
+            return true;
+        }
+        _logger.LogDebug("RefreshToken not found in cookie and storage");
+
+        return false;
+    }
 
     public Task Logout()
     {

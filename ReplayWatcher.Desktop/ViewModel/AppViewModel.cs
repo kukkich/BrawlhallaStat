@@ -104,8 +104,11 @@ public class AppViewModel : ReactiveObject
         });
     }
 
-    public Task StartApplication()
+    public async Task StartApplication()
     {
+        var refreshResult = await _authService.RefreshToken();
+        AuthContext.IsAuthenticated = refreshResult.IsSucceed;
+        
         try
         {
             _replayWatcher.Start();
@@ -115,8 +118,6 @@ public class AppViewModel : ReactiveObject
         {
             IsPathInitialized = false;
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task<AuthenticationResult> LoginAsync(LoginRequest request)

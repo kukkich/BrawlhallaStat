@@ -35,7 +35,7 @@ public partial class MainWindow
                 .DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.AuthContext.Email, view => view.RegisterEmailTextBox.Text)
                 .DisposeWith(disposables);
-            
+
             LoginPasswordBox.Events().PasswordChanged
                 .Subscribe(_ =>
                 {
@@ -55,7 +55,6 @@ public partial class MainWindow
                 .DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
                 .DisposeWith(disposables);
-
             AuthTabs.Events().SelectionChanged
                 .Subscribe(_ =>
                 {
@@ -69,7 +68,7 @@ public partial class MainWindow
     protected override async void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        //await ViewModel!.StartApplicationCommand.Execute();
+        ViewModel!.StartApplicationCommand.Execute();
     }
 
     private void ShowWindow()
@@ -134,7 +133,7 @@ public partial class MainWindow
 
     private void AuthTabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        
+
 
     }
 }
