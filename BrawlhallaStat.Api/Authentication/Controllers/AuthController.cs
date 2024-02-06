@@ -3,7 +3,7 @@ using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BrawlhallaStat.Api.Controllers;
+namespace BrawlhallaStat.Api.Authentication.Controllers;
 
 [Route("api/[controller]/[action]")]
 public class AuthController : ControllerBase
@@ -11,7 +11,7 @@ public class AuthController : ControllerBase
     private const string RefreshTokenCookieKey = "refreshToken";
 
     private readonly IMediator _mediator;
-    
+
     public AuthController(IMediator mediator)
     {
         _mediator = mediator;

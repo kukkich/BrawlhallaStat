@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using AutoMapper;
 using BrawlhallaStat.Api.Exceptions.Tokens;
+using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
@@ -9,7 +10,7 @@ using BrawlhallaStat.Domain.Identity.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BrawlhallaStat.Api.Services.Tokens;
+namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 public class TokenService : ITokenService
 {
@@ -100,6 +101,7 @@ public class TokenService : ITokenService
         var tokenFromStorage = await _dbContext.Tokens
             .Include(x => x.User)
             .FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
+
         if (tokenFromStorage is null)
         {
             throw new TokenNotFoundException();
@@ -139,9 +141,6 @@ public class TokenService : ITokenService
             userClaimsPrincipal = null;
             return false;
         }
-
-        _logger.LogError("Unexpected behaviour in token validation");
-        throw new Exception("Unexpected behaviour in token validation");
     }
 
     public async Task RevokeRefreshToken(string refreshToken)

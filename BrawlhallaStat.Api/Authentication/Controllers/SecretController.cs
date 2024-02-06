@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BrawlhallaStat.Api.Controllers;
+namespace BrawlhallaStat.Api.Authentication.Controllers;
 
 [Authorize]
 [Route("api/[controller]/[action]")]

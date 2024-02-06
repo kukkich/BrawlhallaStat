@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.BrawlhallaEntities;
-using BrawlhallaStat.Api.Middlewares;
+using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Api.Statistics;
@@ -91,7 +91,7 @@ public class Program
 
     public static void ConfigureApplication(WebApplication app)
     {
-        app.UseMiddleware<ApiExceptionMiddleware>();
+        app.UseMiddleware<ApiExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {

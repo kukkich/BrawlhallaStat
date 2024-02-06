@@ -1,13 +1,11 @@
-﻿using BrawlhallaStat.Api.Exceptions;
+﻿namespace BrawlhallaStat.Api.Exceptions;
 
-namespace BrawlhallaStat.Api.Middlewares;
-
-public class ApiExceptionMiddleware
+public class ApiExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<ApiExceptionMiddleware> _logger;
+    private readonly ILogger<ApiExceptionHandlerMiddleware> _logger;
 
-    public ApiExceptionMiddleware(RequestDelegate next, ILogger<ApiExceptionMiddleware> logger)
+    public ApiExceptionHandlerMiddleware(RequestDelegate next, ILogger<ApiExceptionHandlerMiddleware> logger)
     {
         _next = next;
         _logger = logger;

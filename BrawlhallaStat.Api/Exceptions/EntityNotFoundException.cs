@@ -7,15 +7,7 @@ public class EntityNotFoundException<TEntity, TId> : ApiException
 {
     private readonly TId _id;
 
-    public override string Message
-    {
-        get
-        {
-            var name = typeof(TEntity).Name;
-
-            return $"{name} with id {_id} wasn't found";
-        }
-    }
+    public override string Message => $"{typeof(TEntity).Name} with id {_id} wasn't found";
 
     public EntityNotFoundException(TId id)
     {

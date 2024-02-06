@@ -2,7 +2,7 @@
 using BrawlhallaStat.Domain.Identity.Base;
 using System.Security.Claims;
 
-namespace BrawlhallaStat.Api.MapperProfiles;
+namespace BrawlhallaStat.Api.Authentication.MapperProfiles;
 
 public class UserIdentityProfile : Profile
 {
@@ -20,10 +20,10 @@ public class UserIdentityProfile : Profile
             new (ClaimTypes.Name, userIdentity.Login),
             new (ClaimTypes.Email, userIdentity.Email)
         };
-        claimList.AddRange(userIdentity.Roles.Select(role => 
+        claimList.AddRange(userIdentity.Roles.Select(role =>
             new Claim(ClaimTypes.Role, role.Name))
         );
-        claimList.AddRange(userIdentity.Claims.Select(claim => 
+        claimList.AddRange(userIdentity.Claims.Select(claim =>
             new Claim(claim.Name, claim.Value))
         );
         return claimList;
