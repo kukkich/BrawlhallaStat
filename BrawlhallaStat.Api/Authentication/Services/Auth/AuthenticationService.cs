@@ -1,11 +1,13 @@
 ﻿using BrawlhallaStat.Api.Authentication.Services.Hashing;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
+using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.Exceptions.Authentication;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace BrawlhallaStat.Api.Authentication.Services.Auth;
 
@@ -64,8 +66,43 @@ public class AuthenticationService : IAuthenticationService
         return tokenPair;
     }
 
-    public Task<TokenPair> Register(RegistrationData data)
+    public async Task<TokenPair> Register(RegistrationData data)
     {
-        throw new NotImplementedException();
+        var (login, nickName, password, email) = data;
+
+        if (await _dbContext.Users.AnyAsync(x => x.Login == login))
+        {
+            throw new AlreadyExistException(
+                who: nameof(User),
+                propertyName: nameof(User.Login),
+                value: login
+            );
+        }
+        if (await _dbContext.Users.AnyAsync(x => x.Email == email))
+        {
+            throw new AlreadyExistException(
+                who: nameof(User),
+                propertyName: nameof(User.Email),
+                value: email
+            );
+        }
+
+        var user = new User
+        {
+            Id = Guid.NewGuid().ToString(),
+            Login = login,
+            NickName = nickName,
+            Email = email,
+            PasswordHash = _passwordHasher.Hash(password)
+        };
+
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+
+        var tokenPair = await _tokenService.GenerateTokenPair(user);
+       
+        _logger.LogInformation("User registered: id {Id}, login {Login}", user.Id, user.Login);
+
+        return tokenPair;
     }
 }

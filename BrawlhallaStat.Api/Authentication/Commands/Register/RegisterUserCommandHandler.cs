@@ -1,70 +1,61 @@
-﻿using BrawlhallaStat.Api.Authentication.Commands.Refresh;
-using BrawlhallaStat.Api.Authentication.Services.Tokens;
-using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Domain;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.Authentication.Commands.Login;
+using BrawlhallaStat.Api.Authentication.Services.Auth;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.Authentication.Commands.Register;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenPair>
 {
-    private readonly ITokenService _tokenService;
-    private readonly IMediator _mediator;
-    private readonly ILogger<RefreshTokenCommandHandler> _logger;
+    private readonly IAuthenticationService _authService;
     private readonly BrawlhallaStatContext _dbContext;
+    private readonly ILogger<LoginUserCommand> _logger;
+    private readonly IMapper _mapper;
 
     public RegisterUserCommandHandler(
-        ITokenService tokenService,
+        IAuthenticationService authService,
         BrawlhallaStatContext dbContext,
-        IMediator mediator, 
-        ILogger<RefreshTokenCommandHandler> logger
+        ILogger<LoginUserCommand> logger,
+        IMapper mapper
         )
     {
-        _tokenService = tokenService;
+        _authService = authService;
         _dbContext = dbContext;
-        _mediator = mediator;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public async Task<TokenPair> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var (login, password, email) = request;
-
-        if (await _dbContext.Users.AnyAsync(x => x.Login == login, cancellationToken: cancellationToken))
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        try
         {
-            throw new AlreadyExistException(
-                who: nameof(User),
-                propertyName: nameof(User.Login),
-                value: login
+            _logger.LogInformation(
+                "User {Login} {Email} registration transaction begin",
+                request.Login, request.Email
             );
-        }
-        if (await _dbContext.Users.AnyAsync(x => x.Email == email, cancellationToken: cancellationToken))
-        {
-            throw new AlreadyExistException(
-                who: nameof(User),
-                propertyName: nameof(User.Email),
-                value: email
+
+            var registrationData = _mapper.Map<RegistrationData>(request);
+            var tokenPair = await _authService.Register(registrationData);
+
+            await transaction.CommitAsync(cancellationToken);
+            _logger.LogInformation(
+                "User {Login} {Email} registration transaction commit",
+                request.Login, request.Email
             );
+
+            return tokenPair;
         }
-
-        var createUserCommand = new CreateUser
+        catch (Exception)
         {
-            Email = email,
-            Login = login,
-            Password = password,
-        };
-
-        var user = await _mediator.Send(createUserCommand, cancellationToken);
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        var tokenPair = await _tokenService.GenerateTokenPair(user);
-
-        _logger.LogInformation("Register user {role.Login} [{role.Id}]", user.Login, user.Id);
-        
-        return tokenPair;
+            await transaction.RollbackAsync(CancellationToken.None);
+            _logger.LogWarning(
+                "User {Login} {Email} registration transaction rollback",
+                request.Login, request.Email
+            );
+            throw;
+        }
     }
 }
