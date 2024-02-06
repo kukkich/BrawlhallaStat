@@ -24,7 +24,7 @@ public class Program
                     connectionString,
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
                 )
-                .UseLoggerFactory(NullLoggerFactory.Instance); // for logging disable
+                .UseLoggerFactory(NullLoggerFactory.Instance);
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });

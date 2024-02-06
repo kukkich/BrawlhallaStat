@@ -19,7 +19,6 @@ internal class Program
         var watcherCts = new CancellationTokenSource();
         var cts = new CancellationTokenSource();
         
-        
         var token = cts.Token;
         var actions = new MenuAction[]
         {
