@@ -15,7 +15,7 @@ public class ReplayWatcherService : IDisposable
             _watcher.Path = value;
         }
     }
-
+    
     public bool IsWatching => _watcher.EnableRaisingEvents;
 
     private readonly ConfigurationManager _configurationManager;
@@ -23,25 +23,31 @@ public class ReplayWatcherService : IDisposable
     private readonly FileSystemWatcher _watcher;
     private readonly List<FileSystemEventHandler> _actions = new();
 
-    public ReplayWatcherService(ConfigurationManager configurationManager, ILogger<ReplayWatcherService> logger)
-    {
-        _watcher = new FileSystemWatcher();
+    public event FileSystemEventHandler FileCreated;
 
+    public ReplayWatcherService(
+        ConfigurationManager configurationManager, 
+        ILogger<ReplayWatcherService> logger)
+    {
         _configurationManager = configurationManager;
         _logger = logger;
+
+        _watcher = new FileSystemWatcher();
+        _watcher.Created += (sender, args) => OnFileCreated(args);
+
         Path = configurationManager.Configuration.WatcherDirectory;
         configurationManager.OnConfigurationChanged += OnPathChanged;
     }
 
     public void Start()
     {
-        if (string.IsNullOrEmpty(Path) || !File.Exists(Path))
+        if (string.IsNullOrEmpty(Path) || !Directory.Exists(Path))
         {
             throw new InvalidOperationException("Directory for watching is empty");
         }
         _watcher.EnableRaisingEvents = true;
-
-        _logger.LogInformation("Start watching");
+        
+        _logger.LogInformation("Start watching {Path}", Path);
     }
 
     public void Stop()
@@ -50,10 +56,9 @@ public class ReplayWatcherService : IDisposable
         _logger.LogInformation("Stop watching");
     }
 
-    public void BindAction(FileSystemEventHandler action)
+    protected virtual void OnFileCreated(FileSystemEventArgs e)
     {
-        _actions.Add(action);
-        _watcher.Created += action;
+        FileCreated?.Invoke(this, e);
     }
 
     private void OnPathChanged(AppConfiguration configuration)

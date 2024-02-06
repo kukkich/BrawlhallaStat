@@ -8,6 +8,7 @@ using ReplayWatcher.Desktop.ViewModel;
 using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
 
+
 namespace ReplayWatcher.Desktop;
 
 public partial class MainWindow
@@ -26,6 +27,7 @@ public partial class MainWindow
         _taskbar = CreateTaskbar();
 
         _disposeRequired.Add(_taskbar);
+        
         InitializeComponent();
         this.WhenActivated(disposables =>
         {
@@ -62,13 +64,24 @@ public partial class MainWindow
                     RegisterPasswordBox.Clear();
                 })
                 .DisposeWith(disposables);
+
+            this.BindCommand(ViewModel, vm => vm.SelectPathCommand, view => view.SelectPathButton)
+                .DisposeWith(disposables);
         });
+
+        ViewModel!.StartApplicationCommand.Execute();
     }
 
-    protected override async void OnInitialized(EventArgs e)
+    protected override void OnClosing(CancelEventArgs e)
     {
-        base.OnInitialized(e);
-        ViewModel!.StartApplicationCommand.Execute();
+        if (!Hidden)
+        {
+            e.Cancel = true;
+            HideWindow();
+            return;
+        }
+        Dispose();
+        base.OnClosing(e);
     }
 
     private void ShowWindow()
@@ -89,18 +102,6 @@ public partial class MainWindow
     {
         _taskbar.Dispose();
         Application.Current.Shutdown();
-    }
-
-    protected override void OnClosing(CancelEventArgs e)
-    {
-        if (!Hidden)
-        {
-            e.Cancel = true;
-            HideWindow();
-            return;
-        }
-        Dispose();
-        base.OnClosing(e);
     }
 
     private TaskbarIcon CreateTaskbar()
@@ -129,11 +130,5 @@ public partial class MainWindow
         {
             disposable.Dispose();
         }
-    }
-
-    private void AuthTabs_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-
-
     }
 }

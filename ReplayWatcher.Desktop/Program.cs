@@ -47,8 +47,8 @@ public class Program
 
         services.AddSingleton<IConfiguration>(configuration);
 
-        var appSettings = configuration.GetSection("AppSettings")
-            .Get<AppConfiguration>()!;
+        var appSettings = configuration.Get<AppConfiguration>()!;
+
         services.AddSingleton(appSettings);
         services.AddSingleton<Configuration.ConfigurationManager>();
 

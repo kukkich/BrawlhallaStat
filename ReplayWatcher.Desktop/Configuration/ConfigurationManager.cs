@@ -15,7 +15,7 @@ public class ConfigurationManager
         Configuration = configuration;
     }
 
-    public void Update()
+    public void Save()
     {
         var json = JsonConvert.SerializeObject(Configuration, Formatting.Indented);
         File.WriteAllText("appsettings.json", json);
