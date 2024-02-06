@@ -1,6 +1,5 @@
 ﻿using BrawlhallaStat.Api.Authentication.Commands.Login;
 using BrawlhallaStat.Api.Authentication.Services.Auth;
-using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

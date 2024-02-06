@@ -1,7 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
-namespace BrawlhallaStat.Api.Services.Tokens;
+namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 //TODO replace to configuration
 internal static class TokenConfig

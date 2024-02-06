@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Api.Authentication.Services.Hashing;
+using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.Exceptions.Authentication;
-using BrawlhallaStat.Api.Services.Tokens;
+using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
@@ -56,9 +57,11 @@ public class AuthenticationService : IAuthenticationService
         await _tokenService.RevokeRefreshToken(refreshToken);
     }
 
-    public Task<TokenPair> RefreshTokens(string refreshToken)
+    public async Task<TokenPair> RefreshTokens(string refreshToken)
     {
-        throw new NotImplementedException();
+        var tokenPair = await _tokenService.RefreshAccessToken(refreshToken);
+
+        return tokenPair;
     }
 
     public Task<TokenPair> Register(RegistrationData data)

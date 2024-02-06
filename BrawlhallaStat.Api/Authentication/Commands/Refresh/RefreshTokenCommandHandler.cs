@@ -1,4 +1,6 @@
-﻿using BrawlhallaStat.Api.Services.Tokens;
+﻿using BrawlhallaStat.Api.Authentication.Commands.Login;
+using BrawlhallaStat.Api.Authentication.Services.Auth;
+using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 
@@ -6,17 +8,49 @@ namespace BrawlhallaStat.Api.Authentication.Commands.Refresh;
 
 public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenPair>
 {
-    private readonly ITokenService _tokenService;
+    private readonly IAuthenticationService _authService;
+    private readonly BrawlhallaStatContext _dbContext;
+    private readonly ILogger<LoginUserCommand> _logger;
 
-    public RefreshTokenCommandHandler(ITokenService tokenService)
+    public RefreshTokenCommandHandler(
+        IAuthenticationService authService,
+        BrawlhallaStatContext dbContext,
+        ILogger<LoginUserCommand> logger
+    )
     {
-        _tokenService = tokenService;
+        _authService = authService;
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<TokenPair> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var tokenPair = await _tokenService.RefreshAccessToken(request.RefreshToken);
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            _logger.LogInformation(
+                "Token {token} refresh transaction begin",
+                request.RefreshToken
+            );
 
-        return tokenPair;
+            var tokenPair = await _authService.RefreshTokens(request.RefreshToken);
+
+            await transaction.CommitAsync(cancellationToken);
+            _logger.LogInformation(
+                "Token {token} refresh transaction commit",
+                request.RefreshToken
+            );
+
+            return tokenPair;
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            _logger.LogWarning(
+                "Token {token} refresh transaction rollback",
+                request.RefreshToken
+            );
+            throw;
+        }
     }
 }

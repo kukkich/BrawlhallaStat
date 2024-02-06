@@ -1,7 +1,7 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Identity.Dto;
 
-namespace BrawlhallaStat.Api.Services.Tokens;
+namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 public interface ITokenService
 {

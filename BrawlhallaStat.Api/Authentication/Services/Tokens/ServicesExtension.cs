@@ -1,6 +1,4 @@
-﻿using BrawlhallaStat.Api.Authentication.Services.Tokens;
-
-namespace BrawlhallaStat.Api.Services.Tokens;
+﻿namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 public static class ServicesExtension
 {

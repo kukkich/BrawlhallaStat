@@ -14,7 +14,8 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, TokenPa
     public LoginUserCommandHandler(
         IAuthenticationService authService,
         BrawlhallaStatContext dbContext,
-        ILogger<LoginUserCommand> logger)
+        ILogger<LoginUserCommand> logger
+    )
     {
         _authService = authService;
         _dbContext = dbContext;

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using AutoMapper;
 using BrawlhallaStat.Api.Exceptions.Tokens;
-using BrawlhallaStat.Api.Services.Tokens;
+using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
@@ -145,7 +145,9 @@ public class TokenService : ITokenService
 
     public async Task RevokeRefreshToken(string refreshToken)
     {
-        var token = await _dbContext.Tokens.FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
+        var token = await _dbContext.Tokens
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
         
         if (token is null)
         {
@@ -155,5 +157,10 @@ public class TokenService : ITokenService
 
         _dbContext.Tokens.Remove(token);
         await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation(
+            "User logged out: id {Id}, login {Login}",
+            token.User.Id, token.User.Login
+        );
     }
 }

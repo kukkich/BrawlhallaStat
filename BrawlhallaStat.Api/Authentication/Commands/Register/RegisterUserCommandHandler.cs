@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Api.Authentication.Commands.Refresh;
+using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
