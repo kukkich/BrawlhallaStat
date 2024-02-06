@@ -63,9 +63,9 @@
             </TabControl>
 
         </Grid>
-        <Button Grid.Row="2" Grid.Column="1" Height="30" 
+        <!--<Button Grid.Row="2" Grid.Column="1" Height="30" 
                 x:Name="GetDataButton" 
-                Content="CheckAuth" Margin="0 30 0 0" />
+                Content="CheckAuth" Margin="0 30 0 0" />-->
         
     </Grid>
 </reactiveUi:ReactiveWindow>

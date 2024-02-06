@@ -55,8 +55,8 @@ public partial class MainWindow
                 .DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm.RegisterCommand, view => view.RegisterButton)
                 .DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
-                .DisposeWith(disposables);
+            //this.BindCommand(ViewModel, vm => vm.GetSecureDataCommand, view => view.GetDataButton)
+            //    .DisposeWith(disposables); uncomment for auth debug
             AuthTabs.Events().SelectionChanged
                 .Subscribe(_ =>
                 {
