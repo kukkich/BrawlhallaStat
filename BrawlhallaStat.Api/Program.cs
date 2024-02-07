@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
+using BrawlhallaStat.Api.Authentication;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
@@ -45,14 +45,6 @@ public class Program
                 };
             });
 
-        services.AddAuthorization(option =>
-        {
-            option.AddPolicy("KukkichOnly", policy =>
-            {
-                policy.RequireClaim(ClaimTypes.Name, "kukkich");
-            });
-        });
-
         services.AddCors(options =>
         {
             options.AddPolicy(name: "WebClient",
@@ -86,7 +78,7 @@ public class Program
         services.AddStatistic();
         services.AddBrawlhallaEntities();
 
-        services.AddTokenService();
+        services.AddAuth();
     }
 
     public static void ConfigureApplication(WebApplication app)
