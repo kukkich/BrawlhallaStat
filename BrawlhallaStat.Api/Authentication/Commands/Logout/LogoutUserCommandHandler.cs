@@ -2,7 +2,6 @@
 using BrawlhallaStat.Api.Authentication.Services.Auth;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.Authentication.Commands.Logout;
 

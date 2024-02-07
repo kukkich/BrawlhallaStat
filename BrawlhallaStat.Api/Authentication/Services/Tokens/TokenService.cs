@@ -1,8 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using AutoMapper;
-using BrawlhallaStat.Api.Exceptions.Tokens;
-using BrawlhallaStat.Domain;
+using BrawlhallaStat.Api.Authentication.Exceptions.Tokens;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
@@ -20,8 +19,8 @@ public class TokenService : ITokenService
     private readonly ILogger<TokenService> _logger;
 
     public TokenService(
-        IConfiguration configuration, 
-        BrawlhallaStatContext dbContext, 
+        IConfiguration configuration,
+        BrawlhallaStatContext dbContext,
         IMapper mapper,
         ILogger<TokenService> logger
         )
@@ -35,18 +34,23 @@ public class TokenService : ITokenService
     public async Task<TokenPair> GenerateTokenPair(IUserIdentity user)
     {
         var userClaims = _mapper.Map<List<Claim>>(user);
+
+        var accessJwt = CreateAccessToken(userClaims);
+        var refreshJwt = CreateRefreshToken(userClaims);
+        var tokenHandler = new JwtSecurityTokenHandler();
+
         var tokenPair = new TokenPair
         {
-            Access = CreateAccessToken(userClaims),
-            Refresh = CreateRefreshToken(userClaims)
+            Access = tokenHandler.WriteToken(accessJwt),
+            Refresh = tokenHandler.WriteToken(refreshJwt)
         };
 
-        await SaveToken(user.Id, tokenPair.Refresh);
+        await SaveToken(user.Id, tokenPair.Refresh, refreshJwt);
 
         return tokenPair;
     }
 
-    private string CreateAccessToken(IEnumerable<Claim> claims)
+    private JwtSecurityToken CreateAccessToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
             issuer: TokenConfig.Issuer,
@@ -59,10 +63,10 @@ public class TokenService : ITokenService
             )
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
+        return jwt;
     }
 
-    private string CreateRefreshToken(IEnumerable<Claim> claims)
+    private JwtSecurityToken CreateRefreshToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
             issuer: TokenConfig.Issuer,
@@ -75,16 +79,18 @@ public class TokenService : ITokenService
             )
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(jwt);
+        return jwt;
     }
 
-    private async Task SaveToken(string userId, string refreshToken)
+    private async Task SaveToken(string userId, string value, SecurityToken jwt)
     {
         var token = new Token
         {
             Id = Guid.NewGuid().ToString(),
-            RefreshToken = refreshToken,
-            UserId = userId
+            RefreshToken = value,
+            UserId = userId,
+            ExpiresAt = jwt.ValidTo,
+            ValidFrom = jwt.ValidFrom,
         };
         _dbContext.Tokens.Add(token);
         await _dbContext.SaveChangesAsync();
@@ -92,14 +98,16 @@ public class TokenService : ITokenService
 
     public async Task<TokenPair> RefreshAccessToken(string refreshToken)
     {
-        var isTokenValid = IsRefreshTokenValid(refreshToken, out _);
+        var isTokenValid = await IsRefreshTokenValid(refreshToken);
         if (!isTokenValid)
         {
             throw new InvalidRefreshTokenException();
         }
 
+        var now = DateTime.UtcNow;
         var tokenFromStorage = await _dbContext.Tokens
             .Include(x => x.User)
+            .Where(x => x.ExpiresAt > now)
             .FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
 
         if (tokenFromStorage is null)
@@ -114,33 +122,23 @@ public class TokenService : ITokenService
         return tokenPair;
     }
 
-    private bool IsRefreshTokenValid(string token, out ClaimsPrincipal? userClaimsPrincipal)
+    private async Task<bool> IsRefreshTokenValid(string token)
     {
-        try
-        {
-            userClaimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(
-                token,
-                new TokenValidationParameters
-                {
-                    ValidIssuer = TokenConfig.Issuer,
-                    ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidAudience = TokenConfig.Audience,
-                    ValidateAudience = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = TokenConfig.GetSymmetricSecurityRefreshKey(),
-                },
-                out _
-            );
-
-            return true;
-        }
-        catch (SecurityTokenException)
-        {
-            userClaimsPrincipal = null;
-            return false;
-        }
+        var result = await new JwtSecurityTokenHandler().ValidateTokenAsync(
+            token,
+            new TokenValidationParameters
+            {
+                ValidIssuer = TokenConfig.Issuer,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                ValidAudience = TokenConfig.Audience,
+                ValidateAudience = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidateLifetime = true,
+                IssuerSigningKey = TokenConfig.GetSymmetricSecurityRefreshKey(),
+            }
+        );
+        return result.IsValid;
     }
 
     public async Task RevokeRefreshToken(string refreshToken)
@@ -148,7 +146,7 @@ public class TokenService : ITokenService
         var token = await _dbContext.Tokens
             .Include(x => x.User)
             .FirstOrDefaultAsync(t => t.RefreshToken == refreshToken);
-        
+
         if (token is null)
         {
             _logger.LogWarning("Token {refreshToken} wasn't found during revocation", refreshToken);

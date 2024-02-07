@@ -1,4 +1,6 @@
-﻿namespace BrawlhallaStat.Api.Exceptions.Tokens;
+﻿using BrawlhallaStat.Api.Exceptions;
+
+namespace BrawlhallaStat.Api.Authentication.Exceptions.Tokens;
 
 public class TokenNotFoundException : ApiException
 {

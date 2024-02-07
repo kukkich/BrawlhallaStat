@@ -1,4 +1,6 @@
-﻿namespace BrawlhallaStat.Api.Exceptions.Authentication;
+﻿using BrawlhallaStat.Api.Exceptions;
+
+namespace BrawlhallaStat.Api.Authentication.Exceptions;
 
 public class InvalidPasswordException : ApiException
 {
