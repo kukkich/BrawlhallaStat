@@ -56,6 +56,11 @@ public class AuthenticationService : IAuthService
         var accessToken = await response.Content.ReadAsStringAsync();
         _tokenStorage.SaveAccessToken(accessToken);
 
+        if (!await SaveRefreshToken(httpClient))
+        {
+            return new AuthenticationResult(false, new() { "RefreshToken cookie not found" });
+        }
+
         _logger.LogDebug("Login succeed");
         return new AuthenticationResult(true, null);
     }
@@ -86,6 +91,11 @@ public class AuthenticationService : IAuthService
 
         var accessToken = await response.Content.ReadAsStringAsync();
         _tokenStorage.SaveAccessToken(accessToken);
+
+        if (!await SaveRefreshToken(httpClient))
+        {
+            return new AuthenticationResult(false, new() { "RefreshToken cookie not found" });
+        }
 
         _logger.LogDebug("Register succeed");
         return new AuthenticationResult(true, null);

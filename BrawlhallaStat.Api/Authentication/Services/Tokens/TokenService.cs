@@ -56,6 +56,7 @@ public class TokenService : ITokenService
             issuer: TokenConfig.Issuer,
             audience: TokenConfig.Audience,
             claims: claims,
+            notBefore: DateTime.UtcNow,
             expires: DateTime.UtcNow.Add(TokenConfig.AccessLifeTime),
             signingCredentials: new SigningCredentials(
                 TokenConfig.GetSymmetricSecurityAccessKey(),
@@ -72,6 +73,7 @@ public class TokenService : ITokenService
             issuer: TokenConfig.Issuer,
             audience: TokenConfig.Audience,
             claims: claims,
+            notBefore: DateTime.UtcNow,
             expires: DateTime.UtcNow.Add(TokenConfig.RefreshLifeTime),
             signingCredentials: new SigningCredentials(
                 TokenConfig.GetSymmetricSecurityRefreshKey(),
@@ -104,7 +106,7 @@ public class TokenService : ITokenService
             throw new InvalidRefreshTokenException();
         }
 
-        var now = DateTime.UtcNow;
+        var now = DateTime.Now;
         var tokenFromStorage = await _dbContext.Tokens
             .Include(x => x.User)
             .Where(x => x.ExpiresAt > now)
@@ -118,6 +120,9 @@ public class TokenService : ITokenService
         var user = tokenFromStorage.User;
 
         var tokenPair = await GenerateTokenPair(user);
+
+        _dbContext.Tokens.Remove(tokenFromStorage);
+        await _dbContext.SaveChangesAsync();
 
         return tokenPair;
     }
