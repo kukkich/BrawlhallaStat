@@ -3,6 +3,7 @@ using BrawlhallaStat.Api.Authentication.Requests.Logout;
 using BrawlhallaStat.Api.Authentication.Requests.Refresh;
 using BrawlhallaStat.Api.Authentication.Requests.Register;
 using BrawlhallaStat.Domain.Identity.Dto;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,16 +15,29 @@ public class AuthController : ControllerBase
     private const string RefreshTokenCookieKey = "refreshToken";
 
     private readonly IMediator _mediator;
+    private readonly IValidator<RegistrationModel> _registrationValidator;
+    private readonly IValidator<LoginUserRequest> _loginValidator;
 
-    public AuthController(IMediator mediator)
+    public AuthController(IMediator mediator, 
+        IValidator<RegistrationModel> registrationValidator,
+        IValidator<LoginUserRequest> loginValidator
+    )
     {
         _mediator = mediator;
+        _registrationValidator = registrationValidator;
+        _loginValidator = loginValidator;
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserRequest command)
+    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserRequest request)
     {
-        var tokens = await _mediator.Send(command);
+        var validationResult = _registrationValidator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+        }
+
+        var tokens = await _mediator.Send(request);
 
         SetTokenInCookie(tokens.Refresh);
 
@@ -31,9 +45,15 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserRequest command)
+    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserRequest request)
     {
-        var tokens = await _mediator.Send(command);
+        var validationResult = _loginValidator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
+        }
+
+        var tokens = await _mediator.Send(request);
 
         SetTokenInCookie(tokens.Refresh);
 

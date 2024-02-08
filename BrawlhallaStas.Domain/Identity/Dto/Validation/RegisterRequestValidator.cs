@@ -1,9 +1,9 @@
-﻿using BrawlhallaStat.Api.Authentication.Requests.Register;
+﻿using BrawlhallaStat.Api.Authentication.Validation;
 using FluentValidation;
 
-namespace BrawlhallaStat.Api.Authentication.Validation;
+namespace BrawlhallaStat.Domain.Identity.Dto.Validation;
 
-public class RegisterRequestValidator : AbstractValidator<RegisterUserRequest>
+public class RegisterRequestValidator : AbstractValidator<RegistrationModel>
 {
     public RegisterRequestValidator()
     {

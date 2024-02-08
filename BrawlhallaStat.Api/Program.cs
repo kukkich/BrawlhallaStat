@@ -1,12 +1,17 @@
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.Authentication;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
+using BrawlhallaStat.Api.Authentication.Validation;
 using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Statistics;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity.Dto.Validation;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +74,9 @@ public class Program
         services.AddAutoMapper(typeof(Program).Assembly);
 
         services.AddControllers();
+
+        services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
