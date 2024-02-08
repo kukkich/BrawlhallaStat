@@ -17,18 +17,21 @@ public class TokenService : ITokenService
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IMapper _mapper;
     private readonly ILogger<TokenService> _logger;
+    private readonly TokenConfig _tokenConfig;
 
     public TokenService(
         IConfiguration configuration,
         BrawlhallaStatContext dbContext,
         IMapper mapper,
-        ILogger<TokenService> logger
+        ILogger<TokenService> logger,
+        TokenConfig tokenConfig
         )
     {
         _configuration = configuration;
         _dbContext = dbContext;
         _mapper = mapper;
         _logger = logger;
+        _tokenConfig = tokenConfig;
     }
 
     public async Task<TokenPair> GenerateTokenPair(IUserIdentity user)
@@ -53,13 +56,13 @@ public class TokenService : ITokenService
     private JwtSecurityToken CreateAccessToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
-            issuer: TokenConfig.Issuer,
-            audience: TokenConfig.Audience,
+            issuer: _tokenConfig.Issuer,
+            audience: _tokenConfig.Audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.Add(TokenConfig.AccessLifeTime),
+            expires: DateTime.UtcNow.Add(_tokenConfig.AccessLifeTime),
             signingCredentials: new SigningCredentials(
-                TokenConfig.GetSymmetricSecurityAccessKey(),
+                _tokenConfig.GetSymmetricSecurityAccessKey(),
                 SecurityAlgorithms.HmacSha256
             )
         );
@@ -70,13 +73,13 @@ public class TokenService : ITokenService
     private JwtSecurityToken CreateRefreshToken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(
-            issuer: TokenConfig.Issuer,
-            audience: TokenConfig.Audience,
+            issuer: _tokenConfig.Issuer,
+            audience: _tokenConfig.Audience,
             claims: claims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.Add(TokenConfig.RefreshLifeTime),
+            expires: DateTime.UtcNow.Add(_tokenConfig.RefreshLifeTime),
             signingCredentials: new SigningCredentials(
-                TokenConfig.GetSymmetricSecurityRefreshKey(),
+                _tokenConfig.GetSymmetricSecurityRefreshKey(),
                 SecurityAlgorithms.HmacSha256
             )
         );
@@ -133,14 +136,14 @@ public class TokenService : ITokenService
             token,
             new TokenValidationParameters
             {
-                ValidIssuer = TokenConfig.Issuer,
+                ValidIssuer = _tokenConfig.Issuer,
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = TokenConfig.Audience,
+                ValidAudience = _tokenConfig.Audience,
                 ValidateAudience = true,
                 ClockSkew = TimeSpan.Zero,
                 ValidateLifetime = true,
-                IssuerSigningKey = TokenConfig.GetSymmetricSecurityRefreshKey(),
+                IssuerSigningKey = _tokenConfig.GetSymmetricSecurityRefreshKey(),
             }
         );
         return result.IsValid;

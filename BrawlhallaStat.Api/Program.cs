@@ -31,19 +31,21 @@ public class Program
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });
 
+        services.AddSingleton<TokenConfig>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                var tokenConfig = new TokenConfig(configuration);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = TokenConfig.Issuer,
+                    ValidIssuer = tokenConfig.Issuer,
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
-                    ValidAudience = TokenConfig.Audience,
+                    ValidAudience = tokenConfig.Audience,
                     ValidateAudience = true,
                     ClockSkew = TimeSpan.Zero,
                     ValidateLifetime = true,
-                    IssuerSigningKey = TokenConfig.GetSymmetricSecurityAccessKey(),
+                    IssuerSigningKey = tokenConfig.GetSymmetricSecurityAccessKey(),
                 };
             });
 
