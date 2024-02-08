@@ -1,41 +1,55 @@
-﻿using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Domain;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.BrawlhallaEntities.Services;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.GameEntities.Dtos;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Requests;
 
-public class AddLegendRequestHandler : IRequestHandler<AddLegendRequest, int>
+public class AddLegendRequestHandler : IRequestHandler<AddLegendRequest>
 {
-    private readonly BrawlhallaStatContext _context;
+    private readonly IMapper _mapper;
+    private readonly IBrawlhallaEntitiesService _entitiesService;
+    private readonly BrawlhallaStatContext _dbContext;
+    private readonly ILogger<AddLegendRequestHandler> _logger;
 
-    public AddLegendRequestHandler(BrawlhallaStatContext context)
+    public AddLegendRequestHandler(
+        IMapper mapper,
+        IBrawlhallaEntitiesService entitiesService,
+        BrawlhallaStatContext dbContext,
+        ILogger<AddLegendRequestHandler> logger
+    )
     {
-        _context = context;
+        _mapper = mapper;
+        _entitiesService = entitiesService;
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
-    public async Task<int> Handle(AddLegendRequest request, CancellationToken cancellationToken)
+    public async Task Handle(AddLegendRequest request, CancellationToken cancellationToken)
     {
-        var sameNameExist = _context.Legends.Any(x => x.Name == request.Name);
-        if (sameNameExist)
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        try
         {
-            throw new AlreadyExistException(
-                who: nameof(Legend),
-                propertyName: nameof(Legend.Name),
-                value: request.Name
+            _logger.LogInformation(
+                "Legend add {Id} {Name} {FirstWeaponId} {SecondWeaponId} transaction begin",
+                request.Id, request.Name, request.FirstWeaponId, request.SecondWeaponId
             );
+
+            await _entitiesService.AddLegend(_mapper.Map<LegendDto>(request));
+
+            await transaction.CommitAsync(cancellationToken);
+            _logger.LogInformation("Legend add transaction commit");
+        }
+        catch (Exception exception)
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            _logger.LogWarning(
+                "Legend add transaction rollback. Message: {Message}",
+                exception.Message
+            );
+            throw;
         }
 
-        var legend = new Legend
-        {
-            Name = request.Name,
-            FirstWeaponId = request.FirstWeaponId,
-            SecondWeaponId = request.SecondWeaponId
-        };
-        _context.Legends.Add(legend);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return legend.Id;
     }
 }

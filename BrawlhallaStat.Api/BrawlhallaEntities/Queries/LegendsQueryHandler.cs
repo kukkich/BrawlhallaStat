@@ -1,5 +1,5 @@
 ﻿using BrawlhallaStat.Api.BrawlhallaEntities.Services;
-using BrawlhallaStat.Domain;
+using BrawlhallaStat.Domain.GameEntities;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;

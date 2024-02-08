@@ -2,8 +2,8 @@
 using BrawlhallaStat.Api.Authentication.Services.Hashing;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Dto;
 using Microsoft.EntityFrameworkCore;
 

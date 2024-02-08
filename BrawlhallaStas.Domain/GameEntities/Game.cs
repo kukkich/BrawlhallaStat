@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BrawlhallaStat.Domain.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Domain.Games;
 

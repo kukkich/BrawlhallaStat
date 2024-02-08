@@ -1,7 +1,6 @@
-﻿using BrawlhallaStat.Domain.Identity;
-using BrawlhallaStat.Domain.Identity.Base;
+﻿using BrawlhallaStat.Domain.Identity.Base;
 
-namespace BrawlhallaStat.Domain;
+namespace BrawlhallaStat.Domain.Identity;
 
 public class User : IUserIdentity
 {

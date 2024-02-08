@@ -38,9 +38,8 @@ public class EntitiesController : ControllerBase
     [Authorize("Editor")]
     public async Task<IActionResult> AddWeapons([FromBody] AddWeaponRequest request)
     {
-        // Todo implement into service
-        var id = await _mediator.Send(request);
-        return Ok(id);
+        await _mediator.Send(request);
+        return Ok();
     }
 
     [HttpPost]
@@ -48,7 +47,7 @@ public class EntitiesController : ControllerBase
     [Authorize("Editor")]
     public async Task<IActionResult> AddLegends([FromBody] AddLegendRequest request)
     {
-        var id = await _mediator.Send(request);
-        return Ok(id);
+        await _mediator.Send(request);
+        return Ok();
     }
 }

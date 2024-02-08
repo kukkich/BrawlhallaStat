@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Domain;
+﻿using BrawlhallaStat.Domain.Identity;
 
 namespace BrawlhallaStat.Api;
 

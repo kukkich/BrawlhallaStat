@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 public class Weapon : IHaveId<int>
 {

@@ -48,12 +48,12 @@ public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, T
 
             return tokenPair;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "User {Login} {Email} registration transaction rollback",
-                request.Login, request.Email
+                "User {Login} {Email} registration transaction rollback. Message: {Message}",
+                request.Login, request.Email, exception.Message
             );
             throw;
         }

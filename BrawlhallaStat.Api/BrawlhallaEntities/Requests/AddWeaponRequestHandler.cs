@@ -1,39 +1,54 @@
-﻿using BrawlhallaStat.Api.Exceptions;
-using BrawlhallaStat.Domain;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.BrawlhallaEntities.Services;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.GameEntities.Dtos;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Requests;
 
-public class AddWeaponRequestHandler : IRequestHandler<AddWeaponRequest, int>
+public class AddWeaponRequestHandler : IRequestHandler<AddWeaponRequest>
 {
-    private readonly BrawlhallaStatContext _context;
+    private readonly IMapper _mapper;
+    private readonly IBrawlhallaEntitiesService _entitiesService;
+    private readonly BrawlhallaStatContext _dbContext;
+    private readonly ILogger<AddLegendRequestHandler> _logger;
 
-    public AddWeaponRequestHandler(BrawlhallaStatContext context)
+    public AddWeaponRequestHandler(
+        IMapper mapper,
+        IBrawlhallaEntitiesService entitiesService,
+        BrawlhallaStatContext dbContext,
+        ILogger<AddLegendRequestHandler> logger
+    )
     {
-        _context = context;
+        _mapper = mapper;
+        _entitiesService = entitiesService;
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
-    public async Task<int> Handle(AddWeaponRequest request, CancellationToken cancellationToken)
+    public async Task Handle(AddWeaponRequest request, CancellationToken cancellationToken)
     {
-        var sameNameExist = _context.Weapons.Any(x => x.Name == request.Name);
-        if (sameNameExist)
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        try
         {
-            throw new AlreadyExistException(
-                who: nameof(Weapon),
-                propertyName: nameof(Weapon.Name),
-                value: request.Name
+            _logger.LogInformation(
+                "Weapon add {Id} {Name} transaction begin",
+                request.Id, request.Name
             );
+
+            await _entitiesService.AddLegend(_mapper.Map<LegendDto>(request));
+
+            await transaction.CommitAsync(cancellationToken);
+            _logger.LogInformation("Weapon add transaction commit");
         }
-
-        var weapon = new Weapon
+        catch (Exception exception)
         {
-            Name = request.Name,
-        };
-        _context.Weapons.Add(weapon);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return weapon.Id;
+            await transaction.RollbackAsync(CancellationToken.None);
+            _logger.LogWarning(
+                "Weapon add transaction rollback. Message: {Message}",
+                exception.Message
+            );
+            throw;
+        }
     }
 }

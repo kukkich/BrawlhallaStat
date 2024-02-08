@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Api.Caching;
-using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.GameEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
