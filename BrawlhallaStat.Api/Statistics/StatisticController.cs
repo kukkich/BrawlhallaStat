@@ -1,10 +1,12 @@
 ﻿using BrawlhallaStat.Api.Statistics.Queries;
 using BrawlhallaStat.Domain.Statistics;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Statistics;
 
+[Authorize]
 [Route("api/[controller]")]
 public class StatisticController : ControllerBase
 {

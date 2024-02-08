@@ -45,6 +45,9 @@ public class Program
                 };
             });
 
+        services.AddAuthorizationBuilder()
+            .AddPolicy("Editor", p => p.RequireRole("Editor"));
+
         services.AddCors(options =>
         {
             options.AddPolicy(name: "WebClient",

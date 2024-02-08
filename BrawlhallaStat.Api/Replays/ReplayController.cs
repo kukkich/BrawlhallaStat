@@ -1,9 +1,11 @@
 ﻿using BrawlhallaStat.Api.Replays.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Replays;
 
+[Authorize]
 [Route("api/[controller]/[action]")]
 public class ReplayController : ControllerBase
 {
@@ -19,13 +21,13 @@ public class ReplayController : ControllerBase
     {
         if (file is null || file.Length <= 0)
         {
-            return BadRequest("Incorrect file");
+            return BadRequest("Invalid file");
         }
 
         var user = TestUser.Instance;
 
         await _mediator.Send(new UploadReplayCommand(user, file));
 
-        return Ok("Файл успешно загружен");
+        return Ok("Replay uploaded");
     }
 }
