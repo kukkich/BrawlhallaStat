@@ -1,4 +1,6 @@
 ﻿using BrawlhallaStat.Api.Authentication.Requests.Login;
+using BrawlhallaStat.Api.Authentication.Requests.Logout;
+using BrawlhallaStat.Api.Authentication.Requests.Refresh;
 using BrawlhallaStat.Api.Authentication.Requests.Register;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
@@ -47,7 +49,7 @@ public class AuthController : ControllerBase
             return BadRequest();
         }
 
-        var command = new RefreshTokenCommand { RefreshToken = refreshToken };
+        var command = new RefreshTokenRequest { RefreshToken = refreshToken };
 
         var tokens = await _mediator.Send(command);
         SetTokenInCookie(tokens.Refresh);
@@ -64,7 +66,7 @@ public class AuthController : ControllerBase
             return BadRequest();
         }
 
-        var command = new LogoutUserCommand { RefreshToken = refreshToken };
+        var command = new LogoutUserRequest { RefreshToken = refreshToken };
 
         await _mediator.Send(command);
 
