@@ -1,9 +1,9 @@
 ﻿using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 
-namespace BrawlhallaStat.Api.Authentication.Commands.Login;
+namespace BrawlhallaStat.Api.Authentication.Requests.Login;
 
-public class LoginUserCommand : IRequest<TokenPair>
+public class LoginUserRequest : IRequest<TokenPair>
 {
     public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;

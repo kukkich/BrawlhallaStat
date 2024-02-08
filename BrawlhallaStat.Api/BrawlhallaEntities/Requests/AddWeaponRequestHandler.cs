@@ -3,13 +3,13 @@ using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 
-namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Requests;
 
-public class AddWeaponHandler : IRequestHandler<AddWeaponRequest, int>
+public class AddWeaponRequestHandler : IRequestHandler<AddWeaponRequest, int>
 {
     private readonly BrawlhallaStatContext _context;
 
-    public AddWeaponHandler(BrawlhallaStatContext context)
+    public AddWeaponRequestHandler(BrawlhallaStatContext context)
     {
         _context = context;
     }

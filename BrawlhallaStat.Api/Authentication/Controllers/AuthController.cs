@@ -1,7 +1,5 @@
-﻿using BrawlhallaStat.Api.Authentication.Commands.Login;
-using BrawlhallaStat.Api.Authentication.Commands.Logout;
-using BrawlhallaStat.Api.Authentication.Commands.Refresh;
-using BrawlhallaStat.Api.Authentication.Commands.Register;
+﻿using BrawlhallaStat.Api.Authentication.Requests.Login;
+using BrawlhallaStat.Api.Authentication.Requests.Register;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +19,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserCommand command)
+    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserRequest command)
     {
         var tokens = await _mediator.Send(command);
 
@@ -31,7 +29,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserCommand command)
+    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserRequest command)
     {
         var tokens = await _mediator.Send(command);
 

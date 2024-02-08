@@ -2,18 +2,18 @@
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 
-namespace BrawlhallaStat.Api.Replays.Commands;
+namespace BrawlhallaStat.Api.Replays.Requests;
 
-public class UploadReplayHandler : IRequestHandler<UploadReplayCommand, string>
+public class UploadReplayRequestHandler : IRequestHandler<UploadReplayRequest, string>
 {
     private readonly IReplayService _replayService;
     private readonly BrawlhallaStatContext _dbContext;
-    private readonly ILogger<UploadReplayHandler> _logger;
+    private readonly ILogger<UploadReplayRequestHandler> _logger;
 
-    public UploadReplayHandler(
+    public UploadReplayRequestHandler(
         IReplayService replayService,
         BrawlhallaStatContext dbContext,
-        ILogger<UploadReplayHandler> logger
+        ILogger<UploadReplayRequestHandler> logger
         )
     {
         _replayService = replayService;
@@ -21,7 +21,7 @@ public class UploadReplayHandler : IRequestHandler<UploadReplayCommand, string>
         _logger = logger;
     }
 
-    public async Task<string> Handle(UploadReplayCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(UploadReplayRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try

@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Api.Replays.Commands;
+﻿using BrawlhallaStat.Api.Replays.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +26,7 @@ public class ReplayController : ControllerBase
 
         var user = TestUser.Instance;
 
-        await _mediator.Send(new UploadReplayCommand(user, file));
+        await _mediator.Send(new UploadReplayRequest(user, file));
 
         return Ok("Replay uploaded");
     }

@@ -3,13 +3,13 @@ using BrawlhallaStat.Domain;
 using BrawlhallaStat.Domain.Context;
 using MediatR;
 
-namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Requests;
 
-public class AddLegendHandler : IRequestHandler<AddLegendRequest, int>
+public class AddLegendRequestHandler : IRequestHandler<AddLegendRequest, int>
 {
     private readonly BrawlhallaStatContext _context;
 
-    public AddLegendHandler(BrawlhallaStatContext context)
+    public AddLegendRequestHandler(BrawlhallaStatContext context)
     {
         _context = context;
     }

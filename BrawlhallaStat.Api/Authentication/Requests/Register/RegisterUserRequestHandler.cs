@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
-using BrawlhallaStat.Api.Authentication.Commands.Login;
+using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Services.Auth;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto;
 using MediatR;
 
-namespace BrawlhallaStat.Api.Authentication.Commands.Register;
+namespace BrawlhallaStat.Api.Authentication.Requests.Register;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, TokenPair>
+public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, TokenPair>
 {
     private readonly IAuthenticationService _authService;
     private readonly BrawlhallaStatContext _dbContext;
-    private readonly ILogger<LoginUserCommand> _logger;
+    private readonly ILogger<LoginUserRequest> _logger;
     private readonly IMapper _mapper;
 
-    public RegisterUserCommandHandler(
+    public RegisterUserRequestHandler(
         IAuthenticationService authService,
         BrawlhallaStatContext dbContext,
-        ILogger<LoginUserCommand> logger,
+        ILogger<LoginUserRequest> logger,
         IMapper mapper
         )
     {
@@ -27,7 +27,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, T
         _mapper = mapper;
     }
 
-    public async Task<TokenPair> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<TokenPair> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try

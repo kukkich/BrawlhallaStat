@@ -1,4 +1,5 @@
 ﻿using BrawlhallaStat.Api.BrawlhallaEntities.Queries;
+using BrawlhallaStat.Api.BrawlhallaEntities.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
