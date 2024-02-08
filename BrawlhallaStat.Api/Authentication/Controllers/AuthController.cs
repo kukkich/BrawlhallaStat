@@ -16,16 +16,20 @@ public class AuthController : ControllerBase
 
     private readonly IMediator _mediator;
     private readonly IValidator<RegistrationModel> _registrationValidator;
-    private readonly IValidator<LoginUserRequest> _loginValidator;
+    private readonly IValidator<LoginModel> _loginValidator;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IMediator mediator, 
+    public AuthController(
+        IMediator mediator, 
         IValidator<RegistrationModel> registrationValidator,
-        IValidator<LoginUserRequest> loginValidator
+        IValidator<LoginModel> loginValidator,
+        IConfiguration configuration
     )
     {
         _mediator = mediator;
         _registrationValidator = registrationValidator;
         _loginValidator = loginValidator;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -102,7 +106,7 @@ public class AuthController : ControllerBase
             value: token,
             new CookieOptions
             {
-                MaxAge = TimeSpan.FromDays(10), //Todo take from configuration
+                MaxAge = TimeSpan.FromDays(_configuration.GetSection("Auth").GetValue<int>("CookieLifetimeDays")),
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None

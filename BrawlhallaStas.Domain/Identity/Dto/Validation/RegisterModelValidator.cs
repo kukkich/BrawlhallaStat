@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BrawlhallaStat.Domain.Identity.Dto.Validation;
 
-public class RegisterRequestValidator : AbstractValidator<RegistrationModel>
+public class RegisterModelValidator : AbstractValidator<RegistrationModel>
 {
-    public RegisterRequestValidator()
+    public RegisterModelValidator()
     {
         RuleFor(x => x.Login).SetValidator(new LoginValidator());
         RuleFor(x => x.Password).SetValidator(new PasswordValidator());
