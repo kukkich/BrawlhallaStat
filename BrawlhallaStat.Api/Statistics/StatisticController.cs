@@ -1,4 +1,6 @@
-﻿using BrawlhallaStat.Api.Statistics.Queries;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.Statistics.Queries;
+using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Statistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,16 +13,18 @@ namespace BrawlhallaStat.Api.Statistics;
 public class StatisticController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public StatisticController(IMediator mediator)
+    public StatisticController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<IActionResult> FilteredStatistic(StatisticGeneralFilter filter)
     {
-        var user = TestUser.Instance;
+        var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
         var result = await _mediator.Send(new StatisticQuery(user, filter));
 

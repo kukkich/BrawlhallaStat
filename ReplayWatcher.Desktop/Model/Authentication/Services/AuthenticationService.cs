@@ -46,11 +46,10 @@ public class AuthenticationService : IAuthService
 
         if (!response.IsSuccessStatusCode)
         {
-            var json = await response.Content.ReadAsStringAsync();
-            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
-            _logger.LogDebug("Error while logging");
+            var error = await response.Content.ReadAsStringAsync();
+            _logger.LogDebug("Error while logging: {error}", error);
 
-            return new AuthenticationResult(false, new() { error.Text });
+            return new AuthenticationResult(false, new() { error });
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
@@ -82,11 +81,10 @@ public class AuthenticationService : IAuthService
 
         if (!response.IsSuccessStatusCode)
         {
-            var json = await response.Content.ReadAsStringAsync();
-            var error = JsonConvert.DeserializeObject<ErrorResult>(json)!;
-            _logger.LogDebug("Error while register");
+            var error = await response.Content.ReadAsStringAsync();
+            _logger.LogDebug("Error while register: {error}", error);
 
-            return new AuthenticationResult(false, new() { error.Text });
+            return new AuthenticationResult(false, new() { error });
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
@@ -117,11 +115,10 @@ public class AuthenticationService : IAuthService
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogDebug("Error while refresh");
-            var json = await response.Content.ReadAsStringAsync();
-            var error = JsonConvert.DeserializeObject<ErrorResult>(json);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger.LogDebug("Error while refresh: {error}", error);
 
-            return new AuthenticationResult(false, new() { error?.Text! });
+            return new AuthenticationResult(false, new() { error });
         }
 
         var accessToken = await response.Content.ReadAsStringAsync();
@@ -179,7 +176,7 @@ public class AuthenticationService : IAuthService
                 Secure = true,
                 Expires = DateTime.Now + TimeSpan.FromDays(10)
             });
-            _logger.LogDebug("RefreshToken loaded from storage and added to cookies.");
+            _logger.LogDebug("RefreshToken loaded from storage and added to cookies");
             return true;
         }
         _logger.LogDebug("RefreshToken not found in cookie and storage");
