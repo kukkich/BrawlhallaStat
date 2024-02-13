@@ -35,10 +35,10 @@ public class LogoutUserRequestHandler : IRequestHandler<LogoutUserRequest>
 
             _logger.LogInformation("User logout transaction commit");
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync(CancellationToken.None);
-            _logger.LogWarning("User logout transaction rollback");
+            _logger.LogWarning("User logout transaction rollback: {Message}", exception.Message);
             throw;
         }
     }

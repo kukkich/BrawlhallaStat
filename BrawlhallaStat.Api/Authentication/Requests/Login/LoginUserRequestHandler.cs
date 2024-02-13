@@ -42,12 +42,12 @@ public class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, TokenPa
 
             return tokens;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "User {Login} login transaction rollback",
-                request.Login
+                "User {Login} login transaction rollback: {Message}",
+                request.Login, exception.Message
             );
             throw;
         }

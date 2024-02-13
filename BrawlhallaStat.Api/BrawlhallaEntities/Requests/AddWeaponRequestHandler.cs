@@ -45,7 +45,7 @@ public class AddWeaponRequestHandler : IRequestHandler<AddWeaponRequest>
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "Weapon add transaction rollback. Message: {Message}",
+                "Weapon add transaction rollback: {Message}",
                 exception.Message
             );
             throw;

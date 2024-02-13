@@ -45,7 +45,7 @@ public class AddLegendRequestHandler : IRequestHandler<AddLegendRequest>
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "Legend add transaction rollback. Message: {Message}",
+                "Legend add transaction rollback: {Message}",
                 exception.Message
             );
             throw;

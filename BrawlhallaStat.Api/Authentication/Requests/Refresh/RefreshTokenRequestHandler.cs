@@ -43,12 +43,12 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
 
             return tokenPair;
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "Token {token} refresh transaction rollback",
-                request.RefreshToken
+                "Token {Token} refresh transaction rollback: {Message}",
+                request.RefreshToken, exception.Message
             );
             throw;
         }

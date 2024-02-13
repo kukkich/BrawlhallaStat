@@ -52,7 +52,7 @@ public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, T
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "User {Login} {Email} registration transaction rollback. Message: {Message}",
+                "User {Login} {Email} registration transaction rollback {Message}",
                 request.Login, request.Email, exception.Message
             );
             throw;
