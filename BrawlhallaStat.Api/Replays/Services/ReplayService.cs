@@ -53,7 +53,7 @@ public class ReplayService : IReplayService
         var gameDetail = MapToDomainGame(replay);
         gameDetail.Id = Guid.NewGuid().ToString();
 
-        var nickName = author.Login;
+        var nickName = author.NickName;
         var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
 
         gameDetail.Type = GameTypes[replay.PlaylistName];

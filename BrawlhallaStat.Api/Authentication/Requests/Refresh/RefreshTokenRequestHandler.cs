@@ -28,6 +28,7 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
+            // Todo токен новый только при перезапуске клиента
             _logger.LogInformation(
                 "Token {token} refresh transaction begin",
                 request.RefreshToken

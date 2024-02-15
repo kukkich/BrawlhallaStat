@@ -5,6 +5,7 @@ using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Statistics;
+using BrawlhallaStat.Api.Users;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Dto.Validation;
 using FluentValidation;
@@ -87,6 +88,7 @@ public class Program
         services.AddReplay();
         services.AddStatistic();
         services.AddBrawlhallaEntities();
+        services.AddUserService();
 
         services.AddAuth();
     }

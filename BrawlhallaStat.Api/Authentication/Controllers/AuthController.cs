@@ -60,7 +60,6 @@ public class AuthController : ControllerBase
         var tokens = await _mediator.Send(request);
 
         SetTokenInCookie(tokens.Refresh);
-
         return Ok(tokens.Access);
     }
 
@@ -109,7 +108,7 @@ public class AuthController : ControllerBase
                 MaxAge = TimeSpan.FromDays(_configuration.GetSection("Auth").GetValue<int>("CookieLifetimeDays")),
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.None
+
             }
         );
     }

@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ReplayWatcher.Desktop.Model.Authentication.Storage;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+#pragma warning disable CS8604
 
 namespace ReplayWatcher.Desktop.Model.Authentication.Services;
 
@@ -124,6 +126,7 @@ public class AuthenticationService : IAuthService
         var accessToken = await response.Content.ReadAsStringAsync();
         _tokenStorage.SaveAccessToken(accessToken);
 
+
         if (!await SaveRefreshToken(httpClient))
         {
             return new AuthenticationResult(false, new() { "RefreshToken cookie not found" });
@@ -135,12 +138,23 @@ public class AuthenticationService : IAuthService
 
     private async Task<bool> SaveRefreshToken(HttpClient httpClient)
     {
-        var baseAddress = new Uri(httpClient.BaseAddress.GetLeftPart(UriPartial.Authority));
+        var baseAddress = new Uri(httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority));
         var cookies = _cookieContainer.GetCookies(baseAddress);
-        var refreshTokenCookie = cookies[RefreshTokenCookieKey];
-        if (refreshTokenCookie is not null)
+        var serverSetRefreshTokenCookie = cookies[RefreshTokenCookieKey];
+        
+        cookies.Remove(serverSetRefreshTokenCookie);
+        var clientSetCookie = cookies[RefreshTokenCookieKey];
+
+        //TODO убрать лишнее из этих двух действий
+        if (clientSetCookie is not null)
         {
-            var refreshToken = refreshTokenCookie.Value;
+            clientSetCookie.Expired = true;
+        }
+        _cookieContainer.SetCookies(baseAddress, $"refreshToken={serverSetRefreshTokenCookie.Value}");
+
+        if (serverSetRefreshTokenCookie is not null)
+        {
+            var refreshToken = serverSetRefreshTokenCookie.Value;
             await _tokenStorage.SaveRefreshToken(refreshToken);
             _logger.LogDebug("RefreshToken extracted: {refreshToken}", refreshToken);
         }
@@ -159,6 +173,7 @@ public class AuthenticationService : IAuthService
     {
         var baseAddress = new Uri(httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority));
         var cookies = _cookieContainer.GetCookies(baseAddress);
+
         var refreshTokenCookie = cookies[RefreshTokenCookieKey];
 
         if (refreshTokenCookie is not null)
@@ -169,14 +184,14 @@ public class AuthenticationService : IAuthService
         var refreshTokenFromStorage = await _tokenStorage.GetRefreshToken();
         if (refreshTokenFromStorage is not null)
         {
-            _cookieContainer.Add(new Cookie(RefreshTokenCookieKey, refreshTokenFromStorage)
+            var cookie = new Cookie(RefreshTokenCookieKey, refreshTokenFromStorage)
             {
                 Domain = baseAddress.Host,
                 HttpOnly = true,
                 Secure = true,
-                Expires = DateTime.Now + TimeSpan.FromDays(10)
-            });
-            _logger.LogDebug("RefreshToken loaded from storage and added to cookies");
+            };
+            _cookieContainer.Add(cookie);
+            _logger.LogDebug("RefreshToken loaded from storage and added to cookies: {token}", refreshTokenFromStorage);
             return true;
         }
         _logger.LogDebug("RefreshToken not found in cookie and storage");
