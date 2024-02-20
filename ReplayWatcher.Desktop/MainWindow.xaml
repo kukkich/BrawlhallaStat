@@ -8,16 +8,16 @@
     xmlns:reactiveUi="http://reactiveui.net"
     xmlns:viewModel="clr-namespace:ReplayWatcher.Desktop.ViewModel" 
     xmlns:converters="clr-namespace:ReplayWatcher.Desktop.View.Converters"
-    Title="ReplayWatcher" MinHeight="620" MinWidth="1000">
+    Title="ReplayWatcher" MinHeight="820" MinWidth="1100">
     <Window.Resources>
         <converters:BooleanToVisibilityConverter x:Key="InvertedBoolToVisConverter" />
     </Window.Resources>
 
-    <Grid ShowGridLines="True">
+    <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" Width="3*"/>
@@ -52,10 +52,14 @@
                         <DockPanel Margin="10">
                             <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight">Login</TextBlock>
                             <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterLoginTextBox" Margin="0 4 0 0" />
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight">NickName</TextBlock>
+                            <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterNickNameTextBox" Margin="0 4 0 0" />
                             <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Email</TextBlock>
                             <TextBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterEmailTextBox" Margin="0 4 0 0"/>
                             <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Password</TextBlock>
                             <PasswordBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterPasswordBox" Margin="0 4 0 0" />
+                            <TextBlock DockPanel.Dock="Top" FlowDirection="LeftToRight" Margin="0 10 0 0">Confirm password</TextBlock>
+                            <PasswordBox DockPanel.Dock="Top" Padding="5" Height="30" x:Name="RegisterPasswordConfirmBox" Margin="0 4 0 0" />
                             <Button VerticalAlignment="Bottom" Height="30" x:Name="RegisterButton" Content="Login" Margin="0 0 0 15" />
                         </DockPanel>
                     </TabItem.Content>

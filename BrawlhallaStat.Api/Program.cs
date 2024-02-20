@@ -1,11 +1,14 @@
-using System.Security.Claims;
 using BrawlhallaReplayReader.DependencyInjection;
+using BrawlhallaStat.Api.Authentication;
+using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.BrawlhallaEntities;
-using BrawlhallaStat.Api.Middlewares;
+using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.Replays;
-using BrawlhallaStat.Api.Services.Tokens;
 using BrawlhallaStat.Api.Statistics;
+using BrawlhallaStat.Api.Users;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity.Dto.Validation;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -29,29 +32,26 @@ public class Program
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });
 
+        services.AddSingleton<TokenConfig>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                var tokenConfig = new TokenConfig(configuration);
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = TokenConfig.Issuer,
+                    ValidIssuer = tokenConfig.Issuer,
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
-                    ValidAudience = TokenConfig.Audience,
+                    ValidAudience = tokenConfig.Audience,
                     ValidateAudience = true,
                     ClockSkew = TimeSpan.Zero,
                     ValidateLifetime = true,
-                    IssuerSigningKey = TokenConfig.GetSymmetricSecurityAccessKey(),
+                    IssuerSigningKey = tokenConfig.GetSymmetricSecurityAccessKey(),
                 };
             });
 
-        services.AddAuthorization(option =>
-        {
-            option.AddPolicy("KukkichOnly", policy =>
-            {
-                policy.RequireClaim(ClaimTypes.Name, "kukkich");
-            });
-        });
+        services.AddAuthorizationBuilder()
+            .AddPolicy("Editor", p => p.RequireRole("Editor"));
 
         services.AddCors(options =>
         {
@@ -75,6 +75,9 @@ public class Program
 
         services.AddControllers();
 
+        services.AddValidatorsFromAssemblyContaining<RegisterModelValidator>();
+
+
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         
@@ -85,13 +88,14 @@ public class Program
         services.AddReplay();
         services.AddStatistic();
         services.AddBrawlhallaEntities();
+        services.AddUserService();
 
-        services.AddTokenService();
+        services.AddAuth();
     }
 
     public static void ConfigureApplication(WebApplication app)
     {
-        app.UseMiddleware<ApiExceptionMiddleware>();
+        app.UseMiddleware<ApiExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {

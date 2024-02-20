@@ -9,4 +9,7 @@ public class Token : IHaveId<string>
 
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
+
+    public DateTime ExpiresAt { get; set; }
+    public DateTime ValidFrom { get; set; }
 }

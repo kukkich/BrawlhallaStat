@@ -53,7 +53,7 @@ public class ReplayService : IReplayService
         var gameDetail = MapToDomainGame(replay);
         gameDetail.Id = Guid.NewGuid().ToString();
 
-        var nickName = author.Login;
+        var nickName = author.NickName;
         var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
 
         gameDetail.Type = GameTypes[replay.PlaylistName];
@@ -87,7 +87,7 @@ public class ReplayService : IReplayService
                 .SingleOrDefault(x => x.NickName == nickName);
             if (userFromGame is null)
             {
-                throw new NoUserInGameException(nickName);
+                throw new NoUserInGameException(nickName, game.Players.Select(x => x.NickName));
             }
             return userFromGame;
         }
@@ -171,7 +171,7 @@ public class ReplayService : IReplayService
 
     private GameDetail MapToDomainGame(ReplayInfo replay)
     {
-        var game = new GameDetail()
+        var game = new GameDetail
         {
             Id = Guid.NewGuid().ToString(),
             RandomSeed = replay.RandomSeed,

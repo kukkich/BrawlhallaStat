@@ -84,7 +84,6 @@ internal abstract class ReadingStrategyBase : IReadingStrategy
 
         if (checksum != calculatedChecksum)
         {
-            //TODO extract into logger
             Console.WriteLine($"[DEV WARNING] Data checksums don't match: Got {checksum}, calculated {calculatedChecksum}");
         }
     }

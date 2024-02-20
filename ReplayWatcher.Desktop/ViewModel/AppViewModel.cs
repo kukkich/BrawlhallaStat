@@ -97,14 +97,20 @@ public class AppViewModel : ReactiveObject
             AuthContext.IsAuthenticated = result.IsSucceed;
         });
         RegisterCommand = ReactiveCommand.CreateFromTask(
-            () => RegisterAsync(new RegisterRequest(AuthContext.Login, AuthContext.Email, AuthContext.Password)),
-            this.WhenAnyValue(x => x.AuthContext.IsAuthenticated,
-                x => x.AuthContext.Email, x => x.AuthContext.Login, x => x.AuthContext.Password,
-                (isAuth, login, email, password) =>
+            execute: () => RegisterAsync(new RegisterRequest(
+                    AuthContext.Login, 
+                    AuthContext.NickName, 
+                    AuthContext.Email, 
+                    AuthContext.Password
+            )),
+            canExecute: this.WhenAnyValue(x => x.AuthContext.IsAuthenticated,
+                x => x.AuthContext.Email, x => x.AuthContext.Login, x => x.AuthContext.Password, x => x.AuthContext.PasswordConfirm,
+                (isAuth, login, email, password, passwordConfirm) =>
                     !isAuth &&
                     !String.IsNullOrWhiteSpace(login) &&
                     !String.IsNullOrWhiteSpace(email) &&
-                    !String.IsNullOrWhiteSpace(password)
+                    !String.IsNullOrWhiteSpace(password) &&
+                    password == passwordConfirm 
             ));
         RegisterCommand.Subscribe(result =>
         {

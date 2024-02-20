@@ -8,7 +8,6 @@ using ReplayWatcher.Desktop.ViewModel;
 using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
 
-
 namespace ReplayWatcher.Desktop;
 
 public partial class MainWindow
@@ -37,6 +36,8 @@ public partial class MainWindow
                 .DisposeWith(disposables);
             this.Bind(ViewModel, vm => vm.AuthContext.Email, view => view.RegisterEmailTextBox.Text)
                 .DisposeWith(disposables);
+            this.Bind(ViewModel, vm => vm.AuthContext.NickName, view => view.RegisterNickNameTextBox.Text)
+                .DisposeWith(disposables);
 
             LoginPasswordBox.Events().PasswordChanged
                 .Subscribe(_ =>
@@ -48,6 +49,12 @@ public partial class MainWindow
                 .Subscribe(_ =>
                 {
                     ViewModel.AuthContext.Password = RegisterPasswordBox.Password;
+                })
+                .DisposeWith(disposables);
+            RegisterPasswordConfirmBox.Events().PasswordChanged
+                .Subscribe(_ =>
+                {
+                    ViewModel.AuthContext.PasswordConfirm = RegisterPasswordConfirmBox.Password;
                 })
                 .DisposeWith(disposables);
 

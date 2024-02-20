@@ -1,17 +1,25 @@
-﻿using BrawlhallaStat.Api.Replays.Commands;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.Replays.Requests;
+using BrawlhallaStat.Domain.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Replays;
 
+[Authorize]
 [Route("api/[controller]/[action]")]
 public class ReplayController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
+    private readonly ILogger<ReplayController> _logger;
 
-    public ReplayController(IMediator mediator)
+    public ReplayController(IMediator mediator, IMapper mapper, ILogger<ReplayController> logger)
     {
         _mediator = mediator;
+        _mapper = mapper;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -19,13 +27,14 @@ public class ReplayController : ControllerBase
     {
         if (file is null || file.Length <= 0)
         {
-            return BadRequest("Incorrect file");
+            _logger.LogDebug("Invalid file received");
+            return BadRequest("Invalid file");
         }
 
-        var user = TestUser.Instance;
+        var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
-        await _mediator.Send(new UploadReplayCommand(user, file));
+        await _mediator.Send(new UploadReplayRequest(user, file));
 
-        return Ok("Файл успешно загружен");
+        return Ok("Replay uploaded");
     }
 }

@@ -5,13 +5,13 @@ namespace BrawlhallaStat.Domain.Identity;
 
 public class AuthenticatedUser : IUserIdentity
 {
-    public string Id { get; set; } = null!;
-    public string Login { get; } = null!;
-    public string NickName => Login;
-    public string Email { get; set; } = null!;
+    public string Id { get; init; } = null!;
+    public string Login { get; init; } = null!;
+    public string NickName { get; init; } = null!;
+    public string Email { get; init; } = null!;
 
-    public List<RoleDto> Roles { get; set; } = null!;
-    public List<ClaimDto> Claims { get; set; } = null!;
+    public List<RoleDto> Roles { get; init; } = null!;
+    public List<ClaimDto> Claims { get; init; } = null!;
 
     IEnumerable<IRole> IUserIdentity.Roles => Roles;
     IEnumerable<IClaim> IUserIdentity.Claims => Claims;

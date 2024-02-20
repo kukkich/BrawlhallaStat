@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace ReplayWatcher.Desktop.Model.ReplayService;
 
@@ -40,9 +39,9 @@ public class ReplayService : IReplayService
             return new UploadReplayResult(true, null);
         }
 
-        _logger.LogWarning("Error while uploading replay");
+        var error = await response.Content.ReadAsStringAsync();
+        _logger.LogWarning("Error while uploading replay: {error}", error);
 
-        return new UploadReplayResult(false, new() { await response.Content.ReadAsStringAsync()});
+        return new UploadReplayResult(false, new() { error });
     }
-    
 }
