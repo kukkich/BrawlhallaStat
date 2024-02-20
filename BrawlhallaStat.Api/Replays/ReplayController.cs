@@ -13,11 +13,13 @@ public class ReplayController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
+    private readonly ILogger<ReplayController> _logger;
 
-    public ReplayController(IMediator mediator, IMapper mapper)
+    public ReplayController(IMediator mediator, IMapper mapper, ILogger<ReplayController> logger)
     {
         _mediator = mediator;
         _mapper = mapper;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -25,6 +27,7 @@ public class ReplayController : ControllerBase
     {
         if (file is null || file.Length <= 0)
         {
+            _logger.LogDebug("Invalid file received");
             return BadRequest("Invalid file");
         }
 

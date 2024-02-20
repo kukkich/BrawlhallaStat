@@ -145,7 +145,6 @@ public class AuthenticationService : IAuthService
         cookies.Remove(serverSetRefreshTokenCookie);
         var clientSetCookie = cookies[RefreshTokenCookieKey];
 
-        //TODO убрать лишнее из этих двух действий
         if (clientSetCookie is not null)
         {
             clientSetCookie.Expired = true;
