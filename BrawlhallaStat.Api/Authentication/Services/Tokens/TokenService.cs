@@ -4,8 +4,8 @@ using AutoMapper;
 using BrawlhallaStat.Api.Authentication.Exceptions.Tokens;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
+using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity.Base;
-using BrawlhallaStat.Domain.Identity.Dto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,21 +13,18 @@ namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 public class TokenService : ITokenService
 {
-    private readonly IConfiguration _configuration;
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IMapper _mapper;
     private readonly ILogger<TokenService> _logger;
     private readonly TokenConfig _tokenConfig;
 
     public TokenService(
-        IConfiguration configuration,
         BrawlhallaStatContext dbContext,
         IMapper mapper,
         ILogger<TokenService> logger,
         TokenConfig tokenConfig
         )
     {
-        _configuration = configuration;
         _dbContext = dbContext;
         _mapper = mapper;
         _logger = logger;
@@ -40,17 +37,22 @@ public class TokenService : ITokenService
 
         var accessJwt = CreateAccessToken(userClaims);
         var refreshJwt = CreateRefreshToken(userClaims);
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var tokenPair = new TokenPair
-        {
-            Access = tokenHandler.WriteToken(accessJwt),
-            Refresh = tokenHandler.WriteToken(refreshJwt)
-        };
+        var tokenPair = WriteTokens(accessJwt, refreshJwt);
 
         await SaveToken(user.Id, tokenPair.Refresh, refreshJwt);
 
         return tokenPair;
+    }
+
+    private static TokenPair WriteTokens(SecurityToken accessJwt, SecurityToken refreshJwt)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        return new TokenPair
+        {
+            Access = tokenHandler.WriteToken(accessJwt),
+            Refresh = tokenHandler.WriteToken(refreshJwt)
+        };
     }
 
     private JwtSecurityToken CreateAccessToken(IEnumerable<Claim> claims)
@@ -101,7 +103,7 @@ public class TokenService : ITokenService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<TokenPair> RefreshAccessToken(string refreshToken)
+    public async Task<LoginResult> RefreshAccessToken(string refreshToken)
     {
         var isTokenValid = await IsRefreshTokenValid(refreshToken);
         if (!isTokenValid)
@@ -127,7 +129,13 @@ public class TokenService : ITokenService
         _dbContext.Tokens.Remove(tokenFromStorage);
         await _dbContext.SaveChangesAsync();
 
-        return tokenPair;
+        var authenticatedUser = _mapper.Map<AuthenticatedUser>(user);
+
+        return new LoginResult
+        {
+            TokenPair = tokenPair,
+            User = authenticatedUser
+        };
     }
 
     private async Task<bool> IsRefreshTokenValid(string token)

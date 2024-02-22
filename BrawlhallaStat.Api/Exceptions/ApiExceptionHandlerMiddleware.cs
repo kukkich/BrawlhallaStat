@@ -24,5 +24,4 @@ public class ApiExceptionHandlerMiddleware
             await context.Response.WriteAsync($"{{\"error\": \"{ex.Message}\"}}");
         }
     }
-
 }

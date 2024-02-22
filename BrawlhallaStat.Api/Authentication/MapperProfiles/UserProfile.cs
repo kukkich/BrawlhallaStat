@@ -7,15 +7,17 @@ using ClaimTypes = BrawlhallaStat.Domain.Identity.ClaimTypes;
 
 namespace BrawlhallaStat.Api.Authentication.MapperProfiles;
 
-public class UserIdentityProfile : Profile
+public class UserProfile : Profile
 {
-    public UserIdentityProfile()
+    public UserProfile()
     {
         CreateMap<IUserIdentity, List<Claim>>()
             .ConstructUsing(src => MapToClaims(src));
 
         CreateMap<ClaimsPrincipal, AuthenticatedUser>()
             .ConvertUsing<ClaimsPrincipalToUserConverter>();
+
+        CreateMap<User, AuthenticatedUser>();
     }
 
     private List<Claim> MapToClaims(IUserIdentity userIdentity)

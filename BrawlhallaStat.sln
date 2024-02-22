@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrawlhallaStat.Domain.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrawlhallaStat.Api.Tests", "BrawlhallaStat.Api.Tests\BrawlhallaStat.Api.Tests.csproj", "{CB29E68B-8F34-49CC-AFC3-AA44D149ECA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayWatcher.Desktop", "ReplayWatcher.Desktop\ReplayWatcher.Desktop.csproj", "{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplayWatcher.Desktop", "ReplayWatcher.Desktop\ReplayWatcher.Desktop.csproj", "{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

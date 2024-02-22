@@ -24,13 +24,13 @@ public class AppViewModel : ReactiveObject
     [Reactive] public AuthContext AuthContext { get; private set; } = new();
 
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; private set; }
-    public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; private set; }
-    public ReactiveCommand<Unit, AuthenticationResult> RegisterCommand { get; private set; }
-    public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; private set; }
+    public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; private set; } = null!;
+    public ReactiveCommand<Unit, AuthenticationResult> RegisterCommand { get; private set; } = null!;
+    public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; private set; } = null!;
     public ReactiveCommand<Unit, Unit> SelectPathCommand { get; private set; }
     public ReactiveCommand<string, Unit> UploadReplayCommand { get; private set; }
 
-    public readonly IObservable<EventPattern<FileSystemEventArgs>> ReplayCreatedObservable;
+    public readonly IObservable<EventPattern<FileSystemEventArgs>> ReplayCreatedObservable = null!;
 
     private readonly ReplayWatcherService _replayWatcher;
     private readonly ConfigurationManager _configurationManager;

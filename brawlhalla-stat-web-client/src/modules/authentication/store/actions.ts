@@ -1,10 +1,8 @@
 import AuthService from "../services/AuthService";
 import {AppDispatch} from "../../../store";
 import {userActions} from "./reducer";
-import {LoginRequest, LoginResult, RegisterRequest} from "../types";
+import {LoginRequest, RegisterRequest} from "../types";
 import {getMessageFromError} from "../../../api/tools/getMessageFromError";
-import axios from "axios";
-import {API_URL} from "../../../api/axios";
 
 export const loginAction = (request: LoginRequest) => async (dispatch: AppDispatch) => {
     try {

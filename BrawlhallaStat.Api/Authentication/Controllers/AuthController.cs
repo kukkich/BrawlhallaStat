@@ -1,8 +1,9 @@
-﻿using BrawlhallaStat.Api.Authentication.Requests.Login;
+﻿using AutoMapper;
+using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Requests.Logout;
 using BrawlhallaStat.Api.Authentication.Requests.Refresh;
 using BrawlhallaStat.Api.Authentication.Requests.Register;
-using BrawlhallaStat.Domain.Identity.Dto;
+using BrawlhallaStat.Domain.Identity.Authentication.Dto;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,22 +19,25 @@ public class AuthController : ControllerBase
     private readonly IValidator<RegistrationModel> _registrationValidator;
     private readonly IValidator<LoginModel> _loginValidator;
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
 
     public AuthController(
         IMediator mediator, 
         IValidator<RegistrationModel> registrationValidator,
         IValidator<LoginModel> loginValidator,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IMapper mapper
     )
     {
         _mediator = mediator;
         _registrationValidator = registrationValidator;
         _loginValidator = loginValidator;
         _configuration = configuration;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Register([FromBody] RegisterUserRequest request)
+    public async Task<ActionResult<LoginResultDto>> Register([FromBody] RegisterUserRequest request)
     {
         var validationResult = _registrationValidator.Validate(request);
         if (!validationResult.IsValid)
@@ -41,15 +45,16 @@ public class AuthController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
-        var tokens = await _mediator.Send(request);
+        var result = await _mediator.Send(request);
 
-        SetTokenInCookie(tokens.Refresh);
+        SetTokenInCookie(result.TokenPair.Refresh);
 
-        return Ok(tokens.Access);
+        var resultDto = _mapper.Map<LoginResultDto>(result);
+        return Ok(resultDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Login([FromBody] LoginUserRequest request)
+    public async Task<ActionResult<LoginResultDto>> Login([FromBody] LoginUserRequest request)
     {
         var validationResult = _loginValidator.Validate(request);
         if (!validationResult.IsValid)
@@ -57,14 +62,16 @@ public class AuthController : ControllerBase
             return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
         }
 
-        var tokens = await _mediator.Send(request);
+        var result = await _mediator.Send(request);
 
-        SetTokenInCookie(tokens.Refresh);
-        return Ok(tokens.Access);
+        SetTokenInCookie(result.TokenPair.Refresh);
+
+        var resultDto = _mapper.Map<LoginResultDto>(result);
+        return Ok(resultDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenPair>> Refresh()
+    public async Task<ActionResult<LoginResultDto>> Refresh()
     {
         string? refreshToken = HttpContext.Request.Cookies[RefreshTokenCookieKey];
         if (refreshToken is null)
@@ -74,10 +81,12 @@ public class AuthController : ControllerBase
 
         var command = new RefreshTokenRequest { RefreshToken = refreshToken };
 
-        var tokens = await _mediator.Send(command);
-        SetTokenInCookie(tokens.Refresh);
+        var result = await _mediator.Send(command);
 
-        return Ok(tokens.Access);
+        SetTokenInCookie(result.TokenPair.Refresh);
+
+        var resultDto = _mapper.Map<LoginResultDto>(result);
+        return Ok(resultDto);
     }
 
     [HttpPost]
@@ -108,7 +117,6 @@ public class AuthController : ControllerBase
                 MaxAge = TimeSpan.FromDays(_configuration.GetSection("Auth").GetValue<int>("CookieLifetimeDays")),
                 HttpOnly = true,
                 Secure = true,
-
             }
         );
     }

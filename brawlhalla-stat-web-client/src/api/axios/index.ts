@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {LoginResult} from "../../modules/authentication/types";
 import AuthService from "../../modules/authentication/services/AuthService";
 
 export const API_URL = 'https://localhost:7231/api'

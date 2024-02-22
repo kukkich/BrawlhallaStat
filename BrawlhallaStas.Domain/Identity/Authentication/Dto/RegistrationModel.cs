@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Identity.Dto;
+﻿namespace BrawlhallaStat.Domain.Identity.Authentication.Dto;
 
 public class RegistrationModel
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BrawlhallaStat.Domain.Identity.Dto.Validation;
+namespace BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 
 public class LoginValidator : AbstractValidator<string>
 {

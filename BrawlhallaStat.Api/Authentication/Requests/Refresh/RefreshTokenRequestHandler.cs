@@ -1,12 +1,12 @@
 ﻿using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Services.Auth;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Dto;
+using BrawlhallaStat.Domain.Identity.Authentication;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Authentication.Requests.Refresh;
 
-public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, TokenPair>
+public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, LoginResult>
 {
     private readonly IAuthenticationService _authService;
     private readonly BrawlhallaStatContext _dbContext;
@@ -23,7 +23,7 @@ public class RefreshTokenRequestHandler : IRequestHandler<RefreshTokenRequest, T
         _logger = logger;
     }
 
-    public async Task<TokenPair> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
+    public async Task<LoginResult> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
