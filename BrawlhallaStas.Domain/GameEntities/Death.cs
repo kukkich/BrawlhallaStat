@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 public class Death : IHaveId<int>
 {

@@ -3,9 +3,10 @@ using BrawlhallaReplayReader.Deserializers;
 using BrawlhallaReplayReader.Models;
 using BrawlhallaStat.Api.Replays.Exceptions;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Games;
+using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.Identity.Base;
-using Player = BrawlhallaStat.Domain.Games.Player;
+using GameSettings = BrawlhallaStat.Domain.GameEntities.GameSettings;
+using Player = BrawlhallaStat.Domain.GameEntities.Player;
 
 namespace BrawlhallaStat.Api.Replays.Services;
 
@@ -239,7 +240,7 @@ public class ReplayService : IReplayService
             .OrderByDescending(x => x.TimeStamp)
             .ToList();
 
-        game.Settings = new Domain.Games.GameSettings
+        game.Settings = new GameSettings
         {
             Flags = replay.GameSettings.Flags,
             MaxPlayers = replay.GameSettings.MaxPlayers,

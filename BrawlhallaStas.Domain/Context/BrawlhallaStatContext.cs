@@ -1,6 +1,5 @@
 ﻿using BrawlhallaStat.Domain.GameEntities;
-using BrawlhallaStat.Domain.Games;
-using BrawlhallaStat.Domain.Games.Views;
+using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 // ReSharper disable VirtualMemberCallInConstructor

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 public class ReplayFile : IHaveId<string>
 {

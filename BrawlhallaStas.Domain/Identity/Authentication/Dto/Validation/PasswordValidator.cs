@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
 
-namespace BrawlhallaStat.Api.Authentication.Validation;
+namespace BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 
 public partial class PasswordValidator : AbstractValidator<string>
 {

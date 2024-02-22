@@ -1,5 +1,5 @@
-﻿using BrawlhallaStat.Domain.Games;
-using BrawlhallaStat.Domain.Games.Views;
+﻿using BrawlhallaStat.Domain.GameEntities;
+using BrawlhallaStat.Domain.GameEntities.Views;
 
 namespace BrawlhallaStat.Domain.Statistics;
 
@@ -64,7 +64,7 @@ public class StatisticGeneralFilter
         }
 
         if ((TeammateLegendId is not null || TeammateWeaponId is not null) &&
-            GameType is not (Games.GameType.Ranked2V2 or Games.GameType.Unranked2V2))
+            GameType is not (GameEntities.GameType.Ranked2V2 or GameEntities.GameType.Unranked2V2))
         {
             return false;
         }

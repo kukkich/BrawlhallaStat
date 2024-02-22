@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Api.Authentication.Exceptions;
-using BrawlhallaStat.Api.Exceptions;
+﻿using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;

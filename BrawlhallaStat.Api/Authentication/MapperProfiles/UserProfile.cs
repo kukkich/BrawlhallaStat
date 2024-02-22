@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using BrawlhallaStat.Domain.Identity;
+using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Identity.Dto;
 using ClaimTypes = BrawlhallaStat.Domain.Identity.ClaimTypes;

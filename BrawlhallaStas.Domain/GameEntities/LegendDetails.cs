@@ -1,7 +1,6 @@
-﻿using BrawlhallaStat.Domain.GameEntities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 [Owned]
 public class LegendDetails
