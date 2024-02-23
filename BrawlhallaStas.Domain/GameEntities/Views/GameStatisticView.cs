@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Games.Views;
+﻿namespace BrawlhallaStat.Domain.GameEntities.Views;
 
 public class GameStatisticView
 {

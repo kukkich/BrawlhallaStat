@@ -1,4 +1,5 @@
 ﻿namespace BrawlhallaStat.Domain.Identity;
+using MicrosoftClaimTypes = System.Security.Claims.ClaimTypes;
 
 public class ClaimTypes
 {

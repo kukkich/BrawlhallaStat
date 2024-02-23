@@ -2,12 +2,12 @@
 using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Services.Auth;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Dto;
+using BrawlhallaStat.Domain.Identity.Authentication;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Authentication.Requests.Register;
 
-public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, TokenPair>
+public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, LoginResult>
 {
     private readonly IAuthenticationService _authService;
     private readonly BrawlhallaStatContext _dbContext;
@@ -27,7 +27,7 @@ public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, T
         _mapper = mapper;
     }
 
-    public async Task<TokenPair> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
+    public async Task<LoginResult> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
@@ -38,7 +38,7 @@ public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, T
             );
 
             var registrationData = _mapper.Map<RegistrationData>(request);
-            var tokenPair = await _authService.Register(registrationData);
+            var result = await _authService.Register(registrationData);
 
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation(
@@ -46,7 +46,7 @@ public class RegisterUserRequestHandler : IRequestHandler<RegisterUserRequest, T
                 request.Login, request.Email
             );
 
-            return tokenPair;
+            return result;
         }
         catch (Exception exception)
         {

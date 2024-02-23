@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Domain.Games;
+﻿using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.Replays.Services;

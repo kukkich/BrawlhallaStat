@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Domain.Games;
+﻿using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.Statistics;
 
 namespace BrawlhallaStat.Domain.Tests.Statistics;

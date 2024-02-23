@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 [Owned]
 public class GameSettings

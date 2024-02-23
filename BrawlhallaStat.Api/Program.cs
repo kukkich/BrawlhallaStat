@@ -3,11 +3,12 @@ using BrawlhallaStat.Api.Authentication;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
+using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Statistics;
 using BrawlhallaStat.Api.Users;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Dto.Validation;
+using BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +59,8 @@ public class Program
             options.AddPolicy(name: "WebClient",
                 builder =>
                     builder.WithOrigins(
-                            "http://localhost:8080",
-                            "https://localhost:8080"
+                            "http://localhost:3000",
+                            "https://localhost:3000"
                         )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
@@ -95,6 +96,7 @@ public class Program
 
     public static void ConfigureApplication(WebApplication app)
     {
+        app.UseMiddleware<DelayMiddleware>();
         app.UseMiddleware<ApiExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())

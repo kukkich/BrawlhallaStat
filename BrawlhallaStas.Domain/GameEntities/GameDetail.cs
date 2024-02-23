@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using BrawlhallaStat.Domain.Base;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 public class GameDetail : IHaveId<string>
 {

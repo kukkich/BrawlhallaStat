@@ -1,11 +1,11 @@
-﻿using BrawlhallaStat.Domain.Identity.Base;
-using BrawlhallaStat.Domain.Identity.Dto;
+﻿using BrawlhallaStat.Domain.Identity.Authentication;
+using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.Authentication.Services.Tokens;
 
 public interface ITokenService
 {
     Task<TokenPair> GenerateTokenPair(IUserIdentity user);
-    Task<TokenPair> RefreshAccessToken(string refreshToken);
+    Task<LoginResult> RefreshAccessToken(string refreshToken);
     Task RevokeRefreshToken(string refreshToken);
 }

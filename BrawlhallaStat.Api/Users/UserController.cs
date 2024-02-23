@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Users.Requests;
-using BrawlhallaStat.Domain.Identity;
+using BrawlhallaStat.Domain.Identity.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

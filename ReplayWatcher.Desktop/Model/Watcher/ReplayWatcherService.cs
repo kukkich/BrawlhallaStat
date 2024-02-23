@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Logging;
 using ReplayWatcher.Desktop.Configuration;
+#pragma warning disable CA1816
 
 namespace ReplayWatcher.Desktop.Model.Watcher;
 
@@ -21,9 +22,9 @@ public class ReplayWatcherService : IDisposable
     private readonly ConfigurationManager _configurationManager;
     private readonly ILogger<ReplayWatcherService> _logger;
     private readonly FileSystemWatcher _watcher;
-    private readonly List<FileSystemEventHandler> _actions = new();
+    private readonly List<FileSystemEventHandler> _actions;
 
-    public event FileSystemEventHandler FileCreated;
+    public event FileSystemEventHandler FileCreated = null!;
 
     public ReplayWatcherService(
         ConfigurationManager configurationManager, 
@@ -36,6 +37,7 @@ public class ReplayWatcherService : IDisposable
         _watcher.Created += (sender, args) => OnFileCreated(args);
 
         Path = configurationManager.Configuration.WatcherDirectory;
+        _actions = new List<FileSystemEventHandler>();
         configurationManager.OnConfigurationChanged += OnPathChanged;
     }
 

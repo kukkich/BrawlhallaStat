@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react';
+import {getTheme} from "./modules/theme";
+import {ThemeProvider} from "@mui/material/styles";
+import {useRootDispatch, useRootSelector} from "./store";
+import RouterView from "./modules/router/RouterView";
+import {checkAuthAction} from "./modules/authentication/store/actions";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface AppProps {
+}
+
+const App: React.FC<AppProps> = () => {
+    const themeMode = useRootSelector(state => state.themeReducer.mode);
+    const theme = getTheme(themeMode);
+
+    const dispatch = useRootDispatch();
+
+    useEffect(() =>{
+        if (localStorage.getItem('token')){
+            dispatch(checkAuthAction())
+        }
+    }, [])
+
+    return (
+        <ThemeProvider theme={theme}>
+            <RouterView/>
+        </ThemeProvider>
+    );
 }
 
 export default App;

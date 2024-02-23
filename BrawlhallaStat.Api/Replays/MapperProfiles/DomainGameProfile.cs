@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BrawlhallaReplayReader.Models;
-using BrawlhallaStat.Domain.Games;
-using Player = BrawlhallaStat.Domain.Games.Player;
-using GameSettings = BrawlhallaStat.Domain.Games.GameSettings;
+using BrawlhallaStat.Domain.GameEntities;
+using Player = BrawlhallaStat.Domain.GameEntities.Player;
+using GameSettings = BrawlhallaStat.Domain.GameEntities.GameSettings;
 using ReaderPlayer = BrawlhallaReplayReader.Models.Player;
 using ReaderGameSettings = BrawlhallaReplayReader.Models.GameSettings;
 

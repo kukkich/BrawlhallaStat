@@ -1,7 +1,7 @@
 ﻿using BrawlhallaStat.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace BrawlhallaStat.Domain.Games;
+namespace BrawlhallaStat.Domain.GameEntities;
 
 [PrimaryKey(nameof(AuthorId), nameof(DetailId), nameof(ReplayFileId))]
 public class Game
