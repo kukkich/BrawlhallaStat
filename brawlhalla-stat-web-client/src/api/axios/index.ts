@@ -19,10 +19,10 @@ $api.interceptors.response.use(c => c, async error => {
         originRequest._isRetry = true
         try {
             const response = await AuthService.refresh();
-            localStorage.setItem('token', response.data.tokenPair.access)
+            localStorage.setItem('token', response.data.accessToken)
             return $api.request(originRequest);
         } catch (e) {
-            console.log("Не авторизован")
+            console.log("Refresh token expired")
         }
     }
     throw error

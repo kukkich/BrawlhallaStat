@@ -1,6 +1,6 @@
 import { User } from "./User";
 
 export interface LoginResult {
-    tokenPair: string;
+    accessToken: string;
     user: User;
 }

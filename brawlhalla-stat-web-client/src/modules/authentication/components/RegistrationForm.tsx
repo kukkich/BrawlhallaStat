@@ -13,6 +13,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
     const userState = useRootSelector(state => state.userReducer);
 
     const [login, setLogin] = useState('');
+    const [nickName, setNickName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [loginError, setLoginError] = useState<string | null>(null);
@@ -66,7 +67,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
         }
 
         onSubmit();
-        dispatch(registerAction({login, password, email}));
+        dispatch(registerAction({login, nickName, password, email}));
     };
 
     return (
@@ -79,6 +80,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
                        }}
                        error={Boolean(loginError)}
                        helperText={loginError}
+            />
+            <TextField label="NickName" fullWidth margin="normal"
+                       value={nickName}
+                       onChange={(e) => {
+                           setNickName(e.target.value);
+                       }}
             />
             <TextField label="Email" fullWidth margin="normal"
                        value={email}

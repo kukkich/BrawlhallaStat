@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Api.Authentication.Validation;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 

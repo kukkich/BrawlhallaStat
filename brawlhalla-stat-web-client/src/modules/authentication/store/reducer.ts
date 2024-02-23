@@ -20,7 +20,7 @@ export const userSlice = createSlice({
             state.errors = []
         },
         loginSuccess(state, action: PayloadAction<LoginResult>){
-            localStorage.setItem('token', action.payload.tokenPair.access)
+            localStorage.setItem('token', action.payload.accessToken)
             state.status = LoginStatus.authorized;
             state.user = action.payload.user;
         },
@@ -46,7 +46,7 @@ export const userSlice = createSlice({
         },
         checkAuthFailed(state, error: any){
             state.status = LoginStatus.unauthorized
-            console.log(error.response?.data?.message);
+            console.log(error.response);
         },
     }
 })

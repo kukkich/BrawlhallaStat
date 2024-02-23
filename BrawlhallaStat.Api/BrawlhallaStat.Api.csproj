@@ -33,8 +33,4 @@
     <ProjectReference Include="..\BrawlhallaStas.Domain\BrawlhallaStat.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Authentication\Новая папка\" />
-  </ItemGroup>
-
 </Project>

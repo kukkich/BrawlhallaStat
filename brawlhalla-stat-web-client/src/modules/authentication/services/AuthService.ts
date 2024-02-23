@@ -4,9 +4,7 @@ import $api, {API_URL} from "../../../api/axios";
 
 export default class AuthService {
     static async login(request: LoginRequest): Promise<AxiosResponse<LoginResult>> {
-        let result = $api.post<any>('/auth/login', request);
-        console.log(result);
-        return result;
+        return $api.post<any>('/auth/login', request);
     }
 
     static async register(request: RegisterRequest): Promise<AxiosResponse<LoginResult>> {
@@ -18,6 +16,6 @@ export default class AuthService {
     }
 
     static async refresh(): Promise<AxiosResponse<LoginResult>> {
-        return axios.get<LoginResult>(`${API_URL}/auth/refresh`, {withCredentials: true})
+        return $api.post<LoginResult>('/auth/refresh');
     }
 }
