@@ -11,6 +11,9 @@ public class BrawlhallaEntitiesProfile : Profile
     {
         CreateMap<AddLegendRequest, AddLegendDto>();
         CreateMap<AddLegendDto, Legend>();
+        CreateMap<Legend, LegendDto>();
+
         CreateMap<AddWeaponRequest, Weapon>();
+        CreateMap<Weapon, WeaponDto>().ReverseMap();
     }
 }

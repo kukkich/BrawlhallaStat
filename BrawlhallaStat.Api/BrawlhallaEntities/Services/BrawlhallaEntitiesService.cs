@@ -43,7 +43,7 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
         return weapons;
     }
 
-    public async Task AddWeapon(Weapon weapon)
+    public async Task AddWeapon(WeaponDto weapon)
     {
         var sameNameExist = await _dbContext.Weapons
             .AnyAsync(x => x.Name == weapon.Name);
@@ -65,7 +65,9 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
                 value: weapon.Id.ToString()
             );
         }
-        _dbContext.Weapons.Add(weapon);
+
+        var newWeapon = _mapper.Map<Weapon>(weapon);
+        _dbContext.Weapons.Add(newWeapon);
 
         await _dbContext.SaveChangesAsync();
     }

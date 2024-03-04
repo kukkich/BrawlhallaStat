@@ -1,5 +1,6 @@
 ﻿using BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 using BrawlhallaStat.Api.BrawlhallaEntities.Requests;
+using BrawlhallaStat.Domain.GameEntities.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class EntitiesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Legends()
+    public async Task<ActionResult<List<LegendDto>>> Legends()
     {
         var result = await _mediator.Send(new LegendsQuery());
 
@@ -26,7 +27,7 @@ public class EntitiesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Weapons()
+    public async Task<ActionResult<List<WeaponDto>>> Weapons()
     {
         var result = await _mediator.Send(new WeaponsQuery());
 

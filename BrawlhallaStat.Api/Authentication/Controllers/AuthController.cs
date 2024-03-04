@@ -109,7 +109,6 @@ public class AuthController : ControllerBase
 
     private void SetTokenInCookie(string token)
     {
-        var duration = TimeSpan.FromDays(_configuration.GetSection("Auth").GetValue<int>("CookieLifetimeDays"));
         HttpContext.Response.Cookies.Append(
             key: RefreshTokenCookieKey,
             value: token,
