@@ -6,7 +6,7 @@ const SandBoxPage: React.FC = () => {
         <Grid item container justifyContent="center" alignItems="center"
         >
             <Typography>
-                квак
+                Sandbox content
             </Typography>
         </Grid>
     );

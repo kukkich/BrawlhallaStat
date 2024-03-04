@@ -9,8 +9,8 @@ public class BrawlhallaEntitiesProfile : Profile
 {
     public BrawlhallaEntitiesProfile()
     {
-        CreateMap<AddLegendRequest, LegendDto>();
-        CreateMap<LegendDto, Legend>();
+        CreateMap<AddLegendRequest, AddLegendDto>();
+        CreateMap<AddLegendDto, Legend>();
         CreateMap<AddWeaponRequest, Weapon>();
     }
 }

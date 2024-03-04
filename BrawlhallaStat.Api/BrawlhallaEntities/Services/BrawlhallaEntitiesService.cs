@@ -70,30 +70,30 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddLegend(LegendDto legend)
+    public async Task AddLegend(AddLegendDto addLegend)
     {
         var sameNameExist = await _dbContext.Legends
-            .AnyAsync(x => x.Name == legend.Name);
+            .AnyAsync(x => x.Name == addLegend.Name);
         if (sameNameExist)
         {
             throw new AlreadyExistException(
                 who: nameof(Legend),
                 propertyName: nameof(Legend.Name),
-                value: legend.Name
+                value: addLegend.Name
             );
         }
         var sameIdExist = await _dbContext.Legends
-            .AnyAsync(x => x.Id == legend.Id);
+            .AnyAsync(x => x.Id == addLegend.Id);
         if (sameIdExist)
         {
             throw new AlreadyExistException(
                 who: nameof(Legend),
                 propertyName: nameof(Legend.Id),
-                value: legend.Id.ToString()
+                value: addLegend.Id.ToString()
             );
         }
 
-        var newLegend = _mapper.Map<Legend>(legend);
+        var newLegend = _mapper.Map<Legend>(addLegend);
         
         _dbContext.Legends.Add(newLegend);
         await _dbContext.SaveChangesAsync();
