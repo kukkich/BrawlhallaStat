@@ -61,7 +61,9 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
             }}
             options={entitiesState.legends === null ? [] : entitiesState.legends}
             renderOption={(props, option) => (
-                <Box component="li" sx={{'& > img': {mr: 2}}} {...props}>
+                <Box component="li"
+                     sx={{'& > img': {mr: 2}}}
+                     {...props}>
                     <img loading="lazy"
                          width="50"
                          src={process.env.PUBLIC_URL + `/heroes/${option.name}.png`}

@@ -1,5 +1,5 @@
 import {FC, SyntheticEvent, useEffect, useState} from 'react';
-import {Autocomplete, CircularProgress, createFilterOptions, TextField} from "@mui/material";
+import {Autocomplete, CircularProgress, createFilterOptions, InputAdornment, TextField} from "@mui/material";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
 import {Weapon} from "../types";
@@ -72,6 +72,9 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
             )}
             renderInput={params => (
                 <TextField {...params} label="Weapon"
+                           sx={{height: '100%',
+                               maxWidth: 'auto',
+                               objectFit: 'contain'}}
                            InputProps={{
                                ...params.InputProps,
                                endAdornment: (
@@ -82,7 +85,23 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
                                        }
                                        {params.InputProps.endAdornment}
                                    </>
-                               )
+                               ),
+                               startAdornment: weapon !== null
+                                       ?
+                                       <InputAdornment position="start" >
+                                           <Box sx={{
+                                               '& > img': {
+                                                   mt: 1,
+                                                   height: '45px'
+                                               }}}
+                                           >
+                                               <img loading="lazy"
+                                                    src={process.env.PUBLIC_URL + `/weapons/${weapon.name}.png`}
+                                                    alt=""
+                                               />
+                                           </Box>
+                                       </InputAdornment>
+                                       : null
                            }}
                 />
             )}
