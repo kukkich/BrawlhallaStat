@@ -1,29 +1,29 @@
 import {FC, SyntheticEvent, useEffect, useState} from 'react';
 import {Autocomplete, CircularProgress, createFilterOptions, TextField} from "@mui/material";
-import {Legend} from "../types";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
+import {Weapon} from "../types";
 
-type LegendSelectProp = {
-    legendChange: (legend: Legend | null) => void
+type WeaponSelectProp = {
+    weaponChange: (weapon: Weapon | null) => void
 }
 const filterOptions = createFilterOptions({
     matchFrom: 'start',
-    stringify: (option: Legend) => option.name
+    stringify: (option: Weapon) => option.name
 })
 
-export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
+export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
 
     const dispatch = useRootDispatch();
     const entitiesState = useRootSelector(state => state.entitiesReducer);
 
     const [open, setOpen] = useState<boolean>(false);
-    const [legend, setLegend] = useState<Legend | null>(null);
+    const [weapon, setWeapon] = useState<Weapon | null>(null);
     const [inputValue, setInputValue] = useState<string>('')
 
-    const handleChange = (event: SyntheticEvent<Element, Event>, newValue: Legend | null) => {
-        setLegend(newValue);
-        legendChange(newValue);
+    const handleChange = (event: SyntheticEvent<Element, Event>, newValue: Weapon | null) => {
+        setWeapon(newValue);
+        weaponChange(newValue);
     }
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
         }
 
         (async () => {
-            if (entitiesState.legends === null && !entitiesState.isFetching) {
+            if (entitiesState.weapons === null && !entitiesState.isFetching) {
                 await dispatch(getEntitiesAction());
             }
         })();
@@ -41,7 +41,7 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
     return (
         <Autocomplete
             sx={{ width: 300 }}
-            value={legend}
+            value={weapon}
             filterOptions={filterOptions}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             getOptionLabel={option => option.name}
@@ -58,21 +58,21 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            options={entitiesState.legends === null ? [] : entitiesState.legends}
+            options={entitiesState.weapons === null ? [] : entitiesState.weapons}
             renderInput={params => (
-                <TextField {...params} label="Legend"
-                    InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                            <>
-                                {entitiesState.isFetching && open
-                                    ? <CircularProgress size={20} color="inherit"/>
-                                    : null
-                                }
-                                {params.InputProps.endAdornment}
-                            </>
-                        )
-                    }}
+                <TextField {...params} label="Weapon"
+                           InputProps={{
+                               ...params.InputProps,
+                               endAdornment: (
+                                   <>
+                                       {entitiesState.isFetching && open
+                                           ? <CircularProgress size={20} color="inherit"/>
+                                           : null
+                                       }
+                                       {params.InputProps.endAdornment}
+                                   </>
+                               )
+                           }}
                 />
             )}
         />

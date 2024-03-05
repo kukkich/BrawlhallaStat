@@ -1,8 +1,8 @@
 import {Weapon} from "./Weapon";
 
 export interface Legend {
-    Id: number;
+    id: number;
     name: string;
-    FirstWeapon: Weapon;
-    SecondWeapon: Weapon;
+    firstWeapon: Weapon;
+    secondWeapon: Weapon;
 }
