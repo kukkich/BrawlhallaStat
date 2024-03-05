@@ -65,8 +65,10 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
                         ...params.InputProps,
                         endAdornment: (
                             <>
-                                {/*todo add isOpen condition, check if it works*/}
-                                {entitiesState.isFetching ? <CircularProgress size={20} color="inherit"/> : null}
+                                {entitiesState.isFetching && open
+                                    ? <CircularProgress size={20} color="inherit"/>
+                                    : null
+                                }
                                 {params.InputProps.endAdornment}
                             </>
                         )
