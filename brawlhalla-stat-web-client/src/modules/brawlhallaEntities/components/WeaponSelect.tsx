@@ -3,6 +3,7 @@ import {Autocomplete, CircularProgress, createFilterOptions, TextField} from "@m
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
 import {Weapon} from "../types";
+import Box from "@mui/material/Box";
 
 type WeaponSelectProp = {
     weaponChange: (weapon: Weapon | null) => void
@@ -59,6 +60,16 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
                 setInputValue(newInputValue);
             }}
             options={entitiesState.weapons === null ? [] : entitiesState.weapons}
+            renderOption={(props, option) => (
+                <Box component="li" sx={{'& > img': {mr: 2}}} {...props}>
+                    <img loading="lazy"
+                        width="50"
+                        src={process.env.PUBLIC_URL + `/weapons/${option.name}.png`}
+                        alt=""
+                    />
+                    {option.name}
+                </Box>
+            )}
             renderInput={params => (
                 <TextField {...params} label="Weapon"
                            InputProps={{

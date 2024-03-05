@@ -3,6 +3,7 @@ import {Autocomplete, CircularProgress, createFilterOptions, TextField} from "@m
 import {Legend} from "../types";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
+import Box from "@mui/material/Box";
 
 type LegendSelectProp = {
     legendChange: (legend: Legend | null) => void
@@ -59,6 +60,23 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
                 setInputValue(newInputValue);
             }}
             options={entitiesState.legends === null ? [] : entitiesState.legends}
+            renderOption={(props, option) => (
+                <Box component="li" sx={{'& > img': {mr: 2}}} {...props}>
+                    <img loading="lazy"
+                         width="50"
+                         src={process.env.PUBLIC_URL + `/heroes/${option.name}.png`}
+                    />
+                    <img loading="lazy"
+                         width="40"
+                         src={process.env.PUBLIC_URL + `/weapons/${option.firstWeapon.name}.png`}
+                    />
+                    <img loading="lazy"
+                         width="40"
+                         src={process.env.PUBLIC_URL + `/weapons/${option.secondWeapon.name}.png`}
+                    />
+                    {option.name}
+                </Box>
+            )}
             renderInput={params => (
                 <TextField {...params} label="Legend"
                     InputProps={{
