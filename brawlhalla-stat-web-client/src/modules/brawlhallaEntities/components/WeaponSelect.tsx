@@ -72,37 +72,34 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
             )}
             renderInput={params => (
                 <TextField {...params} label="Weapon"
-                           sx={{height: '100%',
-                               maxWidth: 'auto',
-                               objectFit: 'contain'}}
-                           InputProps={{
-                               ...params.InputProps,
-                               endAdornment: (
-                                   <>
-                                       {entitiesState.isFetching && open
-                                           ? <CircularProgress size={20} color="inherit"/>
-                                           : null
-                                       }
-                                       {params.InputProps.endAdornment}
-                                   </>
-                               ),
-                               startAdornment: weapon !== null
-                                       ?
-                                       <InputAdornment position="start" >
-                                           <Box sx={{
-                                               '& > img': {
-                                                   mt: 1,
-                                                   height: '45px'
-                                               }}}
-                                           >
-                                               <img loading="lazy"
-                                                    src={process.env.PUBLIC_URL + `/weapons/${weapon.name}.png`}
-                                                    alt=""
-                                               />
-                                           </Box>
-                                       </InputAdornment>
-                                       : null
-                           }}
+                    InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                            <>
+                                {entitiesState.isFetching && open
+                                    ? <CircularProgress size={20} color="inherit"/>
+                                    : null
+                                }
+                                {params.InputProps.endAdornment}
+                            </>
+                        ),
+                        startAdornment: weapon !== null
+                            ?
+                            <InputAdornment position="start" >
+                                <Box sx={{
+                                    '& > img': {
+                                        mt: 1,
+                                        height: '45px'
+                                    }}}
+                                >
+                                    <img loading="lazy"
+                                         src={process.env.PUBLIC_URL + `/weapons/${weapon.name}.png`}
+                                         alt=""
+                                    />
+                                </Box>
+                            </InputAdornment>
+                            : null
+                    }}
                 />
             )}
         />

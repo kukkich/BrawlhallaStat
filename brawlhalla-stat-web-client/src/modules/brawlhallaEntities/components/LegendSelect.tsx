@@ -1,5 +1,5 @@
 import {FC, SyntheticEvent, useEffect, useState} from 'react';
-import {Autocomplete, CircularProgress, createFilterOptions, TextField} from "@mui/material";
+import {Autocomplete, CircularProgress, createFilterOptions, InputAdornment, TextField} from "@mui/material";
 import {Legend} from "../types";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
@@ -91,7 +91,23 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
                                 }
                                 {params.InputProps.endAdornment}
                             </>
-                        )
+                        ),
+                        startAdornment: legend !== null
+                            ?
+                            <InputAdornment position="start" >
+                                <Box sx={{
+                                    '& > img': {
+                                        mt: 1,
+                                        height: '45px'
+                                    }}}
+                                >
+                                    <img loading="lazy"
+                                         src={process.env.PUBLIC_URL + `/heroes/${legend.name}.png`}
+                                         alt=""
+                                    />
+                                </Box>
+                            </InputAdornment>
+                            : null
                     }}
                 />
             )}
