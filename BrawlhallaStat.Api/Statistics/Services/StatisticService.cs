@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
+using BrawlhallaStat.Domain.Statistics.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
@@ -14,7 +15,7 @@ public class StatisticService : IStatisticService
         _dbContext = dbContext;
     }
 
-    public async Task<Statistic> GetStatisticsAsync(StatisticGeneralFilter filter, IUserIdentity user)
+    public async Task<Statistic> GetStatistic(StatisticFilterDto filter, IUserIdentity user)
     {
         var filteredGames = _dbContext.GameStatistics
             .Where(x => x.UserId == user.Id)
@@ -29,5 +30,20 @@ public class StatisticService : IStatisticService
             Defeats = await filteredGames.Where(x => !x.IsWin)
                 .CountAsync(),
         };
+    }
+
+    public Task<IEnumerable<StatisticWithFilter>> GetStatisticsFromUserFilters(IUserIdentity user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<StatisticWithFilter> AddFilter(StatisticFilterDto filter, IUserIdentity user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteFilter(string id, IUserIdentity user)
+    {
+        throw new NotImplementedException();
     }
 }

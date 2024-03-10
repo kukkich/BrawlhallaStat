@@ -1,9 +1,13 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
+using BrawlhallaStat.Domain.Statistics.Dtos;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
 
 public interface IStatisticService
 {
-    public Task<Statistic> GetStatisticsAsync(StatisticGeneralFilter filter, IUserIdentity user);
+    public Task<Statistic> GetStatistic(StatisticFilterDto filter, IUserIdentity user);
+    public Task<IEnumerable<StatisticWithFilter>> GetStatisticsFromUserFilters(IUserIdentity user);
+    public Task<StatisticWithFilter> AddFilter(StatisticFilterDto filter, IUserIdentity user);
+    public Task DeleteFilter(string id, IUserIdentity user);
 }

@@ -96,7 +96,7 @@ public class Program
 
     public static void ConfigureApplication(WebApplication app)
     {
-        app.UseMiddleware<DelayMiddleware>();
+        // app.UseMiddleware<DelayMiddleware>();
         app.UseMiddleware<ApiExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())

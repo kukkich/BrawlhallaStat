@@ -2,6 +2,7 @@
 using BrawlhallaStat.Api.Statistics.Queries;
 using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Statistics;
+using BrawlhallaStat.Domain.Statistics.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BrawlhallaStat.Api.Statistics;
 
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 public class StatisticController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -22,12 +23,42 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> FilteredStatistic(StatisticGeneralFilter filter)
+    public async Task<ActionResult<Statistic>> CustomFilter(StatisticFilterDto filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
         var result = await _mediator.Send(new StatisticQuery(user, filter));
 
         return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<StatisticWithFilter>>> UserFilters()
+    {
+        var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
+
+        throw new NotImplementedException();
+        
+        //return Ok(result);
+    }
+
+    [HttpPost("filters")]
+    public async Task<ActionResult<StatisticWithFilter>> AddFilter([FromBody] StatisticFilterDto filter)
+    {
+        var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
+
+        throw new NotImplementedException();
+
+        //return Ok(result);
+    }
+
+    [HttpDelete("filters")]
+    public async Task<ActionResult> DeleteFilter([FromBody] string id)
+    {
+        var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
+
+        throw new NotImplementedException();
+
+        //return Ok(result);
     }
 }

@@ -5,21 +5,20 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.Statistics.Queries;
 
-public class StatisticQueryHandler : IRequestHandler<StatisticQuery, Statistic>
+public class UserStatisticFiltersQueryHandler 
+    : IRequestHandler<UserStatisticFiltersQuery, IEnumerable<Statistic>>
 {
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IStatisticService _statisticService;
 
-    public StatisticQueryHandler(BrawlhallaStatContext dbContext, IStatisticService statisticService)
+    public UserStatisticFiltersQueryHandler(BrawlhallaStatContext dbContext, IStatisticService statisticService)
     {
         _dbContext = dbContext;
         _statisticService = statisticService;
     }
 
-    public async Task<Statistic> Handle(StatisticQuery request, CancellationToken cancellationToken)
+    public Task<IEnumerable<Statistic>> Handle(UserStatisticFiltersQuery request, CancellationToken cancellationToken)
     {
-        var result = await _statisticService.GetStatistic(request.Filter, request.User);
-
-        return result;
+        throw new NotImplementedException();
     }
 }
