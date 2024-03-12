@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using BrawlhallaStat.Api.Authentication.Exceptions;
+using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.Context;
+using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
 using BrawlhallaStat.Domain.Statistics.Dtos;
@@ -40,10 +43,16 @@ public class StatisticService : IStatisticService
         throw new NotImplementedException();
     }
 
-    public async Task<StatisticWithFilter> AddFilter(StatisticFilterCreateDto filter, IUserIdentity user)
+    public async Task<StatisticWithFilter> AddFilter(StatisticFilterCreateDto filter, IUserIdentity actor)
     {
+        if (!await _dbContext.Users.AnyAsync(x => x.Id == actor.Id))
+        {
+            throw new EntityNotFoundException<User, string>(actor.Id);
+        }
+
         var newFilter = _mapper.Map<StatisticFilter>(filter);
-        newFilter.UserId = user.Id;
+        
+        newFilter.UserId = actor.Id;
         newFilter.Id = Guid.NewGuid().ToString();
 
         _dbContext.StatisticFilters.Add(newFilter);
@@ -68,8 +77,21 @@ public class StatisticService : IStatisticService
         };
     }
 
-    public Task DeleteFilter(string id, IUserIdentity user)
+    public async Task DeleteFilter(string filterId, IUserIdentity actor)
     {
-        throw new NotImplementedException();
+        var filter = await _dbContext.StatisticFilters
+            .FirstOrDefaultAsync(x => x.Id == filterId);
+        if (filter is null)
+        {
+            throw new EntityNotFoundException<StatisticFilter, string>(filterId);
+        }
+
+        if (filter.UserId != actor.Id)
+        {
+            throw new AccessForbiddenException();
+        }
+
+        _dbContext.StatisticFilters.Remove(filter);
+        await _dbContext.SaveChangesAsync();
     }
 }
