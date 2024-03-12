@@ -5,5 +5,5 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.Statistics.Queries;
 
-public record StatisticQuery(IUserIdentity User, StatisticFilterDto Filter) 
+public record StatisticQuery(IUserIdentity User, StatisticFilterCreateDto FilterCreate) 
     : IRequest<Statistic>;

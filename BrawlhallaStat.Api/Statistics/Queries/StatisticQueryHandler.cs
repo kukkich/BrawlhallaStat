@@ -18,7 +18,7 @@ public class StatisticQueryHandler : IRequestHandler<StatisticQuery, Statistic>
 
     public async Task<Statistic> Handle(StatisticQuery request, CancellationToken cancellationToken)
     {
-        var result = await _statisticService.GetStatistic(request.Filter, request.User);
+        var result = await _statisticService.GetStatistic(request.FilterCreate, request.User);
 
         return result;
     }
