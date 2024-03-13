@@ -25,10 +25,10 @@ public class Program
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             options.UseNpgsql(
-                    connectionString,
-                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                )
-                .UseLoggerFactory(NullLoggerFactory.Instance);
+                connectionString,
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            );
+                //.UseLoggerFactory(NullLoggerFactory.Instance);
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });

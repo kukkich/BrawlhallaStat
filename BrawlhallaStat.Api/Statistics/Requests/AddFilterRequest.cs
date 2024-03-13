@@ -5,4 +5,4 @@ using MediatR;
 namespace BrawlhallaStat.Api.Statistics.Requests;
 
 public record AddFilterRequest(IUserIdentity Actor, StatisticFilterCreateDto Filter) 
-    : IRequest<StatisticWithFilter>;
+    : IRequest<StatisticWithFilterDto>;

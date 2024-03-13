@@ -7,7 +7,7 @@ using MediatR;
 namespace BrawlhallaStat.Api.Statistics.Queries;
 
 public class FromUserFiltersStatisticsQueryHandler 
-    : IRequestHandler<FromUserFiltersStatisticsQuery, IEnumerable<StatisticWithFilter>>
+    : IRequestHandler<FromUserFiltersStatisticsQuery, IEnumerable<StatisticWithFilterDto>>
 {
     private readonly IStatisticService _statisticService;
     private readonly BrawlhallaStatContext _dbContext;
@@ -20,7 +20,7 @@ public class FromUserFiltersStatisticsQueryHandler
         _logger = logger;
     }
 
-    public async Task<IEnumerable<StatisticWithFilter>> Handle(FromUserFiltersStatisticsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<StatisticWithFilterDto>> Handle(FromUserFiltersStatisticsQuery request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try

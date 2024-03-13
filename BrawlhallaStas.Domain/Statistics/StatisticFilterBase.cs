@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.GameEntities;
 using System.Linq.Expressions;
+using System;
 
 namespace BrawlhallaStat.Domain.Statistics;
 
@@ -14,7 +15,31 @@ public abstract class StatisticFilterBase
     public int? TeammateLegendId { get; set; }
     public int? TeammateWeaponId { get; set; }
 
-    internal IQueryable<GameStatisticView> ApplyFilterExpression(IQueryable<GameStatisticView> source)
+    public bool IsValid()
+    {
+        if (LegendId is not null && WeaponId is not null)
+        {
+            return false;
+        }
+        if (EnemyLegendId is not null && EnemyWeaponId is not null)
+        {
+            return false;
+        }
+        if (TeammateLegendId is not null && TeammateWeaponId is not null)
+        {
+            return false;
+        }
+
+        if ((TeammateLegendId is not null || TeammateWeaponId is not null) &&
+            GameType is not (GameEntities.GameType.Ranked2V2 or GameEntities.GameType.Unranked2V2))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public IQueryable<GameStatisticView> ApplyFilterExpression(IQueryable<GameStatisticView> source)
     {
         source = ApplyPropertyFilterIfNotNull(source, GameType, game => game.GameType == GameType);
         source = ApplyPropertyFilterIfNotNull(source, LegendId, game => game.LegendId == LegendId);
@@ -41,27 +66,4 @@ public abstract class StatisticFilterBase
         return source;
     }
 
-    public bool IsValid()
-    {
-        if (LegendId is not null && WeaponId is not null)
-        {
-            return false;
-        }
-        if (EnemyLegendId is not null && EnemyWeaponId is not null)
-        {
-            return false;
-        }
-        if (TeammateLegendId is not null && TeammateWeaponId is not null)
-        {
-            return false;
-        }
-
-        if ((TeammateLegendId is not null || TeammateWeaponId is not null) &&
-            GameType is not (GameEntities.GameType.Ranked2V2 or GameEntities.GameType.Unranked2V2))
-        {
-            return false;
-        }
-
-        return true;
-    }
 }

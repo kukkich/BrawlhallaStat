@@ -10,5 +10,6 @@ public class FiltersProfile : Profile
     {
         CreateMap<StatisticFilterCreateDto, StatisticFilter>();
         CreateMap<StatisticFilter, StatisticFilterPublicDto>();
+        CreateMap<StatisticWithFilter, StatisticWithFilterDto>();
     }
 }

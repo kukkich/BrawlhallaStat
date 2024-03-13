@@ -34,7 +34,7 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StatisticWithFilter>>> UserFilters()
+    public async Task<ActionResult<IEnumerable<StatisticWithFilterDto>>> UserFilters()
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
@@ -45,7 +45,7 @@ public class StatisticController : ControllerBase
 
     [HttpPost]
     [ActionName("filters")]
-    public async Task<ActionResult<StatisticWithFilter>> AddFilter([FromBody] StatisticFilterCreateDto filter)
+    public async Task<ActionResult<StatisticWithFilterDto>> AddFilter([FromBody] StatisticFilterCreateDto filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
