@@ -20,11 +20,11 @@ public class StatisticService : IStatisticService
         _mapper = mapper;
     }
 
-    public async Task<Statistic> GetStatistic(StatisticFilterCreateDto filterCreate, IUserIdentity user)
+    public async Task<Statistic> GetStatistic(StatisticFilterCreateDto filter, IUserIdentity user)
     {
         var filteredGames = _dbContext.GameStatistics
             .Where(x => x.UserId == user.Id)
-            .ApplyFilter(filterCreate)
+            .ApplyFilter(filter)
             .Select(x => new {x.GameDetailId, x.IsWin})
             .Distinct();
 
@@ -37,9 +37,18 @@ public class StatisticService : IStatisticService
         };
     }
 
-    public Task<IEnumerable<StatisticWithFilter>> GetStatisticsFromUserFilters(IUserIdentity user)
+    public async Task<IEnumerable<StatisticWithFilter>> GetStatisticsFromUserFilters(IUserIdentity user)
     {
-        throw new NotImplementedException();
+        var filters = await _dbContext.StatisticFilters
+            .Where(x => x.UserId == user.Id)
+            .Join
+            .Select(x => )
+            .ToListAsync();
+
+
+        await _dbContext.GameStatistics
+            .Where(x => x.UserId == user.Id)
+            .
     }
 
     public async Task<StatisticWithFilter> AddFilter(StatisticFilterCreateDto filter, IUserIdentity actor)

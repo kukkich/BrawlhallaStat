@@ -24,11 +24,11 @@ public class StatisticController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<Statistic>> CustomFilter(StatisticFilterCreateDto filterCreate)
+    public async Task<ActionResult<Statistic>> CustomFilter(StatisticFilterCreateDto filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
-        var result = await _mediator.Send(new StatisticQuery(user, filterCreate));
+        var result = await _mediator.Send(new StatisticQuery(user, filter));
 
         return Ok(result);
     }
@@ -38,9 +38,9 @@ public class StatisticController : ControllerBase
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
-        throw new NotImplementedException();
-        
-        //return Ok(result);
+        var result = await _mediator.Send(new FromUserFiltersStatisticsQuery(user));
+
+        return Ok(result);
     }
 
     [HttpPost]
