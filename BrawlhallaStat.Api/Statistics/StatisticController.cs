@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Statistics.Queries;
+using BrawlhallaStat.Api.Statistics.Requests;
 using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Statistics;
 using BrawlhallaStat.Domain.Statistics.Dtos;
@@ -42,17 +43,19 @@ public class StatisticController : ControllerBase
         //return Ok(result);
     }
 
-    [HttpPost("filters")]
-    public async Task<ActionResult<StatisticWithFilter>> AddFilter([FromBody] StatisticFilterCreateDto filterCreate)
+    [HttpPost]
+    [ActionName("filters")]
+    public async Task<ActionResult<StatisticWithFilter>> AddFilter([FromBody] StatisticFilterCreateDto filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
-        throw new NotImplementedException();
+        var result = await _mediator.Send(new AddFilterRequest(user, filter));
 
-        //return Ok(result);
+        return Ok(result);
     }
 
-    [HttpDelete("filters")]
+    [HttpDelete]
+    [ActionName("filters")]
     public async Task<ActionResult> DeleteFilter([FromBody] string id)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
