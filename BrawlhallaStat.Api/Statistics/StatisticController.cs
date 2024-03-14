@@ -48,6 +48,10 @@ public class StatisticController : ControllerBase
     public async Task<ActionResult<StatisticWithFilterDto>> AddFilter([FromBody] StatisticFilterCreateDto filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
+        if (!filter.IsValid())
+        {
+            return BadRequest();
+        }
 
         var result = await _mediator.Send(new AddFilterRequest(user, filter));
 
@@ -60,8 +64,8 @@ public class StatisticController : ControllerBase
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 
-        throw new NotImplementedException();
+        await _mediator.Send(new DeleteFilterRequest(user, id));
 
-        //return Ok(result);
+        return Ok();
     }
 }
