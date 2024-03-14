@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
+using BrawlhallaStat.Api.General.Time;
 
 namespace BrawlhallaStat.Api;
 
@@ -85,7 +86,9 @@ public class Program
         services.AddBrawlhallaReplayDeserializer();
 
         services.AddMemoryCache();
-        
+
+        services.AddTimeProvider();
+
         services.AddReplay();
         services.AddStatistic();
         services.AddBrawlhallaEntities();

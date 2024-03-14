@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using BrawlhallaStat.Api.Exceptions;
+using BrawlhallaStat.Api.General.Time;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.Identity;
@@ -8,6 +9,7 @@ using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
 using BrawlhallaStat.Domain.Statistics.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
 
@@ -15,11 +17,13 @@ public class StatisticService : IStatisticService
 {
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly ITimeProvider _timeProvider;
 
-    public StatisticService(BrawlhallaStatContext dbContext, IMapper mapper)
+    public StatisticService(BrawlhallaStatContext dbContext, IMapper mapper, ITimeProvider timeProvider)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _timeProvider = timeProvider;
     }
 
     public async Task<Statistic> GetStatistic(StatisticFilterCreateDto filter, IUserIdentity user)
@@ -71,6 +75,7 @@ public class StatisticService : IStatisticService
                     Defeats = g.Count(x => !x.IsWin)
                 }
             }))
+            .OrderBy(x => x.Filter.CreatedAt)
             .ToListAsync();
 
         return statistics;
@@ -87,6 +92,7 @@ public class StatisticService : IStatisticService
 
         newFilter.UserId = actor.Id;
         newFilter.Id = Guid.NewGuid().ToString();
+        newFilter.CreatedAt = _timeProvider.GetTime();
 
         _dbContext.StatisticFilters.Add(newFilter);
         await _dbContext.SaveChangesAsync();

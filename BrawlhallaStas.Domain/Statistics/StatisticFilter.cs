@@ -9,4 +9,6 @@ public class StatisticFilter : StatisticFilterBase, IHaveId<string>
 
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
+
+    public DateTime CreatedAt { get; set; }
 }
