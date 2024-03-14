@@ -1,12 +1,21 @@
 ﻿using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.GameEntities;
 using System.Linq.Expressions;
-using System;
 
 namespace BrawlhallaStat.Domain.Statistics;
 
 public abstract class StatisticFilterBase
 {
+    // Todo build expression in runtime, see https://www.youtube.com/watch?v=0hDCDmfuiFY
+    public static readonly Expression<Func<GameFilter, bool>> GameMather = gameFilter =>
+        (gameFilter.Filter.GameType == null || gameFilter.Filter.GameType == gameFilter.Game.GameType) &&
+        (gameFilter.Filter.LegendId == null || gameFilter.Filter.LegendId == gameFilter.Game.LegendId) &&
+        (gameFilter.Filter.WeaponId == null || gameFilter.Filter.WeaponId == gameFilter.Game.WeaponId) &&
+        (gameFilter.Filter.EnemyLegendId == null || gameFilter.Filter.EnemyLegendId == gameFilter.Game.EnemyLegendId) &&
+        (gameFilter.Filter.EnemyWeaponId == null || gameFilter.Filter.EnemyWeaponId == gameFilter.Game.EnemyWeaponId) &&
+        (gameFilter.Filter.TeammateLegendId == null || gameFilter.Filter.TeammateLegendId == gameFilter.Game.TeammateLegendId) &&
+        (gameFilter.Filter.TeammateWeaponId == null || gameFilter.Filter.TeammateWeaponId == gameFilter.Game.TeammateWeaponId);
+
     public GameType? GameType { get; set; }
     public int? LegendId { get; set; }
     public int? WeaponId { get; set; }
@@ -52,7 +61,7 @@ public abstract class StatisticFilterBase
         return source;
     }
 
-    private IQueryable<GameStatisticView> ApplyPropertyFilterIfNotNull<TValue>(
+    private static IQueryable<GameStatisticView> ApplyPropertyFilterIfNotNull<TValue>(
         IQueryable<GameStatisticView> source,
         TValue? value,
         Expression<Func<GameStatisticView, bool>> predicate
@@ -65,5 +74,4 @@ public abstract class StatisticFilterBase
 
         return source;
     }
-
 }

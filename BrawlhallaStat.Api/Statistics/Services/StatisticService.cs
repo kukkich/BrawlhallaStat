@@ -3,13 +3,11 @@ using AutoMapper;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.GameEntities.Views;
-using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
 using BrawlhallaStat.Domain.Statistics.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
 
@@ -44,15 +42,6 @@ public class StatisticService : IStatisticService
 
     public async Task<IEnumerable<StatisticWithFilterDto>> GetStatisticsFromUserFilters(IUserIdentity user)
     {
-        Expression<Func<GameFilter, bool>> gameMather = gameFilter =>
-            (gameFilter.Filter.GameType == null || gameFilter.Filter.GameType == gameFilter.Game.GameType) &&
-            (gameFilter.Filter.LegendId == null || gameFilter.Filter.LegendId == gameFilter.Game.LegendId) &&
-            (gameFilter.Filter.WeaponId == null || gameFilter.Filter.WeaponId == gameFilter.Game.WeaponId) &&
-            (gameFilter.Filter.EnemyLegendId == null || gameFilter.Filter.EnemyLegendId == gameFilter.Game.EnemyLegendId) &&
-            (gameFilter.Filter.EnemyWeaponId == null || gameFilter.Filter.EnemyWeaponId == gameFilter.Game.EnemyWeaponId) &&
-            (gameFilter.Filter.TeammateLegendId == null || gameFilter.Filter.TeammateLegendId == gameFilter.Game.TeammateLegendId) &&
-            (gameFilter.Filter.TeammateWeaponId == null || gameFilter.Filter.TeammateWeaponId == gameFilter.Game.TeammateWeaponId);
-
         var statistics = await _mapper.ProjectTo<StatisticWithFilterDto>(
             _dbContext.StatisticFilters
             .Join(_dbContext.GameStatistics,
@@ -64,7 +53,7 @@ public class StatisticService : IStatisticService
                     Game = gameStatistic
                 })
             .Where(x => x.Filter.UserId == user.Id)
-            .Where(gameMather)
+            .Where(StatisticFilterBase.GameMather)
             .Select(x => new
             {
                 x.Filter,
@@ -84,7 +73,6 @@ public class StatisticService : IStatisticService
             }))
             .ToListAsync();
 
-
         return statistics;
     }
 
@@ -103,17 +91,18 @@ public class StatisticService : IStatisticService
         _dbContext.StatisticFilters.Add(newFilter);
         await _dbContext.SaveChangesAsync();
 
-        var filteredGames = _dbContext.GameStatistics
-            .ApplyFilter(newFilter)
+        var statistic = await _dbContext.GameStatistics
+            .Where(x => x.UserId == actor.Id)
+            .ApplyFilter(filter)
             .Select(x => new { x.GameDetailId, x.IsWin })
-            .Distinct();
-        var statistic = new Statistic
-        {
-            Wins = await filteredGames.Where(x => x.IsWin)
-                .CountAsync(),
-            Defeats = await filteredGames.Where(x => !x.IsWin)
-                .CountAsync()
-        };
+            .Distinct()
+            .GroupBy(_ => 1)
+            .Select(g => new Statistic
+            {
+                Wins = g.Count(x => x.IsWin),
+                Defeats = g.Count(x => !x.IsWin),
+            })
+            .FirstAsync();
 
         return new StatisticWithFilterDto
         {
@@ -139,10 +128,4 @@ public class StatisticService : IStatisticService
         _dbContext.StatisticFilters.Remove(filter);
         await _dbContext.SaveChangesAsync();
     }
-}
-
-file class GameFilter
-{
-    public StatisticFilter Filter { get; set; } = null!;
-    public GameStatisticView Game { get; set; } = null!;
 }
