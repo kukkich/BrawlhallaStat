@@ -2,7 +2,7 @@ import {FC, FormEvent, useEffect, useState} from 'react';
 import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from '../../../store';
 import {loginAction} from '../store/actions';
-import {LoginStatus} from '../store/State';
+import {LoginStatus} from '../store/state';
 import {useNavigate} from "react-router-dom";
 
 interface LoginFormProps {

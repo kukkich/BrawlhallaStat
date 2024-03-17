@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from "../../../store";
-import {LoginStatus} from "../store/State";
+import {LoginStatus} from "../store/state";
 import {registerAction} from "../store/actions";
 
 interface RegistrationFormProps {

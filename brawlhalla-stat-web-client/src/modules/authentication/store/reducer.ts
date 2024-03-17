@@ -1,4 +1,4 @@
-import {LoginStatus, UserState} from "./State";
+import {LoginStatus, UserState} from "./state";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {LoginResult} from "../types";
 

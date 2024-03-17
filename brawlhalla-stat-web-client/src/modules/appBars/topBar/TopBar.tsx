@@ -6,7 +6,7 @@ import {ThemeSwitch} from "../../../App/Components/ThemeSwitch";
 import {useNavigate} from 'react-router-dom';
 import AvatarMenu from "./components/AvatarMenu";
 import {useRootSelector} from "../../../store";
-import {LoginStatus} from "../../authentication/store/State";
+import {LoginStatus} from "../../authentication/store/state";
 import LoginButton from "./components/LoginButton";
 import Logo from "./components/Logo";
 import Box from "@mui/material/Box";
