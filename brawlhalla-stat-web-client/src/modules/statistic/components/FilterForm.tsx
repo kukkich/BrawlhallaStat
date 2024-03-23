@@ -1,23 +1,15 @@
 import React, {FC, FormEvent, useState} from 'react';
-import {Box, Button, Container, Divider, List, ListItem, ListSubheader, Paper} from "@mui/material";
-import {GameType, StatisticFilterCreate} from "../types";
-import {WeaponSelect} from "../../brawlhallaEntities/components/WeaponSelect";
-import {IHaveId} from "../../brawlhallaEntities/types/IHaveId";
-import {LegendSelect} from "../../brawlhallaEntities/components/LegendSelect";
-import {getTheme} from "../../theme";
-import {useRootSelector} from "../../../store";
-import {ThemeMode} from "../../theme/types";
+import {Button, Container, Divider, List, Paper, Select} from "@mui/material";
+import {StatisticFilterCreate} from "../types";
+import {PlayerDataSelect} from "./PlayerDataSelect";
+import {GameType} from "../../brawlhallaEntities/types";
+import {GameTypeSelect} from "../../brawlhallaEntities/components/GameTypeSelect";
 
 type FilterFormProps = {
     onSubmit: (filter: StatisticFilterCreate) => void;
 };
 
-const getIdOrNull = (item: IHaveId<number> | null) => {
-    if (item === null){
-        return null;
-    }
-    return item.id;
-}
+
 
 export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => {
     const [gameType, setGameType] = useState<GameType | null>(null)
@@ -50,31 +42,20 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
                    // style={{padding: '20px'}}
             >
                 <Container>
+                    <Container sx={{display: 'flex', justifyContent: 'center', mb: 2}}>
+                        <GameTypeSelect gameTypeChange={setGameType}/>
+                    </Container>
+                    <Divider>Players</Divider>
                     <Container sx={{display: 'flex'}}>
                         <List>
-                            <ListItem>
-                                <WeaponSelect weaponChange={x => setWeaponId(getIdOrNull(x))}/>
-                            </ListItem>
-                            <ListItem>
-                                <LegendSelect legendChange={x => setLegendId(getIdOrNull(x))}/>
-                            </ListItem>
+                            <PlayerDataSelect setWeaponId={setWeaponId} setLegendId={setLegendId}/>
                             <Divider>With</Divider>
-                            <ListItem>
-                                <WeaponSelect weaponChange={x => setTeammateWeaponId(getIdOrNull(x))}/>
-                            </ListItem>
-                            <ListItem>
-                                <LegendSelect legendChange={x => setTeammateLegendId(getIdOrNull(x))}/>
-                            </ListItem>
+                            <PlayerDataSelect setWeaponId={setTeammateWeaponId} setLegendId={setTeammateLegendId}/>
                         </List>
-                    <Divider orientation="vertical" flexItem>VS</Divider>
-                    <List>
-                        <ListItem>
-                            <WeaponSelect weaponChange={x => setEnemyWeaponId(getIdOrNull(x))}/>
-                        </ListItem>
-                        <ListItem>
-                            <LegendSelect legendChange={x => setEnemyLegendId(getIdOrNull(x))}/>
-                        </ListItem>
-                    </List>
+                        <Divider orientation="vertical" flexItem>VS</Divider>
+                        <List>
+                            <PlayerDataSelect setWeaponId={setEnemyWeaponId} setLegendId={setEnemyLegendId}/>
+                        </List>
                     </Container>
                     <Button
                         variant="contained"

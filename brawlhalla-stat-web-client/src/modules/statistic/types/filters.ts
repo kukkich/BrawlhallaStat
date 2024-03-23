@@ -1,13 +1,5 @@
 import {Statistic} from "./index";
-
-export enum GameType {
-    unranked1V1,
-    unranked2V2,
-    ranked1V1,
-    ranked2V2,
-}
-
-
+import {GameType} from "../../brawlhallaEntities/types";
 
 export interface StatisticFilterBase {
     gameType: GameType | null,
