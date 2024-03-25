@@ -18,7 +18,6 @@ export const GameTypeSelect: FC<GameTypeSelectProp> = ({ gameTypeChange }: GameT
     const [gameType, setGameType] = useState<string>('');
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value)
         setGameType(event.target.value)
 
         const type = gameTypesViewMap.get(event.target.value) as GameType | null;
@@ -44,18 +43,4 @@ export const GameTypeSelect: FC<GameTypeSelectProp> = ({ gameTypeChange }: GameT
             </FormControl>
         </Box>
     );
-        // <>
-        //     <InputLabel id="label">Game type</InputLabel>
-        //     <Select
-        //         sx={{ width: 200, maxHeight: 50 }}
-        //         label="Game type"
-        //         labelId="label"
-        //         value={gameTypesViewMap.get(gameType)}
-        //         onChange={handleChange}
-        //     >
-        //         {gameTypesMapper.map((type, index) =>
-        //             <MenuItem key={index} value={index}>{gameTypesViewMap.get(type)}</MenuItem>
-        //         )}
-        //     </Select>
-        // </>
 };

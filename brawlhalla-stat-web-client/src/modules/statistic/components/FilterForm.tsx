@@ -1,5 +1,5 @@
 import React, {FC, FormEvent, useState} from 'react';
-import {Button, Container, Divider, List, Paper, Select} from "@mui/material";
+import {Button, Container, Divider, List, Paper} from "@mui/material";
 import {StatisticFilterCreate} from "../types";
 import {PlayerDataSelect} from "./PlayerDataSelect";
 import {GameType} from "../../brawlhallaEntities/types";
@@ -20,6 +20,10 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
     const [teammateLegendId, setTeammateLegendId] = useState<number | null>(null)
     const [teammateWeaponId, setTeammateWeaponId] = useState<number | null>(null)
 
+    const is2v2ModeSelected = gameType !== null
+        ? (gameType === GameType.ranked2V2 || gameType === GameType.unranked2V2)
+        : true;
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
@@ -38,23 +42,27 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
         <Container
             sx={{color: 'primary', display: 'flex'}}
         >
-            <Paper elevation={6} sx={{py: '20px'}}
-                   // style={{padding: '20px'}}
-            >
-                <Container>
+            <Paper elevation={6} sx={{py: '20px'}}>
+                <Container sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                     <Container sx={{display: 'flex', justifyContent: 'center', mb: 2}}>
                         <GameTypeSelect gameTypeChange={setGameType}/>
                     </Container>
                     <Divider>Players</Divider>
-                    <Container sx={{display: 'flex'}}>
-                        <List>
-                            <PlayerDataSelect setWeaponId={setWeaponId} setLegendId={setLegendId}/>
-                            <Divider>With</Divider>
-                            <PlayerDataSelect setWeaponId={setTeammateWeaponId} setLegendId={setTeammateLegendId}/>
+                    <Container sx={{display: 'flex', mb:'8px'}}>
+                        <List sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
+                            <PlayerDataSelect weaponIdChange={setWeaponId} legendIdChange={setLegendId}/>
+                            {is2v2ModeSelected
+                                ?
+                                <>
+                                    <Divider>With</Divider>
+                                    <PlayerDataSelect  weaponIdChange={setTeammateWeaponId} legendIdChange={setTeammateLegendId}/>
+                                </>
+                                : <> </>
+                            }
                         </List>
                         <Divider orientation="vertical" flexItem>VS</Divider>
-                        <List>
-                            <PlayerDataSelect setWeaponId={setEnemyWeaponId} setLegendId={setEnemyLegendId}/>
+                        <List sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}} >
+                            <PlayerDataSelect weaponIdChange={setEnemyWeaponId} legendIdChange={setEnemyLegendId}/>
                         </List>
                     </Container>
                     <Button
@@ -66,6 +74,5 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
                 </Container>
             </Paper>
         </Container>
-
     );
 };

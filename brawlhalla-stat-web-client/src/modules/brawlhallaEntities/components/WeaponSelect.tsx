@@ -6,14 +6,17 @@ import {Weapon} from "../types";
 import Box from "@mui/material/Box";
 
 type WeaponSelectProp = {
-    weaponChange: (weapon: Weapon | null) => void
+    weaponChange: (weapon: Weapon | null) => void,
+    hidden?: boolean | undefined
 }
 const filterOptions = createFilterOptions({
     matchFrom: 'start',
     stringify: (option: Weapon) => option.name
 })
 
-export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
+// TODO add hints. See: https://mui.com/material-ui/react-autocomplete/#hint
+// TODO add text "Any" when nothing selected
+export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
 
     const dispatch = useRootDispatch();
     const entitiesState = useRootSelector(state => state.entitiesReducer);
@@ -37,15 +40,16 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange}) => {
                 await dispatch(getEntitiesAction());
             }
         })();
-    }, [open]);
+    }, [dispatch, entitiesState.isFetching, entitiesState.weapons, open]);
 
     return (
         <Autocomplete
             sx={{ width: 300 }}
+            hidden={hidden}
             value={weapon}
             filterOptions={filterOptions}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            getOptionLabel={option => option.name}
+            getOptionLabel={(option: Weapon) => option.name}
             onChange={handleChange}
             open={open}
             onOpen={() => {

@@ -6,14 +6,15 @@ import {getEntitiesAction} from "../store/actions";
 import Box from "@mui/material/Box";
 
 type LegendSelectProp = {
-    legendChange: (legend: Legend | null) => void
+    legendChange: (legend: Legend | null) => void,
+    hidden?: boolean | undefined
 }
 const filterOptions = createFilterOptions({
     matchFrom: 'start',
     stringify: (option: Legend) => option.name
 })
 
-export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
+export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
 
     const dispatch = useRootDispatch();
     const entitiesState = useRootSelector(state => state.entitiesReducer);
@@ -42,6 +43,7 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange}) => {
     return (
         <Autocomplete
             sx={{ width: 300 }}
+            hidden={hidden}
             value={legend}
             filterOptions={filterOptions}
             isOptionEqualToValue={(option, value) => option.id === value.id}
