@@ -1,5 +1,6 @@
 import {StatisticState} from "./state";
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {StatisticWithFilter} from "../types";
 
 export const emptyForm = {
     data: {
@@ -18,6 +19,7 @@ export const emptyForm = {
 const initialState: StatisticState = {
     statistics: [],
     form: emptyForm,
+    isFetching: false,
     errors: []
 }
 
@@ -25,9 +27,33 @@ export const statisticSlice = createSlice({
     name: 'statistic',
     initialState,
     reducers: {
-        clearForm(state){
+        submitFormStart(state){
+            state.form.isFetching = true;
+            state.form.errors = [];
+        },
+        submitFormSuccess(state, action: PayloadAction<StatisticWithFilter>){
             state.form = emptyForm;
+            state.form.isFetching = false;
+            state.statistics.push(action.payload);
+        },
+        submitFormFailed(state, action: PayloadAction<string>){
+            state.form.isFetching = false;
+            state.form.errors.push(action.payload);
+        },
+
+        fetchStatisticsStart(state) {
+            state.isFetching = true;
+            state.errors = [];
+        },
+        fetchStatisticsSuccess(state, action: PayloadAction<StatisticWithFilter[]>) {
+            state.isFetching = false;
+            state.statistics = action.payload;
+        },
+        fetchStatisticsFailed(state, action: PayloadAction<string>) {
+            state.isFetching = false;
+            state.errors.push(action.payload);
         }
+
     }
 })
 
