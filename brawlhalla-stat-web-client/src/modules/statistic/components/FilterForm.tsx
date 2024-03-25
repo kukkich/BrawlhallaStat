@@ -4,14 +4,15 @@ import {StatisticFilterCreate} from "../types";
 import {PlayerDataSelect} from "./PlayerDataSelect";
 import {GameType} from "../../brawlhallaEntities/types";
 import {GameTypeSelect} from "../../brawlhallaEntities/components/GameTypeSelect";
+import {useRootSelector} from "../../../store";
 
 type FilterFormProps = {
     onSubmit: (filter: StatisticFilterCreate) => void;
 };
 
-
-
 export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => {
+    const state = useRootSelector(state => state.statisticReducer.form);
+
     const [gameType, setGameType] = useState<GameType | null>(null)
     const [legendId, setLegendId] = useState<number | null>(null)
     const [weaponId, setWeaponId] = useState<number | null>(null)
@@ -27,7 +28,7 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
-        onSubmit({
+        const data: StatisticFilterCreate = {
             gameType,
             legendId,
             weaponId,
@@ -35,7 +36,9 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
             enemyWeaponId,
             teammateLegendId,
             teammateWeaponId,
-        });
+        }
+
+        onSubmit(data);
     };
 
     return (

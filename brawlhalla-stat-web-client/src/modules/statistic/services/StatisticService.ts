@@ -1,9 +1,9 @@
-import {LoginRequest, LoginResult} from "../../authentication/types";
-import {AxiosResponse} from "axios/index";
+import {AxiosResponse} from "axios";
 import $api from "../../../api/axios";
+import {StatisticFilterCreate, StatisticWithFilter} from "../types";
 
 export default class StatisticService {
-    static async login(request: LoginRequest): Promise<AxiosResponse<LoginResult>> {
+    static async createFilter(request: StatisticFilterCreate): Promise<AxiosResponse<StatisticWithFilter>> {
         return await $api.post<any>('/auth/login', request);
     }
 }
