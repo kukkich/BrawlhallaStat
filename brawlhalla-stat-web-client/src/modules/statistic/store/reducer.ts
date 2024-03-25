@@ -37,7 +37,6 @@ export const statisticSlice = createSlice({
         },
         submitFormSuccess(state, action: PayloadAction<StatisticWithFilter>){
             state.form = emptyForm;
-            state.form.isFetching = false;
             state.statistics.push(action.payload);
         },
         submitFormFailed(state, action: PayloadAction<string>){

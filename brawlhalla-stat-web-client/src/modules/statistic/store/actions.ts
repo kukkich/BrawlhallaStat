@@ -1,17 +1,21 @@
-import {AppDispatch} from "../../../store";
+import {AppDispatch, RootState} from "../../../store";
 import StatisticService from "../services/StatisticService";
-import {StatisticFilterCreate} from "../types";
 import {statisticActions} from "./reducer";
 
-export const submitForm = (request: StatisticFilterCreate) => async (dispatch: AppDispatch) => {
+export const submitForm = () => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
         dispatch(statisticActions.submitFormStart())
-        const response = await StatisticService.createFilter(request);
+        const data = getState().statisticReducer.form.data;
+
+        const response = await StatisticService.createFilter(data);
         console.log('фильтер добавлен')
         console.log(response)
         dispatch(statisticActions.submitFormSuccess(response));
+        console.log('получил статистики')
         dispatch(fetchStatistics())
+        console.log('Конец')
     } catch (e: any){
+        console.log(e)
         dispatch(statisticActions.submitFormFailed(e))
     }
 }
