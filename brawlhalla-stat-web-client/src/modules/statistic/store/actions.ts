@@ -7,6 +7,8 @@ export const submitForm = (request: StatisticFilterCreate) => async (dispatch: A
     try {
         dispatch(statisticActions.submitFormStart())
         const response = await StatisticService.createFilter(request);
+        console.log('фильтер добавлен')
+        console.log(response)
         dispatch(statisticActions.submitFormSuccess(response));
         dispatch(fetchStatistics())
     } catch (e: any){
@@ -16,8 +18,11 @@ export const submitForm = (request: StatisticFilterCreate) => async (dispatch: A
 
 export const fetchStatistics = () => async (dispatch: AppDispatch) => {
     try {
-
+        dispatch(statisticActions.fetchStatisticsStart())
+        const statistics = await StatisticService.getFilters()
+        dispatch(statisticActions.fetchStatisticsSuccess(statistics))
+        console.log(statistics)
     } catch (e: any){
-
+        dispatch(statisticActions.fetchStatisticsFailed(e))
     }
 }

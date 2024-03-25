@@ -5,21 +5,46 @@ import {PlayerDataSelect} from "./PlayerDataSelect";
 import {GameType} from "../../brawlhallaEntities/types";
 import {GameTypeSelect} from "../../brawlhallaEntities/components/GameTypeSelect";
 import {useRootSelector} from "../../../store";
+import {statisticActions} from "../store/reducer";
+import {useDispatch} from "react-redux";
 
 type FilterFormProps = {
     onSubmit: (filter: StatisticFilterCreate) => void;
 };
 
 export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => {
-    const state = useRootSelector(state => state.statisticReducer.form);
+    const dispatch = useDispatch();
+    const state = useRootSelector(state => state.statisticReducer);
+    const data = state.form.data;
 
-    const [gameType, setGameType] = useState<GameType | null>(null)
-    const [legendId, setLegendId] = useState<number | null>(null)
-    const [weaponId, setWeaponId] = useState<number | null>(null)
-    const [enemyLegendId, setEnemyLegendId] = useState<number | null>(null)
-    const [enemyWeaponId, setEnemyWeaponId] = useState<number | null>(null)
-    const [teammateLegendId, setTeammateLegendId] = useState<number | null>(null)
-    const [teammateWeaponId, setTeammateWeaponId] = useState<number | null>(null)
+    const [gameType, setGameType] = [
+        data.gameType,
+        (x: GameType | null) => dispatch(statisticActions.setFormState({...data, gameType: x}))
+    ]
+    const [legendId, setLegendId] = [
+        data.legendId,
+        (x: number | null) => statisticActions.setFormState({...data, legendId: x})
+    ]
+    const [weaponId, setWeaponId] = [
+        data.weaponId,
+        (x: number | null) => statisticActions.setFormState({...data, weaponId: x})
+    ]
+    const [enemyLegendId, setEnemyLegendId] = [
+        data.enemyLegendId,
+        (x: number | null) => statisticActions.setFormState({...data, enemyLegendId: x})
+    ]
+    const [enemyWeaponId, setEnemyWeaponId] = [
+        data.enemyWeaponId,
+        (x: number | null) => statisticActions.setFormState({...data, enemyWeaponId: x})
+    ]
+    const [teammateLegendId, setTeammateLegendId] = [
+        data.teammateLegendId,
+        (x: number | null) => statisticActions.setFormState({...data, teammateLegendId: x})
+    ]
+    const [teammateWeaponId, setTeammateWeaponId] = [
+        data.teammateWeaponId,
+        (x: number | null) => statisticActions.setFormState({...data, teammateWeaponId: x})
+    ]
 
     const is2v2ModeSelected = gameType !== null
         ? (gameType === GameType.ranked2V2 || gameType === GameType.unranked2V2)
