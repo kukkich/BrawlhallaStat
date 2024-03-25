@@ -1,19 +1,21 @@
 import {AppDispatch} from "../../../store";
-import {entitiesActions} from "../../brawlhallaEntities/store/reducer";
-import entitiesService from "../../brawlhallaEntities/services/entitiesService";
+import StatisticService from "../services/StatisticService";
+import {StatisticFilterCreate} from "../types";
+import {statisticActions} from "./reducer";
 
-export const submitForm = () => async (dispatch: AppDispatch) => {
+export const submitForm = (request: StatisticFilterCreate) => async (dispatch: AppDispatch) => {
     try {
-        dispatch(entitiesActions.getEntitiesStart())
-        const response = await entitiesService.getEntities();
-        dispatch(entitiesActions.getEntitiesSuccess(response));
+        dispatch(statisticActions.submitFormStart())
+        const response = await StatisticService.createFilter(request);
+        dispatch(statisticActions.submitFormSuccess(response));
+        dispatch(fetchStatistics())
     } catch (e: any){
-        dispatch(entitiesActions.getEntitiesFailed(e))
+        dispatch(statisticActions.submitFormFailed(e))
     }
 }
 
 export const fetchStatistics = () => async (dispatch: AppDispatch) => {
-    try{
+    try {
 
     } catch (e: any){
 
