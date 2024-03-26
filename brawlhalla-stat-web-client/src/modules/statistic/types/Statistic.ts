@@ -1,5 +1,5 @@
 export interface Statistic {
-    Wins: number;
-    Lost: number;
-    Total: number;
+    wins: number;
+    lost: number;
+    total: number;
 }

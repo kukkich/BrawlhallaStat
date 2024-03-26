@@ -1,11 +1,7 @@
-import {FC, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
 import {
     GridRowsProp,
     GridRowModesModel,
@@ -14,10 +10,7 @@ import {
     GridColDef,
     GridToolbarContainer,
     GridActionsCellItem,
-    GridEventListener,
     GridRowId,
-    GridRowModel,
-    GridRowEditStopReasons,
     GridSlots,
 } from '@mui/x-data-grid';
 import {
@@ -27,6 +20,9 @@ import {
     randomArrayItem,
 } from '@mui/x-data-grid-generator/services/random-generator';
 import { Delete } from '@mui/icons-material';
+import {useRootDispatch, useRootSelector} from "../../../store";
+import {StatisticWithFilter} from "../types";
+import {fetchStatistics} from "../store/actions";
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
@@ -100,27 +96,24 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 export const StatisticTable: FC = () => {
-    const [rows, setRows] = useState(initialRows);
-    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+    const dispatch = useRootDispatch();
+    useEffect(() => {
+        dispatch(fetchStatistics())
+    }, [])
 
-    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
-        }
-    };
+    const statRows = useRootSelector(x => x.statisticReducer.statistics)
+
+    const [rows, setRows] = useState(initialRows);
 
     const handleDeleteClick = (id: GridRowId) => () => {
         setRows(rows.filter((row) => row.id !== id));
     };
-
-    const processRowUpdate = (newRow: GridRowModel) => {
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
-    };
-
-    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-        setRowModesModel(newRowModesModel);
+    const t = {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 25,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
     };
 
     const columns: GridColDef[] = [
@@ -129,7 +122,6 @@ export const StatisticTable: FC = () => {
             type: 'actions',
             headerName: 'Actions',
             width: 100,
-            cellClassName: 'actions',
             getActions: ({ id }) => {
                 return [
                     <GridActionsCellItem
@@ -149,17 +141,22 @@ export const StatisticTable: FC = () => {
             align: 'left',
             headerAlign: 'left',
         },
+        { field: 'joinDate', headerName: 'Join date', width: 180},
+        {field: 'role', headerName: 'Department', width: 220},
+    ];
+    const statColumns: GridColDef[] = [
         {
-            field: 'joinDate',
-            headerName: 'Join date',
-            width: 180,
+            field: 'id',
+            headerName: 'Id',
+            valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
         },
         {
-            field: 'role',
-            headerName: 'Department',
-            width: 220,
+            field: 'wins',
+            headerName: 'Wins',
+            valueGetter: (_, item: StatisticWithFilter) => item.statistic.wins,
         },
     ];
+
 
     return (
         <Box sx={{ height: 500, width: '100%',
@@ -172,18 +169,15 @@ export const StatisticTable: FC = () => {
             }}
         >
             <DataGrid
-                rows={rows}
-                columns={columns}
+                columns={statColumns}
+                rows={statRows}
+                getRowId={(value) => value.filter.id}
                 editMode="row"
-                rowModesModel={rowModesModel}
-                onRowModesModelChange={handleRowModesModelChange}
-                onRowEditStop={handleRowEditStop}
-                processRowUpdate={processRowUpdate}
                 slots={{
                     toolbar: EditToolbar as GridSlots['toolbar'],
                 }}
                 slotProps={{
-                    toolbar: { setRows, setRowModesModel },
+                    toolbar: { setRows },
                 }}
             />
         </Box>
