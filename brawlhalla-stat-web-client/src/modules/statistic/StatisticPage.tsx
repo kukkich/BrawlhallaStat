@@ -2,7 +2,7 @@ import {Grid, useTheme} from '@mui/material';
 import React, {FC} from 'react';
 import SideBar from "../appBars/sideBar/SideBar";
 import {StatisticSideBarContent} from "./components/StatisticSideBarContent";
-import {FilterForm} from "./components/FilterForm";
+import {FilterForm} from "./components/form/FilterForm";
 
 const StatisticPage: FC = () => {
     const theme = useTheme();

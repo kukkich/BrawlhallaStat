@@ -1,9 +1,9 @@
 import {FC, useState} from 'react';
 import {ListItem} from "@mui/material";
-import {WeaponSelect} from "../../brawlhallaEntities/components/WeaponSelect";
-import {LegendSelect} from "../../brawlhallaEntities/components/LegendSelect";
-import {IHaveId} from "../../brawlhallaEntities/types/IHaveId";
-import {Legend, Weapon} from "../../brawlhallaEntities/types";
+import {WeaponSelect} from "../../../brawlhallaEntities/components/WeaponSelect";
+import {LegendSelect} from "../../../brawlhallaEntities/components/LegendSelect";
+import {IHaveId} from "../../../brawlhallaEntities/types/IHaveId";
+import {Legend, Weapon} from "../../../brawlhallaEntities/types";
 
 type PlayerDataSelectProps = {
     weaponIdChange: (id: number | null) => void,

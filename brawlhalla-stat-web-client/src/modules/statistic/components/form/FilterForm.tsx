@@ -1,12 +1,12 @@
 import React, {FC, FormEvent} from 'react';
 import {Button, Container, Divider, List, Paper} from "@mui/material";
-import {StatisticFilterCreate} from "../types";
+import {StatisticFilterCreate} from "../../types";
 import {PlayerDataSelect} from "./PlayerDataSelect";
-import {GameType} from "../../brawlhallaEntities/types";
-import {GameTypeSelect} from "../../brawlhallaEntities/components/GameTypeSelect";
-import {useRootDispatch, useRootSelector} from "../../../store";
-import {statisticActions} from "../store/reducer";
-import {submitForm} from "../store/actions";
+import {GameType} from "../../../brawlhallaEntities/types";
+import {GameTypeSelect} from "../../../brawlhallaEntities/components/GameTypeSelect";
+import {useRootDispatch, useRootSelector} from "../../../../store";
+import {statisticActions} from "../../store/reducer";
+import {submitForm} from "../../store/actions";
 
 type FilterFormProps = {
     onSubmit: (filter: StatisticFilterCreate) => void;
