@@ -28,6 +28,7 @@ export const statisticSlice = createSlice({
     initialState,
     reducers: {
         setFormState(state, action: PayloadAction<StatisticFilterCreate>) {
+            console.log('Обновилась форма:')
             console.log(action.payload)
             state.form.data = action.payload;
         },

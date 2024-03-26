@@ -22,12 +22,18 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
         data.gameType,
         (x: GameType | null) => dispatch(statisticActions.setFormState({...data, gameType: x}))
     ]
-    const setLegendId = (x: number | null) => statisticActions.setFormState({...data, legendId: x})
-    const setWeaponId = (x: number | null) => statisticActions.setFormState({...data, weaponId: x})
-    const setEnemyLegendId = (x: number | null) => statisticActions.setFormState({...data, enemyLegendId: x})
-    const setEnemyWeaponId = (x: number | null) => statisticActions.setFormState({...data, enemyWeaponId: x})
-    const setTeammateLegendId = (x: number | null) => statisticActions.setFormState({...data, teammateLegendId: x})
-    const setTeammateWeaponId = (x: number | null) => statisticActions.setFormState({...data, teammateWeaponId: x})
+    const setLegendId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, legendId: x}))
+    const setWeaponId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, weaponId: x}))
+    const setEnemyLegendId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, enemyLegendId: x}))
+    const setEnemyWeaponId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, enemyWeaponId: x}))
+    const setTeammateLegendId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, teammateLegendId: x}))
+    const setTeammateWeaponId = (x: number | null) =>
+        dispatch(statisticActions.setFormState({...data, teammateWeaponId: x}))
 
     const is2v2ModeSelected = gameType !== null
         ? (gameType === GameType.ranked2V2 || gameType === GameType.unranked2V2)

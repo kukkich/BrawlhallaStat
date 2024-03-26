@@ -5,15 +5,15 @@ import {statisticActions} from "./reducer";
 export const submitForm = () => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
         dispatch(statisticActions.submitFormStart())
-        const data = getState().statisticReducer.form.data;
 
+        const state = getState();
+        const data = state.statisticReducer.form.data;
         const response = await StatisticService.createFilter(data);
-        console.log('фильтер добавлен')
         console.log(response)
+
         dispatch(statisticActions.submitFormSuccess(response));
-        console.log('получил статистики')
         dispatch(fetchStatistics())
-        console.log('Конец')
+        console.log('Фильтр добавлена')
     } catch (e: any){
         console.log(e)
         dispatch(statisticActions.submitFormFailed(e))
