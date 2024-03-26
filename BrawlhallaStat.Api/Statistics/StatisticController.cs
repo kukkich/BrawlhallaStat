@@ -47,7 +47,6 @@ public class StatisticController : ControllerBase
     [ActionName("filters")]
     public async Task<ActionResult<StatisticWithFilterDto>> AddFilter([FromBody] StatisticFilterCreateDto filter)
     {
-        //Bug возвращается не созданная статистика
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
         if (!filter.IsValid())
         {

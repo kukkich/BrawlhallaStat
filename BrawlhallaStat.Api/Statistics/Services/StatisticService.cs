@@ -39,9 +39,9 @@ public class StatisticService : IStatisticService
                 Wins = g.Count(x => x.IsWin),
                 Defeats = g.Count(x => !x.IsWin),
             })
-            .FirstAsync();
+            .FirstOrDefaultAsync();
 
-        return statistic;
+        return statistic ?? Statistic.Default;
     }
 
     public async Task<IEnumerable<StatisticWithFilterDto>> GetStatisticsFromUserFilters(IUserIdentity user)
@@ -108,7 +108,9 @@ public class StatisticService : IStatisticService
                 Wins = g.Count(x => x.IsWin),
                 Defeats = g.Count(x => !x.IsWin),
             })
-            .FirstAsync();
+            .FirstOrDefaultAsync();
+
+        statistic ??= Statistic.Default;
 
         return new StatisticWithFilterDto
         {

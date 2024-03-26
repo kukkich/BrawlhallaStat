@@ -28,8 +28,6 @@ export const statisticSlice = createSlice({
     initialState,
     reducers: {
         setFormState(state, action: PayloadAction<StatisticFilterCreate>) {
-            console.log('Обновилась форма:')
-            console.log(action.payload)
             state.form.data = action.payload;
         },
         submitFormStart(state){
@@ -44,8 +42,6 @@ export const statisticSlice = createSlice({
             state.form.isFetching = false;
             state.form.errors.push(action.payload);
         },
-
-
         fetchStatisticsStart(state) {
             state.isFetching = true;
             state.errors = [];

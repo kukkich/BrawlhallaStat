@@ -10,7 +10,6 @@ const $api = axios.create({
 
 $api.interceptors.request.use(config => {
     config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-    console.log('Токен закреплен')
     return config
 })
 

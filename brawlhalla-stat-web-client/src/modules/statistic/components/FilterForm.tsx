@@ -1,4 +1,4 @@
-import React, {FC, FormEvent, useState} from 'react';
+import React, {FC, FormEvent} from 'react';
 import {Button, Container, Divider, List, Paper} from "@mui/material";
 import {StatisticFilterCreate} from "../types";
 import {PlayerDataSelect} from "./PlayerDataSelect";
@@ -6,7 +6,6 @@ import {GameType} from "../../brawlhallaEntities/types";
 import {GameTypeSelect} from "../../brawlhallaEntities/components/GameTypeSelect";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {statisticActions} from "../store/reducer";
-import {useDispatch} from "react-redux";
 import {submitForm} from "../store/actions";
 
 type FilterFormProps = {
