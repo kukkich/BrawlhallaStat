@@ -18,10 +18,8 @@ const filterOptions = createFilterOptions({
 })
 
 export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
-
-    const dispatch = useRootDispatch();
-
-    const entitiesState = useRootSelector(state => state.entitiesReducer);
+    const [, legends, fetched, tryFetch] = useBrawlhallaEntities(false);
+    const isLoading = !fetched
 
     const [open, setOpen] = useState<boolean>(false);
     const [legend, setLegend] = useState<Legend | null>(null);
@@ -33,14 +31,13 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
     }
 
     useEffect(() => {
-        if (!open || entitiesState.isFetching) {
+        console.log(`open: ${open}, fetched: ${fetched}`)
+        if (!open || fetched) {
             return;
         }
 
         (async () => {
-            if (entitiesState.legends === null && !entitiesState.isFetching) {
-                await dispatch(getEntitiesAction());
-            }
+            await tryFetch()
         })();
     }, [open]);
 
@@ -61,11 +58,11 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
                 setOpen(false);
             }}
             inputValue={inputValue}
-            loading={entitiesState.isFetching}
+            loading={isLoading}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            options={entitiesState.legends === null ? [] : entitiesState.legends}
+            options={legends}
             renderOption={(props, option) => (
                 <Box component="li"
                      sx={{'& > img': {mr: 2}}}
@@ -82,7 +79,7 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
                         ...params.InputProps,
                         endAdornment: (
                             <>
-                                {entitiesState.isFetching && open
+                                {isLoading && open
                                     ? <CircularProgress size={20} color="inherit"/>
                                     : null
                                 }
@@ -98,10 +95,7 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
                                         height: '45px'
                                     }}}
                                 >
-                                    <img loading="lazy"
-                                         src={process.env.PUBLIC_URL + `/heroes/${legend.name}.png`}
-                                         alt=""
-                                    />
+                                    <LegendIcon name={legend.name}/>
                                 </Box>
                             </InputAdornment>
                             : null
