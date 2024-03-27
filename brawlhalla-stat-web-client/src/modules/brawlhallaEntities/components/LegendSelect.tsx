@@ -31,14 +31,11 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
     }
 
     useEffect(() => {
-        console.log(`open: ${open}, fetched: ${fetched}`)
         if (!open || fetched) {
             return;
         }
 
-        (async () => {
-            await tryFetch()
-        })();
+        tryFetch()
     }, [open]);
 
     return (

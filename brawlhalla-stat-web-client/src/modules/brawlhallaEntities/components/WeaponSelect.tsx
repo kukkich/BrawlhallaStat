@@ -5,6 +5,7 @@ import {getEntitiesAction} from "../store/actions";
 import {Weapon} from "../types";
 import Box from "@mui/material/Box";
 import {WeaponIcon} from "./icons/WeaponIcon";
+import {useBrawlhallaEntities} from "../hooks/useBrawlhallaEntities";
 
 type WeaponSelectProp = {
     weaponChange: (weapon: Weapon | null) => void,
@@ -18,9 +19,8 @@ const filterOptions = createFilterOptions({
 // TODO add hints. See: https://mui.com/material-ui/react-autocomplete/#hint
 // TODO add text "Any" when nothing selected
 export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
-
-    const dispatch = useRootDispatch();
-    const entitiesState = useRootSelector(state => state.entitiesReducer);
+    const [weapons, , fetched, tryFetch] = useBrawlhallaEntities(false);
+    const isLoading = !fetched
 
     const [open, setOpen] = useState<boolean>(false);
     const [weapon, setWeapon] = useState<Weapon | null>(null);
@@ -32,16 +32,12 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
     }
 
     useEffect(() => {
-        if (!open || entitiesState.isFetching) {
+        if (!open || fetched) {
             return;
         }
 
-        (async () => {
-            if (entitiesState.weapons === null && !entitiesState.isFetching) {
-                await dispatch(getEntitiesAction());
-            }
-        })();
-    }, [dispatch, entitiesState.isFetching, entitiesState.weapons, open]);
+        tryFetch()
+    }, [open,]);
 
     return (
         <Autocomplete
@@ -60,11 +56,11 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
                 setOpen(false);
             }}
             inputValue={inputValue}
-            loading={entitiesState.isFetching}
+            loading={isLoading}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);
             }}
-            options={entitiesState.weapons === null ? [] : entitiesState.weapons}
+            options={weapons}
             renderOption={(props, option) => (
                 <Box component="li" sx={{'& > img': {mr: 2}}} {...props}>
                     <WeaponIcon name={option.name} width='50'/>
@@ -77,7 +73,7 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
                         ...params.InputProps,
                         endAdornment: (
                             <>
-                                {entitiesState.isFetching && open
+                                {isLoading && open
                                     ? <CircularProgress size={20} color="inherit"/>
                                     : null
                                 }
