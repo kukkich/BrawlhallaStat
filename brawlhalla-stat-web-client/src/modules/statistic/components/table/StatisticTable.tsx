@@ -20,9 +20,9 @@ import {
     randomArrayItem,
 } from '@mui/x-data-grid-generator/services/random-generator';
 import { Delete } from '@mui/icons-material';
-import {useRootDispatch, useRootSelector} from "../../../store";
-import {StatisticWithFilter} from "../types";
-import {fetchStatistics} from "../store/actions";
+import {useRootDispatch, useRootSelector} from "../../../../store";
+import {StatisticWithFilter} from "../../types";
+import {fetchStatistics} from "../../store/actions";
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {

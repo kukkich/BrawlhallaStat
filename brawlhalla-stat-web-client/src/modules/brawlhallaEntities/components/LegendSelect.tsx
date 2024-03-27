@@ -6,6 +6,7 @@ import {getEntitiesAction} from "../store/actions";
 import Box from "@mui/material/Box";
 import {LegendIcon} from "./icons/LegendIcon";
 import {WeaponIcon} from "./icons/WeaponIcon";
+import {useBrawlhallaEntities} from "../hooks/useBrawlhallaEntities";
 
 type LegendSelectProp = {
     legendChange: (legend: Legend | null) => void,
@@ -19,6 +20,7 @@ const filterOptions = createFilterOptions({
 export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
 
     const dispatch = useRootDispatch();
+
     const entitiesState = useRootSelector(state => state.entitiesReducer);
 
     const [open, setOpen] = useState<boolean>(false);
