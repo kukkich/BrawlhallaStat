@@ -4,6 +4,7 @@ import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
 import {Weapon} from "../types";
 import Box from "@mui/material/Box";
+import {WeaponIcon} from "./icons/WeaponIcon";
 
 type WeaponSelectProp = {
     weaponChange: (weapon: Weapon | null) => void,
@@ -66,11 +67,7 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
             options={entitiesState.weapons === null ? [] : entitiesState.weapons}
             renderOption={(props, option) => (
                 <Box component="li" sx={{'& > img': {mr: 2}}} {...props}>
-                    <img loading="lazy"
-                        width="50"
-                        src={process.env.PUBLIC_URL + `/weapons/${option.name}.png`}
-                        alt=""
-                    />
+                    <WeaponIcon name={option.name} width='50'/>
                     {option.name}
                 </Box>
             )}
@@ -96,10 +93,7 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
                                         height: '45px'
                                     }}}
                                 >
-                                    <img loading="lazy"
-                                         src={process.env.PUBLIC_URL + `/weapons/${weapon.name}.png`}
-                                         alt=""
-                                    />
+                                    <WeaponIcon name={weapon.name}/>
                                 </Box>
                             </InputAdornment>
                             : null

@@ -4,6 +4,8 @@ import {Legend} from "../types";
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {getEntitiesAction} from "../store/actions";
 import Box from "@mui/material/Box";
+import {LegendIcon} from "./icons/LegendIcon";
+import {WeaponIcon} from "./icons/WeaponIcon";
 
 type LegendSelectProp = {
     legendChange: (legend: Legend | null) => void,
@@ -66,18 +68,9 @@ export const LegendSelect: FC<LegendSelectProp> = ({legendChange, hidden}) => {
                 <Box component="li"
                      sx={{'& > img': {mr: 2}}}
                      {...props}>
-                    <img loading="lazy"
-                         width="50"
-                         src={process.env.PUBLIC_URL + `/heroes/${option.name}.png`}
-                    />
-                    <img loading="lazy"
-                         width="40"
-                         src={process.env.PUBLIC_URL + `/weapons/${option.firstWeapon.name}.png`}
-                    />
-                    <img loading="lazy"
-                         width="40"
-                         src={process.env.PUBLIC_URL + `/weapons/${option.secondWeapon.name}.png`}
-                    />
+                    <LegendIcon name={option.name} width='50'/>
+                    <WeaponIcon name={option.firstWeapon.name} width='40'/>
+                    <WeaponIcon name={option.secondWeapon.name} width='40'/>
                     {option.name}
                 </Box>
             )}
