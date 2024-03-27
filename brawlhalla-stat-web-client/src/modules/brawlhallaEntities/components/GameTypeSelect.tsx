@@ -13,7 +13,7 @@ export const GameTypeSelect: FC<GameTypeSelectProp> = ({ gameTypeChange }: GameT
     const handleChange = (event: SelectChangeEvent) => {
         console.log(event.target.value)
         setGameType(event.target.value)
-        const value = event.target.value as number | string;
+        const value = event.target.value;
         const type = (value !== ''
             ? value
             : null) as GameType || null;

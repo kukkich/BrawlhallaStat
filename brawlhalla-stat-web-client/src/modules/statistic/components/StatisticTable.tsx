@@ -108,13 +108,6 @@ export const StatisticTable: FC = () => {
     const handleDeleteClick = (id: GridRowId) => () => {
         setRows(rows.filter((row) => row.id !== id));
     };
-    const t = {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 25,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    };
 
     const columns: GridColDef[] = [
         {
@@ -142,7 +135,7 @@ export const StatisticTable: FC = () => {
             headerAlign: 'left',
         },
         { field: 'joinDate', headerName: 'Join date', width: 180},
-        {field: 'role', headerName: 'Department', width: 220},
+        { field: 'role', headerName: 'Department', width: 220},
     ];
     const statColumns: GridColDef[] = [
         {

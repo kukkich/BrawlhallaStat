@@ -44,7 +44,6 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
             } else {
                 dispatch(statisticActions.setFormState({...data, gameType: newGameType}))
             }
-            console.log(state.form.data)
         }
     ]
     const setLegendId = (x: number | null) =>
