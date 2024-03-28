@@ -24,29 +24,28 @@ export const userSlice = createSlice({
             state.status = LoginStatus.authorized;
             state.user = action.payload.user;
         },
-        loginFailed(state, actions: PayloadAction<string>){
+        loginFailed(state, action: PayloadAction<string[]>){
             state.status = LoginStatus.unauthorized
-            state.errors.push(actions.payload)
+            console.log(action.payload)
+            action.payload.forEach(x => {
+                state.errors.push(x);
+            })
         },
 
         logoutStart(state){
             state.status = LoginStatus.logouting
         },
-        logoutSuccess(state){
+        logoutFinished(state){
             localStorage.removeItem('token')
             state.status = LoginStatus.unauthorized
             state.user = null
-        },
-        logoutFailed(state){
-            state.status = LoginStatus.authorized
         },
 
         checkAuthStart(state){
             state.status = LoginStatus.authChecking
         },
-        checkAuthFailed(state, error: any){
+        checkAuthFailed(state){
             state.status = LoginStatus.unauthorized
-            console.log(error.response);
         },
     }
 })

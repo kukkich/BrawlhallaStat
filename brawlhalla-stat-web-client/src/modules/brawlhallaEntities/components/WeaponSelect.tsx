@@ -1,7 +1,5 @@
 import {FC, SyntheticEvent, useEffect, useState} from 'react';
 import {Autocomplete, CircularProgress, createFilterOptions, InputAdornment, TextField} from "@mui/material";
-import {useRootDispatch, useRootSelector} from "../../../store";
-import {getEntitiesAction} from "../store/actions";
 import {Weapon} from "../types";
 import Box from "@mui/material/Box";
 import {WeaponIcon} from "./icons/WeaponIcon";
@@ -37,7 +35,7 @@ export const WeaponSelect: FC<WeaponSelectProp> = ({weaponChange, hidden}) => {
         }
 
         tryFetch()
-    }, [open,]);
+    }, [open]);
 
     return (
         <Autocomplete

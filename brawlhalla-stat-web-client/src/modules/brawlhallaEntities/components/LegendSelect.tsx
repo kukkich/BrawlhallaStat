@@ -1,8 +1,6 @@
 import {FC, SyntheticEvent, useEffect, useState} from 'react';
 import {Autocomplete, CircularProgress, createFilterOptions, InputAdornment, TextField} from "@mui/material";
 import {Legend} from "../types";
-import {useRootDispatch, useRootSelector} from "../../../store";
-import {getEntitiesAction} from "../store/actions";
 import Box from "@mui/material/Box";
 import {LegendIcon} from "./icons/LegendIcon";
 import {WeaponIcon} from "./icons/WeaponIcon";

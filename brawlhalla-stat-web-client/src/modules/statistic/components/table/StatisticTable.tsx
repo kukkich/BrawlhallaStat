@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,7 +11,7 @@ import {
     GridToolbarContainer,
     GridActionsCellItem,
     GridRowId,
-    GridSlots,
+    GridSlots, GridRowSpacingParams,
 } from '@mui/x-data-grid';
 import {
     randomCreatedDate,
@@ -21,8 +21,9 @@ import {
 } from '@mui/x-data-grid-generator/services/random-generator';
 import { Delete } from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
-import {StatisticWithFilter} from "../../types";
+import {StatisticFilter, StatisticWithFilter} from "../../types";
 import {fetchStatistics} from "../../store/actions";
+import {FilterView} from "./FilterView";
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
@@ -100,7 +101,6 @@ export const StatisticTable: FC = () => {
     useEffect(() => {
         dispatch(fetchStatistics())
     }, [])
-
     const statRows = useRootSelector(x => x.statisticReducer.statistics)
 
     const [rows, setRows] = useState(initialRows);
@@ -139,6 +139,11 @@ export const StatisticTable: FC = () => {
     ];
     const statColumns: GridColDef[] = [
         {
+            field: 'filter',
+            headerName: 'Filter',
+            renderCell: (params) => <FilterView filter={params.value}/>,
+        },
+        {
             field: 'id',
             headerName: 'Id',
             valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
@@ -150,9 +155,8 @@ export const StatisticTable: FC = () => {
         },
     ];
 
-
     return (
-        <Box sx={{ height: 500, width: '100%',
+        <Box sx={{ height: 800, width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
                 },
@@ -164,6 +168,19 @@ export const StatisticTable: FC = () => {
             <DataGrid
                 columns={statColumns}
                 rows={statRows}
+                sx={{
+                    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
+                        py: 2,
+                    },
+                    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
+                        py: '15px',
+                    },
+                    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+                        py: '15px',
+                    },
+                }}
+                getEstimatedRowHeight={() => 100}
+                getRowHeight={() => 'auto'}
                 getRowId={(value) => value.filter.id}
                 editMode="row"
                 slots={{

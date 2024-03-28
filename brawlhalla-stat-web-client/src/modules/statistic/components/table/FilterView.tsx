@@ -1,30 +1,28 @@
-import {FC, useEffect} from 'react';
+import {FC} from 'react';
 import {StatisticFilter} from "../../types";
-import {useRootDispatch, useRootSelector} from "../../../../store";
-import {getEntitiesAction} from "../../../brawlhallaEntities/store/actions";
+import {useBrawlhallaEntities} from "../../../brawlhallaEntities/hooks/useBrawlhallaEntities";
+import {CircularProgress} from "@mui/material";
+import {LegendIcon} from "../../../brawlhallaEntities/components/icons/LegendIcon";
 
 type Props = {
     filter: StatisticFilter
 };
 
-export const FilterView: FC<Props> = ({filter : StatisticFilter}: Props) => {
-    const dispatch = useRootDispatch();
+export const FilterView: FC<Props> = ({filter}: Props) => {
+    const [weapons, legends, fetched] = useBrawlhallaEntities(true);
 
-    const entities = useRootSelector(state => state.entitiesReducer);
-    // const loading = !entities.fetched || entities.isFetching;
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (!entities.fetched && !entities.isFetching) {
-    //             await dispatch(getEntitiesAction());
-    //         }
-    //     })();
-    // })
-
-    // const legend = entities.legends.find(x => x.id === filter.legendId)
+    const legend = filter.legendId !== null
+        ? legends.find(x => x.id === filter.legendId)
+        : null
 
     return (
         <>
+        {fetched
+            ? (legend !== null && legend !== undefined
+                ? <LegendIcon width='40' name={legend.name} />
+                : <CircularProgress size={20} color="warning"/>)
+            : <CircularProgress size={20} color="inherit"/>
+        }
         </>
     );
 };

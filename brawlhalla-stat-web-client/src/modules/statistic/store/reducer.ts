@@ -38,9 +38,11 @@ export const statisticSlice = createSlice({
             state.form = emptyForm;
             state.statistics.push(action.payload);
         },
-        submitFormFailed(state, action: PayloadAction<string>){
+        submitFormFailed(state, action: PayloadAction<string[]>){
             state.form.isFetching = false;
-            state.form.errors.push(action.payload);
+            action.payload.forEach(x => {
+                state.errors.push(x);
+            })
         },
         fetchStatisticsStart(state) {
             state.isFetching = true;
@@ -50,9 +52,12 @@ export const statisticSlice = createSlice({
             state.isFetching = false;
             state.statistics = action.payload;
         },
-        fetchStatisticsFailed(state, action: PayloadAction<string>) {
+        fetchStatisticsFailed(state, action: PayloadAction<string[]>) {
             state.isFetching = false;
-            state.errors.push(action.payload);
+
+            action.payload.forEach(x => {
+                state.errors.push(x);
+            })
         }
 
     }

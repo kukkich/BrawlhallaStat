@@ -1,6 +1,7 @@
 import {AppDispatch, RootState} from "../../../store";
 import StatisticService from "../services/StatisticService";
 import {statisticActions} from "./reducer";
+import {getErrorResponse} from "../../../api/tools/getErrorResponse";
 
 export const submitForm = () => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
@@ -11,10 +12,9 @@ export const submitForm = () => async (dispatch: AppDispatch, getState: () => Ro
         const response = await StatisticService.createFilter(data);
 
         dispatch(statisticActions.submitFormSuccess(response));
-        dispatch(fetchStatistics())
+        await dispatch(fetchStatistics())
     } catch (e: any){
-        console.log(e)
-        dispatch(statisticActions.submitFormFailed(e))
+        dispatch(statisticActions.submitFormFailed(getErrorResponse(e).errors))
     }
 }
 
@@ -24,6 +24,6 @@ export const fetchStatistics = () => async (dispatch: AppDispatch) => {
         const statistics = await StatisticService.getFilters()
         dispatch(statisticActions.fetchStatisticsSuccess(statistics))
     } catch (e: any){
-        dispatch(statisticActions.fetchStatisticsFailed(e))
+        dispatch(statisticActions.fetchStatisticsFailed(getErrorResponse(e).errors))
     }
 }

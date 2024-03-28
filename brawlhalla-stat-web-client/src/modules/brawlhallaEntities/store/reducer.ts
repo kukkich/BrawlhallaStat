@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {BrawlhallaEntitiesState} from "./state";
 import {GetEntitiesResult} from "../services/getEntitiesResult";
+import {ErrorResponse} from "../../../api/types/ErrorResponse";
 
 const initialState: BrawlhallaEntitiesState = {
     legends: null,
@@ -22,8 +23,10 @@ export const entitiesSlice = createSlice({
             state.weapons = action.payload.weapons
             state.isFetching = false
         },
-        getEntitiesFailed(state: BrawlhallaEntitiesState, error: any){
-            state.errors.push(error)
+        getEntitiesFailed(state: BrawlhallaEntitiesState, action: PayloadAction<ErrorResponse>){
+            action.payload.errors.forEach(x => {
+                state.errors.push(x);
+            })
             state.isFetching = false
         },
     }
