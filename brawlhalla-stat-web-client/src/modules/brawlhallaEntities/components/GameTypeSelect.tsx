@@ -11,12 +11,11 @@ export const GameTypeSelect: FC<GameTypeSelectProp> = ({ gameTypeChange }: GameT
     const [gameType, setGameType] = useState<string>('');
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value)
+        const value = event.target.value as string | number;
         setGameType(event.target.value)
-        const value = event.target.value;
         const type = (value !== ''
             ? value
-            : null) as GameType || null;
+            : null) as GameType | null;
         gameTypeChange(type)
     };
 
@@ -32,8 +31,8 @@ export const GameTypeSelect: FC<GameTypeSelectProp> = ({ gameTypeChange }: GameT
                 >
                     <MenuItem value={''}>Any</MenuItem>
                     <MenuItem value={GameType.unranked1V1}>Unranked 1v1</MenuItem>
-                    <MenuItem value={GameType.ranked1V1}>Ranked 1v1</MenuItem>
                     <MenuItem value={GameType.unranked2V2}>Unranked 2v2</MenuItem>
+                    <MenuItem value={GameType.ranked1V1}>Ranked 1v1</MenuItem>
                     <MenuItem value={GameType.ranked2V2}>Ranked 2v2</MenuItem>
                 </Select>
             </FormControl>

@@ -146,6 +146,7 @@ export const StatisticTable: FC = () => {
         {
             field: 'id',
             headerName: 'Id',
+            width: 380,
             valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
         },
         {

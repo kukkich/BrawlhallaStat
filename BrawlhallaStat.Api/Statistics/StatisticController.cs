@@ -45,10 +45,10 @@ public class StatisticController : ControllerBase
 
     [HttpPost]
     [ActionName("filters")]
-    public async Task<ActionResult<StatisticWithFilterDto>> AddFilter([FromBody] StatisticFilterCreateDto filter)
+    public async Task<ActionResult<StatisticWithFilterDto>> AddFilter([FromBody] StatisticFilterCreateDto? filter)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
-        if (!filter.IsValid())
+        if (filter is null || !filter.IsValid())
         {
             return BadRequest();
         }
