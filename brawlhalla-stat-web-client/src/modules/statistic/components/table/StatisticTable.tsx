@@ -23,7 +23,7 @@ import { Delete } from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {StatisticFilter, StatisticWithFilter} from "../../types";
 import {fetchStatistics} from "../../store/actions";
-import {FilterView} from "./FilterView";
+import {FilterView} from "./Views/FilterView";
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
