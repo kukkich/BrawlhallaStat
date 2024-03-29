@@ -20,9 +20,10 @@ const CenteredBox = styled('div')({
 const VerticalTypography = styled(Typography)({
     writingMode: 'vertical-rl',
     transform: 'rotate(-180deg)',
+    alignSelf: 'center'
 });
 
-const GameView: FC<GameViewProps> = ({gameType}) => {
+const GameTypeView: FC<GameViewProps> = ({gameType}) => {
     const getGameMode = (gameType: GameType | null): string => {
         if (gameType === null) {
             return 'Any';
@@ -94,13 +95,15 @@ export const FilterView: FC<Props> = ({filter}: Props) => {
         : null
 
     return (
-        <Paper elevation={8}>
+        <Paper elevation={8} sx={{py: 1}}>
             <Grid container
-                  // spacing={2}
+                // spacing={2}
             >
-                <Grid item>
+                <Grid item sx={{display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'}}>
                     <Container sx={{width: 28}}>
-                        <GameView gameType={filter.gameType}></GameView>
+                        <GameTypeView gameType={filter.gameType}></GameTypeView>
                         {/*{fetched*/}
                         {/*    ? (legend !== null && legend !== undefined*/}
                         {/*        ? <LegendIcon width='40' name={legend.name} />*/}
@@ -112,15 +115,7 @@ export const FilterView: FC<Props> = ({filter}: Props) => {
                 <Grid item xs={12} sm container>
                     <Grid item xs container direction="column" spacing={2}>
                         <Grid item xs>
-                            <Typography gutterBottom variant="subtitle1" component="div">
-                                Standard license
-                            </Typography>
-                            <Typography variant="body2" gutterBottom>
-                                Full resolution 1920x1080 • JPEG
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                ID: 1030114
-                            </Typography>
+
                         </Grid>
                         <Grid item>
                             <Typography sx={{cursor: 'pointer'}} variant="body2">

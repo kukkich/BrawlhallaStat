@@ -141,14 +141,15 @@ export const StatisticTable: FC = () => {
         {
             field: 'filter',
             headerName: 'Filter',
+            width: 450,
             renderCell: (params) => <FilterView filter={params.value}/>,
         },
-        {
-            field: 'id',
-            headerName: 'Id',
-            width: 380,
-            valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
-        },
+        // {
+        //     field: 'id',
+        //     headerName: 'Id',
+        //     width: 380,
+        //     valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
+        // },
         {
             field: 'wins',
             headerName: 'Wins',

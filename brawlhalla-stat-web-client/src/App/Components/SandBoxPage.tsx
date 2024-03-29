@@ -1,7 +1,5 @@
 import React from "react";
 import {Container, Grid} from "@mui/material";
-import {FilterView} from "../../modules/statistic/components/table/FilterView";
-import {GameType} from "../../modules/brawlhallaEntities/types";
 import {StatisticTable} from "../../modules/statistic/components/table/StatisticTable";
 
 const SandBoxPage: React.FC = () => {
