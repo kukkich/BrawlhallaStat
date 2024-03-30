@@ -11,7 +11,6 @@ const StatisticPage: FC = () => {
             <SideBar content={<StatisticSideBarContent/>}/>
             <Grid item xs={10} sx={{mt: theme.spacing(2)}}>
                 <StatisticTable/>
-                {/*<FilterForm onSubmit={() => {}}/>*/}
             </Grid>
             <Grid item/>
         </Grid>
