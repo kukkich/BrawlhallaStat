@@ -14,21 +14,26 @@ $api.interceptors.request.use(config => {
 })
 
 $api.interceptors.response.use(c => c, async error => {
-    const originRequest = error.comfig;
-    console.log("Отправка")
-    if(error.response.status === 401 && !error.config._isRetry) {
-        console.log(`Статус ${error.response.status}`)
-        console.log(error.config)
-        originRequest._isRetry = true
+    const originalRequest = error.config;
+    console.log("Отправка");
+    console.log(error);
+    if (error.code === 'ERR_NETWORK') {
+        throw error
+    }
+    if (error.response.status === 401 && originalRequest._isRetry === undefined) {
+        console.log(originalRequest._isRetry);
+        originalRequest._isRetry = true;
+        console.log(originalRequest);
         try {
             const response = await AuthService.refresh();
-            localStorage.setItem('token', response.data.accessToken)
-            return $api.request(originRequest);
+            localStorage.setItem('token', response.data.accessToken);
+            originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
+            return await $api.request(originalRequest)
         } catch (e) {
-            console.log("Refresh token expired")
+            console.log("Refresh token expired");
         }
     }
-    throw error
+    throw error;
 })
 
 export default $api;

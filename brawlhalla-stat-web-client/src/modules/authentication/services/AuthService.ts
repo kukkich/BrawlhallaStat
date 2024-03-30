@@ -1,4 +1,4 @@
-import {AxiosResponse} from "axios";
+import axios, {AxiosResponse} from "axios";
 import {LoginRequest, LoginResult, RegisterRequest} from "../types";
 import $api from "../../../api/axios";
 import {getDetailsFromApiException} from "../../../api/tools/getDetailsFromApiException";
@@ -30,7 +30,7 @@ export default class AuthService {
 
     static async refresh(): Promise<AxiosResponse<LoginResult>> {
         try {
-            return await $api.post<LoginResult>('/auth/refresh');
+            return await axios.post<LoginResult>('/auth/refresh');
         } catch (e) {
             throw getDetailsFromApiException(e)
         }

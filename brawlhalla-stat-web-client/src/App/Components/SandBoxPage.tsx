@@ -15,7 +15,7 @@ const SandBoxPage: React.FC = () => {
                 {/*    teammateLegendId: 11,*/}
                 {/*    teammateWeaponId: 12,*/}
                 {/*}}/>*/}
-                <StatisticTable/>
+                {/*<StatisticTable/>*/}
             </Container>
         </Grid>
 
