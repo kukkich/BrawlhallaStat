@@ -49,6 +49,10 @@ function EditToolbar(props: EditToolbarProps) {
         </>
     );
 }
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
 
 export const StatisticTable: FC = () => {
     const [faded, setFaded] = useState(false);
@@ -95,9 +99,26 @@ export const StatisticTable: FC = () => {
             renderCell: (params) => <FilterView filter={params.value}/>,
         },
         {
-            field: 'wins',
-            headerName: 'Wins',
-            valueGetter: (_, item: StatisticWithFilter) => item.statistic.wins,
+            field: 'win rate',
+            headerName: 'Win rate',
+            type: 'number',
+            width: 140,
+            valueGetter: (_, item: StatisticWithFilter) => item.statistic.wins * 100 / item.statistic.total,
+            // @ts-ignore
+            valueFormatter: (value) => parseFloat(value).toFixed(2)+"%",
+        },
+        {
+            field: 'win/lost',
+            headerName: 'Win/Lost',
+            type: 'string',
+            sortable: false,
+            filterable: false,
+            valueGetter: (_, item: StatisticWithFilter) => `${item.statistic.wins}/${item.statistic.defeats}`,
+        },
+        {
+            field: 'games',
+            headerName: 'Total Games',
+            valueGetter: (_, item: StatisticWithFilter) => item.statistic.total
         },
     ];
 
