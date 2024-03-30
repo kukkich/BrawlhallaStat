@@ -40,7 +40,11 @@ public abstract class StatisticFilterBase
         }
 
         if ((TeammateLegendId is not null || TeammateWeaponId is not null) &&
-            GameType is not (GameEntities.GameType.Ranked2V2 or GameEntities.GameType.Unranked2V2))
+            GameType is not (
+                null or
+                GameEntities.GameType.Ranked2V2 or
+                GameEntities.GameType.Unranked2V2
+            ))
         {
             return false;
         }

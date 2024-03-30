@@ -61,8 +61,6 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
 
     const showTeammateFields = teammateFieldsAvailable(gameType);
 
-
-
     return (
         <Container
             sx={{color: 'primary', display: 'flex'}}

@@ -3,71 +3,22 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import {
-    GridRowsProp,
-    GridRowModesModel,
-    GridRowModes,
     DataGrid,
-    GridColDef,
-    GridToolbarContainer,
     GridActionsCellItem,
+    GridColDef,
     GridRowId,
+    GridRowModesModel,
+    GridRowsProp,
     GridSlots,
+    GridToolbarContainer,
 } from '@mui/x-data-grid';
-import {
-    randomCreatedDate,
-    randomTraderName,
-    randomId,
-    randomArrayItem,
-} from '@mui/x-data-grid-generator/services/random-generator';
-import { Delete } from '@mui/icons-material';
+import {Delete} from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {StatisticWithFilter} from "../../types";
 import {deleteFilter, fetchStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
-import {CircularProgress} from "@mui/material";
-
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-    return randomArrayItem(roles);
-};
-
-const initialRows: GridRowsProp = [
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 25,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 36,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 19,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 28,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-    {
-        id: randomId(),
-        name: randomTraderName(),
-        age: 23,
-        joinDate: randomCreatedDate(),
-        role: randomRole(),
-    },
-];
+import {CircularProgress, Fade} from "@mui/material";
+import {ModalFilterForm} from "../form/ModalFilterForm";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -77,80 +28,51 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
-    const { setRows, setRowModesModel } = props;
+    const [open, setOpen] = useState<boolean>(false)
 
     const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
+        setOpen(true)
     };
 
     return (
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add record
-            </Button>
-        </GridToolbarContainer>
+        <>
+            <ModalFilterForm
+                open={open}
+                onSubmit={(filter) => setOpen(false)}
+                onClose={() => setOpen(false)}
+            />
+            <GridToolbarContainer>
+                <Button color="primary" startIcon={<AddIcon/>} onClick={handleClick}>
+                    Add filter
+                </Button>
+            </GridToolbarContainer>
+        </>
     );
 }
 
 export const StatisticTable: FC = () => {
+    const [faded, setFaded] = useState(false);
+
     const dispatch = useRootDispatch();
     useEffect(() => {
+        setFaded(true)
         dispatch(fetchStatistics())
-    }, [])
+    }, [dispatch])
 
     const statisticState = useRootSelector(x => x.statisticReducer)
     const statRows = statisticState.statistics
 
-    const [rows, setRows] = useState(initialRows);
-
     const handleDeleteClick = (id: GridRowId) => () => {
         dispatch(deleteFilter(id as string))
-        setRows(rows.filter((row) => row.id !== id));
     };
 
-    const columns: GridColDef[] = [
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 100,
-            getActions: ({ id }) => {
-                return [
-                    <GridActionsCellItem
-                        icon={statisticState.removingFilterId !== id
-                            ? <Delete/>
-                            : <CircularProgress size={20} color="inherit"/>
-                        }
-                        label="Delete"
-                        onClick={handleDeleteClick(id)}
-                        color="error"
-                    />,
-                ];
-            },
-        },
-        { field: 'name', headerName: 'Name', width: 180},
-        {
-            field: 'age',
-            headerName: 'Age',
-            width: 80,
-            align: 'left',
-            headerAlign: 'left',
-        },
-        { field: 'joinDate', headerName: 'Join date', width: 180},
-        { field: 'role', headerName: 'Department', width: 220},
-    ];
     const statColumns: GridColDef[] = [
         {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
             width: 100,
-            getActions: ({ id }) => {
+            getActions: ({id}) => {
                 return [
                     <GridActionsCellItem
                         icon={statisticState.removingFilterId !== id
@@ -167,15 +89,11 @@ export const StatisticTable: FC = () => {
         {
             field: 'filter',
             headerName: 'Filter',
+            sortable: false,
+            filterable: false,
             width: 300,
             renderCell: (params) => <FilterView filter={params.value}/>,
         },
-        // {
-        //     field: 'id',
-        //     headerName: 'Id',
-        //     width: 380,
-        //     valueGetter: (_, item: StatisticWithFilter) => item.filter.id,
-        // },
         {
             field: 'wins',
             headerName: 'Wins',
@@ -184,7 +102,9 @@ export const StatisticTable: FC = () => {
     ];
 
     return (
-        <Box sx={{ height: 800, width: '100%',
+        <Fade in={faded} timeout={700}>
+            <Box sx={{
+                height: 800, width: '100%',
                 '& .actions': {
                     color: 'text.secondary',
                 },
@@ -192,32 +112,30 @@ export const StatisticTable: FC = () => {
                     color: 'text.primary',
                 },
             }}
-        >
-            <DataGrid
-                columns={statColumns}
-                rows={statRows}
-                sx={{
-                    '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
-                        py: 2,
-                    },
-                    '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
-                        py: '15px',
-                    },
-                    '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
-                        py: '15px',
-                    },
-                }}
-                getEstimatedRowHeight={() => 100}
-                getRowHeight={() => 'auto'}
-                getRowId={(value) => value.filter.id}
-                editMode="row"
-                slots={{
-                    toolbar: EditToolbar as GridSlots['toolbar'],
-                }}
-                slotProps={{
-                    toolbar: { setRows },
-                }}
-            />
-        </Box>
+            >
+                <DataGrid
+                    columns={statColumns}
+                    rows={statRows}
+                    sx={{
+                        '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
+                            py: 2,
+                        },
+                        '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
+                            py: '15px',
+                        },
+                        '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+                            py: '15px',
+                        },
+                    }}
+                    getEstimatedRowHeight={() => 100}
+                    getRowHeight={() => 'auto'}
+                    getRowId={(value) => value.filter.id}
+                    editMode="row"
+                    slots={{
+                        toolbar: EditToolbar as GridSlots['toolbar'],
+                    }}
+                />
+            </Box>
+        </Fade>
     );
 };
