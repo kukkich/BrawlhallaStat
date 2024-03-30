@@ -26,6 +26,49 @@ import {deleteFilter, fetchStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
 import {CircularProgress} from "@mui/material";
 
+const roles = ['Market', 'Finance', 'Development'];
+const randomRole = () => {
+    return randomArrayItem(roles);
+};
+
+const initialRows: GridRowsProp = [
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 25,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 36,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 19,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 28,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+    {
+        id: randomId(),
+        name: randomTraderName(),
+        age: 23,
+        joinDate: randomCreatedDate(),
+        role: randomRole(),
+    },
+];
+
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
     setRowModesModel: (
@@ -34,7 +77,15 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: EditToolbarProps) {
+    const { setRows, setRowModesModel } = props;
+
     const handleClick = () => {
+        const id = randomId();
+        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+        setRowModesModel((oldModel) => ({
+            ...oldModel,
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+        }));
     };
 
     return (
@@ -50,13 +101,16 @@ export const StatisticTable: FC = () => {
     const dispatch = useRootDispatch();
     useEffect(() => {
         dispatch(fetchStatistics())
-    })
+    }, [])
 
     const statisticState = useRootSelector(x => x.statisticReducer)
     const statRows = statisticState.statistics
 
+    const [rows, setRows] = useState(initialRows);
+
     const handleDeleteClick = (id: GridRowId) => () => {
         dispatch(deleteFilter(id as string))
+        setRows(rows.filter((row) => row.id !== id));
     };
 
     const columns: GridColDef[] = [
@@ -159,6 +213,9 @@ export const StatisticTable: FC = () => {
                 editMode="row"
                 slots={{
                     toolbar: EditToolbar as GridSlots['toolbar'],
+                }}
+                slotProps={{
+                    toolbar: { setRows },
                 }}
             />
         </Box>
