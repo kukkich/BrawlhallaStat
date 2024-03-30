@@ -20,14 +20,7 @@ import {FilterView} from "./Views/FilterView";
 import {CircularProgress, Fade} from "@mui/material";
 import {ModalFilterForm} from "../form/ModalFilterForm";
 
-interface EditToolbarProps {
-    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-    setRowModesModel: (
-        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-    ) => void;
-}
-
-function EditToolbar(props: EditToolbarProps) {
+function EditToolbar() {
     const [open, setOpen] = useState<boolean>(false)
 
     const handleClick = () => {
