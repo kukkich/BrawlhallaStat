@@ -22,8 +22,9 @@ export default class StatisticService {
     }
 
     static async deleteFilter(id: string): Promise<void> {
+        console.log(`remove by id ${id}`)
         try {
-            await $api.delete('/statistic/filters', {data: {id}});
+            await $api.delete(`/statistic/filters/${id}`);
         } catch (e) {
             throw getDetailsFromApiException(e)
         }

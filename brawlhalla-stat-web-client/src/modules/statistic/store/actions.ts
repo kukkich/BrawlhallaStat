@@ -27,3 +27,13 @@ export const fetchStatistics = () => async (dispatch: AppDispatch) => {
         dispatch(statisticActions.fetchStatisticsFailed(getErrorResponse(e).errors))
     }
 }
+
+export const deleteFilter = (id: string) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(statisticActions.deleteFilterStart(id))
+        await StatisticService.deleteFilter(id);
+        dispatch(statisticActions.deleteFilterSuccess(id))
+    } catch (e: any) {
+        dispatch(statisticActions.deleteFilterFailed(getErrorResponse(e).errors))
+    }
+}

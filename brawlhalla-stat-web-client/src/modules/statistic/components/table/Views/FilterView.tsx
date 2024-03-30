@@ -39,7 +39,7 @@ export const FilterView: FC<Props> = ({filter}: Props) => {
                     </Container>
                 </CenterGrid>
                 <CenterGrid item>
-                    <EntitiesSetupView size='60' filter={filter}/>
+                    <EntitiesSetupView size='40' filter={filter}/>
                 </CenterGrid>
             </Grid>
 

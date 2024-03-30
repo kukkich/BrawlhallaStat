@@ -22,8 +22,9 @@ import {
 import { Delete } from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {StatisticFilter, StatisticWithFilter} from "../../types";
-import {fetchStatistics} from "../../store/actions";
+import {deleteFilter, fetchStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
+import {CircularProgress} from "@mui/material";
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
@@ -101,11 +102,14 @@ export const StatisticTable: FC = () => {
     useEffect(() => {
         dispatch(fetchStatistics())
     }, [])
-    const statRows = useRootSelector(x => x.statisticReducer.statistics)
+
+    const statisticState = useRootSelector(x => x.statisticReducer)
+    const statRows = statisticState.statistics
 
     const [rows, setRows] = useState(initialRows);
 
     const handleDeleteClick = (id: GridRowId) => () => {
+        dispatch(deleteFilter(id as string))
         setRows(rows.filter((row) => row.id !== id));
     };
 
@@ -118,7 +122,10 @@ export const StatisticTable: FC = () => {
             getActions: ({ id }) => {
                 return [
                     <GridActionsCellItem
-                        icon={<Delete/>}
+                        icon={statisticState.removingFilterId !== id
+                            ? <Delete/>
+                            : <CircularProgress size={20} color="inherit"/>
+                        }
                         label="Delete"
                         onClick={handleDeleteClick(id)}
                         color="error"
@@ -139,9 +146,28 @@ export const StatisticTable: FC = () => {
     ];
     const statColumns: GridColDef[] = [
         {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            getActions: ({ id }) => {
+                return [
+                    <GridActionsCellItem
+                        icon={statisticState.removingFilterId !== id
+                            ? <Delete/>
+                            : <CircularProgress size={20} color="inherit"/>
+                        }
+                        label="Delete"
+                        onClick={handleDeleteClick(id)}
+                        color="error"
+                    />,
+                ];
+            },
+        },
+        {
             field: 'filter',
             headerName: 'Filter',
-            width: 450,
+            width: 300,
             renderCell: (params) => <FilterView filter={params.value}/>,
         },
         // {

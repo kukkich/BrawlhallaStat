@@ -58,9 +58,9 @@ public class StatisticController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     [ActionName("filters")]
-    public async Task<ActionResult> DeleteFilter([FromBody] string id)
+    public async Task<ActionResult> DeleteFilter(string id)
     {
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
 

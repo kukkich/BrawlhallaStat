@@ -6,6 +6,9 @@ export const getDetailsFromApiException = (e: any): ErrorResponse => {
         throw new Error("Unexpected error", {cause: e})
     }
     const error = e as AxiosError
+    if (error.response!.status === 404) {
+        return {errors: ['Resource not found']}
+    }
 
     // @ts-ignore
     const data = error.response.data as ErrorResponse
