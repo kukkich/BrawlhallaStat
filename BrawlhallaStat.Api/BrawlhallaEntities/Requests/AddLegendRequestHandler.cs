@@ -36,7 +36,7 @@ public class AddLegendRequestHandler : IRequestHandler<AddLegendRequest>
                 request.Id, request.Name, request.FirstWeaponId, request.SecondWeaponId
             );
 
-            await _entitiesService.AddLegend(_mapper.Map<LegendDto>(request));
+            await _entitiesService.AddLegend(_mapper.Map<AddLegendDto>(request));
 
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation("Legend add transaction commit");

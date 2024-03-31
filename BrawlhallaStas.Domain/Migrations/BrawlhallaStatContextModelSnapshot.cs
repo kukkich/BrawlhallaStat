@@ -22,7 +22,7 @@ namespace BrawlhallaStat.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Death", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Death", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("Deaths");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Game", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Game", b =>
                 {
                     b.Property<string>("AuthorId")
                         .HasColumnType("text");
@@ -76,7 +76,7 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.GameDetail", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.GameDetail", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -108,7 +108,34 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("GameDetails");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Player", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Legend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FirstWeaponId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SecondWeaponId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FirstWeaponId");
+
+                    b.HasIndex("SecondWeaponId");
+
+                    b.ToTable("Legends");
+                });
+
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Player", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +164,7 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.ReplayFile", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.ReplayFile", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -155,7 +182,7 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("ReplayFiles");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Views.GameStatisticView", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Views.GameStatisticView", b =>
                 {
                     b.Property<int>("EnemyLegendId")
                         .HasColumnType("integer");
@@ -192,6 +219,23 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("GameStatisticView", (string)null);
+                });
+
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Weapon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Weapons");
                 });
 
             modelBuilder.Entity("BrawlhallaStat.Domain.Identity.IdentityClaim", b =>
@@ -269,34 +313,7 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("Tokens");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Legend", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FirstWeaponId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SecondWeaponId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FirstWeaponId");
-
-                    b.HasIndex("SecondWeaponId");
-
-                    b.ToTable("Legends");
-                });
-
-            modelBuilder.Entity("BrawlhallaStat.Domain.User", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.Identity.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -322,30 +339,53 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Weapon", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.Statistics.StatisticFilter", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("EnemyLegendId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int?>("EnemyWeaponId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Name")
+                    b.Property<int?>("GameType")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LegendId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TeammateLegendId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TeammateWeaponId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("WeaponId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Weapons");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StatisticFilters");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Death", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Death", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.Games.GameDetail", "GameDetail")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.GameDetail", "GameDetail")
                         .WithMany("Deaths")
                         .HasForeignKey("GameDetailId");
 
-                    b.HasOne("BrawlhallaStat.Domain.Games.Player", "Player")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.Player", "Player")
                         .WithMany("Deaths")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -356,27 +396,27 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Game", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Game", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.User", "Author")
+                    b.HasOne("BrawlhallaStat.Domain.Identity.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BrawlhallaStat.Domain.Games.Player", "AuthorPlayer")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.Player", "AuthorPlayer")
                         .WithMany()
                         .HasForeignKey("AuthorPlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BrawlhallaStat.Domain.Games.GameDetail", "Detail")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.GameDetail", "Detail")
                         .WithMany()
                         .HasForeignKey("DetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BrawlhallaStat.Domain.Games.ReplayFile", "ReplayFile")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.ReplayFile", "ReplayFile")
                         .WithMany()
                         .HasForeignKey("ReplayFileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,9 +431,9 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.Navigation("ReplayFile");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.GameDetail", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.GameDetail", b =>
                 {
-                    b.OwnsOne("BrawlhallaStat.Domain.Games.GameSettings", "Settings", b1 =>
+                    b.OwnsOne("BrawlhallaStat.Domain.GameEntities.GameSettings", "Settings", b1 =>
                         {
                             b1.Property<string>("GameDetailId")
                                 .HasColumnType("text");
@@ -440,15 +480,34 @@ namespace BrawlhallaStat.Domain.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Player", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Legend", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.Games.GameDetail", "GameDetail")
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.Weapon", "FirstWeapon")
+                        .WithMany()
+                        .HasForeignKey("FirstWeaponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.Weapon", "SecondWeapon")
+                        .WithMany()
+                        .HasForeignKey("SecondWeaponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FirstWeapon");
+
+                    b.Navigation("SecondWeapon");
+                });
+
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Player", b =>
+                {
+                    b.HasOne("BrawlhallaStat.Domain.GameEntities.GameDetail", "GameDetail")
                         .WithMany("Players")
                         .HasForeignKey("GameDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("BrawlhallaStat.Domain.Games.Customization", "Customization", b1 =>
+                    b.OwnsOne("BrawlhallaStat.Domain.GameEntities.Customization", "Customization", b1 =>
                         {
                             b1.Property<int>("PlayerId")
                                 .HasColumnType("integer");
@@ -476,7 +535,7 @@ namespace BrawlhallaStat.Domain.Migrations
                                 .HasForeignKey("PlayerId");
                         });
 
-                    b.OwnsOne("BrawlhallaStat.Domain.Games.LegendDetails", "LegendDetails", b1 =>
+                    b.OwnsOne("BrawlhallaStat.Domain.GameEntities.LegendDetails", "LegendDetails", b1 =>
                         {
                             b1.Property<int>("PlayerId")
                                 .HasColumnType("integer");
@@ -499,7 +558,7 @@ namespace BrawlhallaStat.Domain.Migrations
 
                             b1.ToTable("Players");
 
-                            b1.HasOne("BrawlhallaStat.Domain.Legend", "Legend")
+                            b1.HasOne("BrawlhallaStat.Domain.GameEntities.Legend", "Legend")
                                 .WithMany()
                                 .HasForeignKey("LegendId")
                                 .OnDelete(DeleteBehavior.Cascade)
@@ -522,7 +581,7 @@ namespace BrawlhallaStat.Domain.Migrations
 
             modelBuilder.Entity("BrawlhallaStat.Domain.Identity.IdentityClaim", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.User", "User")
+                    b.HasOne("BrawlhallaStat.Domain.Identity.User", "User")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -533,14 +592,14 @@ namespace BrawlhallaStat.Domain.Migrations
 
             modelBuilder.Entity("BrawlhallaStat.Domain.Identity.Role", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.User", null)
+                    b.HasOne("BrawlhallaStat.Domain.Identity.User", null)
                         .WithMany("Roles")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("BrawlhallaStat.Domain.Identity.Token", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.User", "User")
+                    b.HasOne("BrawlhallaStat.Domain.Identity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -549,42 +608,36 @@ namespace BrawlhallaStat.Domain.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Legend", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.Statistics.StatisticFilter", b =>
                 {
-                    b.HasOne("BrawlhallaStat.Domain.Weapon", "FirstWeapon")
-                        .WithMany()
-                        .HasForeignKey("FirstWeaponId")
+                    b.HasOne("BrawlhallaStat.Domain.Identity.User", "User")
+                        .WithMany("StatisticFilters")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BrawlhallaStat.Domain.Weapon", "SecondWeapon")
-                        .WithMany()
-                        .HasForeignKey("SecondWeaponId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FirstWeapon");
-
-                    b.Navigation("SecondWeapon");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.GameDetail", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.GameDetail", b =>
                 {
                     b.Navigation("Deaths");
 
                     b.Navigation("Players");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.Games.Player", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.GameEntities.Player", b =>
                 {
                     b.Navigation("Deaths");
                 });
 
-            modelBuilder.Entity("BrawlhallaStat.Domain.User", b =>
+            modelBuilder.Entity("BrawlhallaStat.Domain.Identity.User", b =>
                 {
                     b.Navigation("Claims");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("StatisticFilters");
                 });
 #pragma warning restore 612, 618
         }

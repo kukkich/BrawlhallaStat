@@ -1,14 +1,16 @@
 import {Grid, useTheme} from '@mui/material';
-import React from 'react';
+import React, {FC} from 'react';
 import SideBar from "../appBars/sideBar/SideBar";
+import {StatisticSideBarContent} from "./components/StatisticSideBarContent";
+import {StatisticTable} from "./components/table/StatisticTable";
 
-const StatisticPage = () => {
+const StatisticPage: FC = () => {
     const theme = useTheme();
     return (
         <Grid container spacing={2} sx={{height: '100%'}}>
-            <SideBar/>
+            <SideBar content={<StatisticSideBarContent/>}/>
             <Grid item xs={10} sx={{mt: theme.spacing(2)}}>
-
+                <StatisticTable/>
             </Grid>
             <Grid item/>
         </Grid>

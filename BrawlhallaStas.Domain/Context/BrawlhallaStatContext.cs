@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.Identity;
+using BrawlhallaStat.Domain.Statistics;
 using Microsoft.EntityFrameworkCore;
 // ReSharper disable VirtualMemberCallInConstructor
 
@@ -22,6 +23,7 @@ public class BrawlhallaStatContext : DbContext
     public DbSet<IdentityClaim> Claims { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
 
+    public DbSet<StatisticFilter> StatisticFilters { get; set; }
     public DbSet<GameStatisticView> GameStatistics { get; set; } = null!;
 
     public BrawlhallaStatContext(DbContextOptions options)
@@ -30,7 +32,7 @@ public class BrawlhallaStatContext : DbContext
         //Database.EnsureDeleted();
         if (!Database.EnsureCreated()) return;
     }
-
+        
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

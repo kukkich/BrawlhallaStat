@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import {useState, FC} from 'react';
 import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from "../../../store";
-import {LoginStatus} from "../store/State";
+import {LoginStatus} from "../store/state";
 import {registerAction} from "../store/actions";
 
 interface RegistrationFormProps {
     onSubmit: () => void;
 }
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
+const RegistrationForm: FC<RegistrationFormProps> = ({onSubmit}) => {
     const dispatch = useRootDispatch();
     const userState = useRootSelector(state => state.userReducer);
 
@@ -19,30 +19,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
     const [loginError, setLoginError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [emailError, setEmailError] = useState<string | null>(null);
-
-    const [buttonColor, setButtonColor] = useState<'primary' | 'success' | 'error'>('primary');
-    useEffect(() => {
-        if (buttonColor === 'success') {
-            const timeout = setTimeout(() => {
-                setButtonColor('primary');
-            }, 650);
-
-            return () => clearTimeout(timeout);
-        }
-
-        if (buttonColor === 'error') {
-            const timeout = setTimeout(() => {
-                setButtonColor('primary');
-            }, 2000);
-
-            return () => clearTimeout(timeout);
-        }
-    }, [buttonColor]);
-    useEffect(() => {
-        if (userState.status === LoginStatus.authorized) {
-            setButtonColor('success');
-        }
-    }, [userState.status]);
+    const [buttonColor] = useState<'primary' | 'success' | 'error'>('primary');
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -62,7 +39,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
         }
 
         if (anyErrors) {
-            setButtonColor('error');
             return
         }
 
@@ -112,6 +88,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({onSubmit}) => {
             }
             <Button
                 variant="contained"
+                //@ts-ignore
                 color={buttonColor}
                 onClick={handleSubmit}
                 disabled={userState.status === LoginStatus.loginning}

@@ -3,12 +3,12 @@ using BrawlhallaStat.Domain.Statistics;
 
 namespace BrawlhallaStat.Domain.Tests.Statistics;
 
-public class StatisticGeneralFilterTests
+public class StatisticFilterTests
 {
     [Test]
     public void GIVEN_Filter_WHEN_Legend_and_weapon_not_null_THEN_not_valid_expected()
     {
-        var filter = new StatisticGeneralFilter
+        var filter = new StatisticFilter
         {
             LegendId = 1,
             WeaponId = 2,
@@ -20,7 +20,7 @@ public class StatisticGeneralFilterTests
     [Test]
     public void GIVEN_Filter_WHEN_Enemy_legend_and_weapon_not_null_THEN_not_valid_expected()
     {
-        var filter = new StatisticGeneralFilter
+        var filter = new StatisticFilter
         {
             EnemyLegendId = 11,
             EnemyWeaponId = 22,
@@ -36,7 +36,7 @@ public class StatisticGeneralFilterTests
     [TestCase(null)]
     public void GIVEN_Filter_WHEN_Teammate_legend_and_weapon_not_null_and_different_game_types_THEN_not_valid_expected(GameType? gameType)
     {
-        var filter = new StatisticGeneralFilter
+        var filter = new StatisticFilter
         {
             GameType = gameType,
             TeammateLegendId = 11,
@@ -52,7 +52,7 @@ public class StatisticGeneralFilterTests
     [TestCase(GameType.Ranked2V2, true)]
     public void GIVEN_Filter_WHEN_Teammate_legend_not_null_and_different_game_types_THEN_valid_expected_when_game_type_is_2v2(GameType gameType, bool expected)
     {
-        var filter = new StatisticGeneralFilter
+        var filter = new StatisticFilter
         {
             GameType = gameType,
             TeammateLegendId = 11,
@@ -67,7 +67,7 @@ public class StatisticGeneralFilterTests
     [TestCase(GameType.Ranked2V2, true)]
     public void GIVEN_Filter_WHEN_Teammate_weapon_not_null_and_different_game_types_THEN_valid_expected_when_game_type_is_2v2(GameType gameType, bool expected)
     {
-        var filter = new StatisticGeneralFilter
+        var filter = new StatisticFilter
         {
             GameType = gameType,
             TeammateWeaponId = 11,

@@ -1,15 +1,16 @@
-import React from "react";
-import {Grid, List, ListItemButton, ListItemIcon, ListItemText, Paper} from "@mui/material";
+import {Grid, List, Paper} from "@mui/material";
+import {FC, ReactNode} from "react";
 
-const SideBar: React.FC = () => {
+type SideBarProps = {
+    content: ReactNode;
+}
+
+const SideBar: FC<SideBarProps> = ({ content }: SideBarProps) => {
     return (
         <Grid item xs>
             <Paper elevation={2} sx={{height: '100vh'}}>
                 <List>
-                    <ListItemButton>
-                        <ListItemIcon/>
-                        <ListItemText primary="Sidebar Item"/>
-                    </ListItemButton>
+                    {content}
                 </List>
             </Paper>
         </Grid>

@@ -1,7 +1,7 @@
 import React from "react";
 import {Navigate, useLocation} from "react-router-dom";
 import {useRootSelector} from "../../../store";
-import {LoginStatus} from "../../authentication/store/State";
+import {LoginStatus} from "../../authentication/store/state";
 import {IPolicyComponent} from "./IPolicyComponent";
 
 export const AuthRequired: IPolicyComponent = ({children}) => {

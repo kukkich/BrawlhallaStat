@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
+using BrawlhallaStat.Api.General.Time;
 
 namespace BrawlhallaStat.Api;
 
@@ -25,10 +26,10 @@ public class Program
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             options.UseNpgsql(
-                    connectionString,
-                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                )
-                .UseLoggerFactory(NullLoggerFactory.Instance);
+                connectionString,
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            );
+                //.UseLoggerFactory(NullLoggerFactory.Instance);
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         });
@@ -85,7 +86,9 @@ public class Program
         services.AddBrawlhallaReplayDeserializer();
 
         services.AddMemoryCache();
-        
+
+        services.AddTimeProvider();
+
         services.AddReplay();
         services.AddStatistic();
         services.AddBrawlhallaEntities();

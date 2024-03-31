@@ -1,11 +1,15 @@
 import { combineReducers } from 'redux';
 import {themeReducer} from "../modules/theme";
 import {configureStore} from "@reduxjs/toolkit";
-import { userReducer } from '../modules/authentication';
+import {userReducer} from '../modules/authentication';
+import {entitiesReducer} from "../modules/brawlhallaEntities/store/reducer";
+import {statisticReducer} from "../modules/statistic/store/reducer";
 
 export const rootReducer = combineReducers({
     themeReducer,
     userReducer,
+    entitiesReducer,
+    statisticReducer
 });
 
 export const rootStore = configureStore({

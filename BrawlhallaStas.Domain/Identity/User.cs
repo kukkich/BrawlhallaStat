@@ -1,4 +1,5 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
+using BrawlhallaStat.Domain.Statistics;
 
 namespace BrawlhallaStat.Domain.Identity;
 
@@ -12,6 +13,8 @@ public class User : IUserIdentity
 
     public List<Role> Roles { get; set; } = new();
     public List<IdentityClaim> Claims { get; set; } = new();
+
+    public List<StatisticFilter> StatisticFilters { get; set; } = new();
 
     IEnumerable<IRole> IUserIdentity.Roles => Roles;
     IEnumerable<IClaim> IUserIdentity.Claims => Claims;

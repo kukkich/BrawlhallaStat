@@ -36,7 +36,7 @@ public class AddWeaponRequestHandler : IRequestHandler<AddWeaponRequest>
                 request.Id, request.Name
             );
 
-            await _entitiesService.AddLegend(_mapper.Map<LegendDto>(request));
+            await _entitiesService.AddLegend(_mapper.Map<AddLegendDto>(request));
 
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation("Weapon add transaction commit");
