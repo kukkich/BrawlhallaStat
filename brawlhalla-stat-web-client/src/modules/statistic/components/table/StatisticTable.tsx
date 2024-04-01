@@ -82,8 +82,7 @@ export const StatisticTable: FC = () => {
             headerAlign: 'center',
             align: 'center',
             width: 300,
-            renderCell: (params) =>
-                    <FilterView filter={params.value}/>
+            renderCell: (params) => <FilterView filter={params.value}/>
         },
         {
             field: 'win rate',

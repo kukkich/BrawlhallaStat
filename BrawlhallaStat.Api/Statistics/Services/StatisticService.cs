@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using BrawlhallaStat.Api.Exceptions;
+using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Api.General.Time;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.GameEntities.Views;
@@ -46,39 +47,61 @@ public class StatisticService : IStatisticService
 
     public async Task<IEnumerable<StatisticWithFilterDto>> GetStatisticsFromUserFilters(IUserIdentity user)
     {
-        var statistics = await _mapper.ProjectTo<StatisticWithFilterDto>(
-            _dbContext.StatisticFilters
-            .Join(_dbContext.GameStatistics,
-                filter => filter.UserId,
-                gameStatistic => gameStatistic.UserId,
-                (filter, gameStatistic) => new GameFilter
-                {
-                    Filter = filter,
-                    Game = gameStatistic
-                })
-            .Where(x => x.Filter.UserId == user.Id)
-            .Where(StatisticFilterBase.GameMather)
-            .Select(x => new
-            {
-                x.Filter,
-                x.Game.GameDetailId,
-                x.Game.IsWin,
-            })
-            .Distinct()
-            .GroupBy(x => x.Filter, x => x)
-            .Select(g => new StatisticWithFilter
-            {
-                Filter = g.Key,
-                Statistic = new Statistic
-                {
-                    Wins = g.Count(x => x.IsWin),
-                    Defeats = g.Count(x => !x.IsWin)
-                }
-            }))
+        var statistics = await BuildUserStatisticsQuery(user)
             .OrderBy(x => x.Filter.CreatedAt)
             .ToListAsync();
 
         return statistics;
+    }
+
+    public async Task<PagedStatisticWithFilterDto> GetStatisticsFromUserFilters(IUserIdentity user, Page page)
+    {
+        var query = BuildUserStatisticsQuery(user);
+
+        var total = await query.CountAsync();
+        var statistics = await query
+            .OrderBy(x => x.Filter.CreatedAt)
+            .FromPage(page)
+            .ToListAsync();
+
+        return new PagedStatisticWithFilterDto
+        {
+            StatisticWithFilter = statistics,
+            Total = total
+        };
+    }
+
+    private IQueryable<StatisticWithFilterDto> BuildUserStatisticsQuery(IUserIdentity user)
+    {
+        return _mapper.ProjectTo<StatisticWithFilterDto>(
+            _dbContext.StatisticFilters
+                .Join(_dbContext.GameStatistics,
+                    filter => filter.UserId,
+                    gameStatistic => gameStatistic.UserId,
+                    (filter, gameStatistic) => new GameFilter
+                    {
+                        Filter = filter,
+                        Game = gameStatistic
+                    })
+                .Where(x => x.Filter.UserId == user.Id)
+                .Where(StatisticFilterBase.GameMather)
+                .Select(x => new
+                {
+                    x.Filter,
+                    x.Game.GameDetailId,
+                    x.Game.IsWin,
+                })
+                .Distinct()
+                .GroupBy(x => x.Filter, x => x)
+                .Select(g => new StatisticWithFilter
+                {
+                    Filter = g.Key,
+                    Statistic = new Statistic
+                    {
+                        Wins = g.Count(x => x.IsWin),
+                        Defeats = g.Count(x => !x.IsWin)
+                    }
+                }));
     }
 
     public async Task<StatisticWithFilterDto> AddFilter(StatisticFilterCreateDto filter, IUserIdentity actor)

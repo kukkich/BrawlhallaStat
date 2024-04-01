@@ -94,6 +94,7 @@ public class AuthenticationService : IAuthenticationService
             );
         }
 
+        // Todo extract into user service
         var user = new User
         {
             Id = Guid.NewGuid().ToString(),
