@@ -1,5 +1,5 @@
 import {StatisticFilter, StatisticFilterBase, StatisticFilterCreate, StatisticWithFilter } from "./filters";
-import { Statistic } from "./statistic";
+import { Statistic } from "./Statistic";
 
 export type {
     StatisticFilterBase,
