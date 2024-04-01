@@ -7,8 +7,6 @@ import {
     GridActionsCellItem,
     GridColDef,
     GridRowId,
-    GridRowModesModel,
-    GridRowsProp,
     GridSlots,
     GridToolbarContainer,
 } from '@mui/x-data-grid';
@@ -19,6 +17,8 @@ import {deleteFilter, fetchStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
 import {CircularProgress, Fade} from "@mui/material";
 import {ModalFilterForm} from "../form/ModalFilterForm";
+import { CircularProgressWithLabel } from '../../../UI/components/CircularProgressWithLabel';
+import {CircularProgressLabeledGradient} from "../../../UI/components/CircularProgressLabeledGradient";
 
 function EditToolbar() {
     const [open, setOpen] = useState<boolean>(false)
@@ -42,10 +42,6 @@ function EditToolbar() {
         </>
     );
 }
-const currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-});
 
 export const StatisticTable: FC = () => {
     const [faded, setFaded] = useState(false);
@@ -96,9 +92,10 @@ export const StatisticTable: FC = () => {
             headerName: 'Win rate',
             type: 'number',
             width: 140,
+            renderCell: (params) => <CircularProgressLabeledGradient value={params.value} />,
             valueGetter: (_, item: StatisticWithFilter) => item.statistic.wins * 100 / item.statistic.total,
             // @ts-ignore
-            valueFormatter: (value) => parseFloat(value).toFixed(2)+"%",
+            // valueFormatter: (value) => parseFloat(value).toFixed(2)+"%",
         },
         {
             field: 'win/lost',
