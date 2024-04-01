@@ -22,7 +22,7 @@ export function CircularProgressLabeledGradient(
             >
                 <Typography
                     variant="caption"
-                    // component="div"
+                    component="div"
                     // color="text.secondary"
                 >{props.value.toPrecision(3) + "%"}</Typography>
             </Box>

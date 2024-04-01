@@ -2,22 +2,15 @@ import {FC, useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import {
-    DataGrid,
-    GridActionsCellItem,
-    GridColDef,
-    GridRowId,
-    GridSlots,
-    GridToolbarContainer,
-} from '@mui/x-data-grid';
+import {DataGrid, GridActionsCellItem, GridColDef, GridRowId, GridSlots, GridToolbarContainer,} from '@mui/x-data-grid';
 import {Delete} from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {StatisticWithFilter} from "../../types";
 import {deleteFilter, fetchStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
-import {CircularProgress, Fade} from "@mui/material";
+import {CircularProgress, Container, Fade, styled} from "@mui/material";
 import {ModalFilterForm} from "../form/ModalFilterForm";
-import { CircularProgressWithLabel } from '../../../UI/components/CircularProgressWithLabel';
+import {CircularProgressWithLabel} from '../../../UI/components/CircularProgressWithLabel';
 import {CircularProgressLabeledGradient} from "../../../UI/components/CircularProgressLabeledGradient";
 
 function EditToolbar() {
@@ -64,6 +57,8 @@ export const StatisticTable: FC = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
+            headerAlign: 'center',
+            align: 'center',
             width: 100,
             getActions: ({id}) => {
                 return [
@@ -84,15 +79,20 @@ export const StatisticTable: FC = () => {
             headerName: 'Filter',
             sortable: false,
             filterable: false,
+            headerAlign: 'center',
+            align: 'center',
             width: 300,
-            renderCell: (params) => <FilterView filter={params.value}/>,
+            renderCell: (params) =>
+                    <FilterView filter={params.value}/>
         },
         {
             field: 'win rate',
             headerName: 'Win rate',
+            headerAlign: 'center',
+            align: 'center',
             type: 'number',
             width: 140,
-            renderCell: (params) => <CircularProgressLabeledGradient value={params.value} />,
+            renderCell: (params) => <CircularProgressLabeledGradient value={params.value}/>,
             valueGetter: (_, item: StatisticWithFilter) => item.statistic.wins * 100 / item.statistic.total,
             // @ts-ignore
             // valueFormatter: (value) => parseFloat(value).toFixed(2)+"%",
@@ -101,6 +101,8 @@ export const StatisticTable: FC = () => {
             field: 'win/lost',
             headerName: 'Win/Lost',
             type: 'string',
+            headerAlign: 'center',
+            align: 'center',
             sortable: false,
             filterable: false,
             valueGetter: (_, item: StatisticWithFilter) => `${item.statistic.wins}/${item.statistic.defeats}`,
@@ -108,6 +110,8 @@ export const StatisticTable: FC = () => {
         {
             field: 'games',
             headerName: 'Total Games',
+            headerAlign: 'center',
+            align: 'center',
             valueGetter: (_, item: StatisticWithFilter) => item.statistic.total
         },
     ];
