@@ -3,9 +3,18 @@ import {StatisticFilterCreate, StatisticWithFilter} from "../types";
 import {getDetailsFromApiException} from "../../../api/tools/getDetailsFromApiException";
 
 export default class StatisticService {
-    static async getFilters(): Promise<StatisticWithFilter[]> {
+    static async getStatistics(): Promise<StatisticWithFilter[]> {
         try {
-            const response = await $api.get<StatisticWithFilter[]>('/statistic/userFilters');
+            const response = await $api.get<StatisticWithFilter[]>('/statistic/userStatistics');
+            return response.data;
+        } catch (e) {
+            throw getDetailsFromApiException(e)
+        }
+    }
+
+    static async getStatisticsPaged(number: number, size: number): Promise<StatisticWithFilter[]> {
+        try {
+            const response = await $api.get<StatisticWithFilter[]>(`/statistic/userStatistics?number=${number}&size=${size}`);
             return response.data;
         } catch (e) {
             throw getDetailsFromApiException(e)

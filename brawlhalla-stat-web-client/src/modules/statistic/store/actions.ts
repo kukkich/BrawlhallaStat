@@ -21,7 +21,7 @@ export const submitForm = () => async (dispatch: AppDispatch, getState: () => Ro
 export const fetchStatistics = () => async (dispatch: AppDispatch) => {
     try {
         dispatch(statisticActions.fetchStatisticsStart())
-        const statistics = await StatisticService.getFilters()
+        const statistics = await StatisticService.getStatistics()
         dispatch(statisticActions.fetchStatisticsSuccess(statistics))
     } catch (e: any){
         dispatch(statisticActions.fetchStatisticsFailed(getErrorResponse(e).errors))
