@@ -22,3 +22,8 @@ export interface StatisticWithFilter {
     statistic: Statistic,
     filter: StatisticFilter
 }
+
+export interface PagedStatisticWithFilter {
+    statisticWithFilter: StatisticWithFilter[],
+    total: number
+}

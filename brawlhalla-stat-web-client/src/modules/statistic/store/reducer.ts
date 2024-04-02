@@ -1,6 +1,7 @@
 import {StatisticState} from "./state";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {StatisticFilterCreate, StatisticWithFilter} from "../types";
+import {PagedStatisticWithFilter} from "../types/filters";
 
 export const emptyForm = {
     data: {
@@ -18,6 +19,7 @@ export const emptyForm = {
 
 const initialState: StatisticState = {
     statistics: [],
+    totalStatistics: 0,
     removingFilterId: null,
     form: emptyForm,
     isFetching: false,
@@ -60,6 +62,13 @@ export const statisticSlice = createSlice({
                 state.errors.push(x);
             })
         },
+
+        fetchPagedStatisticsSuccess(state, action: PayloadAction<PagedStatisticWithFilter>) {
+            state.isFetching = false;
+            state.statistics = action.payload.statisticWithFilter;
+            state.totalStatistics = action.payload.total;
+        },
+
         deleteFilterStart(state, action: PayloadAction<string>) {
             state.removingFilterId = action.payload;
         },

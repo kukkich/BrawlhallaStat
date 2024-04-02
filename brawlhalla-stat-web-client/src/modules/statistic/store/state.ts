@@ -8,6 +8,7 @@ export interface StatisticFormState {
 
 export interface StatisticState {
     statistics: StatisticWithFilter[],
+    totalStatistics: number,
     removingFilterId: string | null,
     form: StatisticFormState,
     isFetching: boolean,

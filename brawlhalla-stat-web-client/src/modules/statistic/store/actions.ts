@@ -28,6 +28,16 @@ export const fetchStatistics = () => async (dispatch: AppDispatch) => {
     }
 }
 
+export const fetchPagedStatistics = (number: number, size: number) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(statisticActions.fetchStatisticsStart())
+        const response = await StatisticService.getStatisticsPaged(number, size)
+        dispatch(statisticActions.fetchPagedStatisticsSuccess(response))
+    } catch (e: any){
+        dispatch(statisticActions.fetchStatisticsFailed(getErrorResponse(e).errors))
+    }
+}
+
 export const deleteFilter = (id: string) => async (dispatch: AppDispatch) => {
     try {
         dispatch(statisticActions.deleteFilterStart(id))
