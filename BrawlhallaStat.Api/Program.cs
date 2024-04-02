@@ -3,6 +3,7 @@ using BrawlhallaStat.Api.Authentication;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
 using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
+using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Api.Middlewares;
 using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Statistics;
@@ -88,6 +89,7 @@ public class Program
         services.AddMemoryCache();
 
         services.AddTimeProvider();
+        services.AddPaging();
 
         services.AddReplay();
         services.AddStatistic();

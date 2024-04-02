@@ -1,6 +1,8 @@
 import {StatisticState} from "./state";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {StatisticFilterCreate, StatisticWithFilter} from "../types";
+import {PagedStatisticWithFilter} from "../types/filters";
+import {Pagination} from "../types/Pagination";
 
 export const emptyForm = {
     data: {
@@ -18,6 +20,11 @@ export const emptyForm = {
 
 const initialState: StatisticState = {
     statistics: [],
+    pagination: {
+        page: 0,
+        pageSize: 5,
+    },
+    totalStatistics: 0,
     removingFilterId: null,
     form: emptyForm,
     isFetching: false,
@@ -60,12 +67,22 @@ export const statisticSlice = createSlice({
                 state.errors.push(x);
             })
         },
+
+        fetchPagedStatisticsSuccess(state, action: PayloadAction<PagedStatisticWithFilter>) {
+            state.isFetching = false;
+            state.statistics = action.payload.statisticWithFilter;
+            state.totalStatistics = action.payload.total;
+        },
+        setPagination(state, action: PayloadAction<Pagination>){
+            state.pagination = action.payload;
+        },
+
         deleteFilterStart(state, action: PayloadAction<string>) {
             state.removingFilterId = action.payload;
         },
         deleteFilterSuccess(state, action: PayloadAction<string>) {
             state.removingFilterId = null;
-            state.statistics = state.statistics.filter(x => x.filter.id !== action.payload)
+            // state.statistics = state.statistics.filter(x => x.filter.id !== action.payload)
         },
         deleteFilterFailed(state, action: PayloadAction<string[]>) {
             state.removingFilterId = null;
