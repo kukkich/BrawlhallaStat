@@ -6,12 +6,12 @@ import {DataGrid, GridActionsCellItem, GridColDef, GridRowId, GridSlots, GridToo
 import {Delete} from '@mui/icons-material';
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {StatisticWithFilter} from "../../types";
-import {deleteFilter, fetchStatistics} from "../../store/actions";
+import {deleteFilter, fetchPagedStatistics} from "../../store/actions";
 import {FilterView} from "./Views/FilterView";
-import {CircularProgress, Container, Fade, styled} from "@mui/material";
+import {CircularProgress, Fade} from "@mui/material";
 import {ModalFilterForm} from "../form/ModalFilterForm";
-import {CircularProgressWithLabel} from '../../../UI/components/CircularProgressWithLabel';
 import {CircularProgressLabeledGradient} from "../../../UI/components/CircularProgressLabeledGradient";
+import {statisticActions} from "../../store/reducer";
 
 function EditToolbar() {
     const [open, setOpen] = useState<boolean>(false)
@@ -39,14 +39,20 @@ function EditToolbar() {
 export const StatisticTable: FC = () => {
     const [faded, setFaded] = useState(false);
 
+    const statisticState = useRootSelector(x => x.statisticReducer)
+    const statRows = statisticState.statistics
+    const pagination = statisticState.pagination
+
+    const handlePaginationModelChange = (paginationModel: {page: number, pageSize: number}) => {
+        dispatch(statisticActions.setPagination({...paginationModel}))
+        dispatch(fetchPagedStatistics(paginationModel.page, paginationModel.pageSize))
+    }
+
     const dispatch = useRootDispatch();
     useEffect(() => {
         setFaded(true)
-        dispatch(fetchStatistics())
+        dispatch(fetchPagedStatistics(pagination.page, pagination.pageSize))
     }, [dispatch])
-
-    const statisticState = useRootSelector(x => x.statisticReducer)
-    const statRows = statisticState.statistics
 
     const handleDeleteClick = (id: GridRowId) => () => {
         dispatch(deleteFilter(id as string))
@@ -144,10 +150,17 @@ export const StatisticTable: FC = () => {
                     getEstimatedRowHeight={() => 100}
                     getRowHeight={() => 'auto'}
                     getRowId={(value) => value.filter.id}
-                    editMode="row"
+                    // editMode="row"
+                    loading={statisticState.isFetching}
+                    rowCount={statisticState.totalStatistics}
+                    pageSizeOptions={[5, 10, 15, 20]}
+                    paginationModel={pagination}
+                    onPaginationModelChange={handlePaginationModelChange}
+                    paginationMode='server'
                     slots={{
                         toolbar: EditToolbar as GridSlots['toolbar'],
                     }}
+
                 />
             </Box>
         </Fade>

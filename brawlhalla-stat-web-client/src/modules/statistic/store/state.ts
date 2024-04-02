@@ -1,4 +1,5 @@
 import {StatisticFilterCreate, StatisticWithFilter} from "../types";
+import {Pagination} from "../types/Pagination";
 
 export interface StatisticFormState {
     data: StatisticFilterCreate,
@@ -8,6 +9,7 @@ export interface StatisticFormState {
 
 export interface StatisticState {
     statistics: StatisticWithFilter[],
+    pagination: Pagination,
     totalStatistics: number,
     removingFilterId: string | null,
     form: StatisticFormState,

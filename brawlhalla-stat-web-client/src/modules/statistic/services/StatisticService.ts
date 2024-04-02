@@ -15,7 +15,7 @@ export default class StatisticService {
 
     static async getStatisticsPaged(number: number, size: number): Promise<PagedStatisticWithFilter> {
         try {
-            const response = await $api.get<PagedStatisticWithFilter>(`/statistic/userStatistics?number=${number}&size=${size}`);
+            const response = await $api.get<PagedStatisticWithFilter>(`/statistic/userStatisticsPaged?number=${number}&size=${size}`);
             return response.data;
         } catch (e) {
             throw getDetailsFromApiException(e)
