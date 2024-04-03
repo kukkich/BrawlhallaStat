@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Api.Caching;
-using BrawlhallaStat.Api.Exceptions;
+﻿using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.GameEntities;
 using BrawlhallaStat.Domain.GameEntities.Dtos;
 using AutoMapper;
@@ -10,22 +9,16 @@ namespace BrawlhallaStat.Api.BrawlhallaEntities.Services;
 
 public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
 {
-    private readonly ICacheService<List<Legend>> _legendsCache;
-    private readonly ICacheService<List<Weapon>> _weaponsCache;
     private readonly BrawlhallaStatContext _dbContext;
     private readonly IMapper _mapper;
     private readonly ILogger<BrawlhallaEntitiesService> _logger;
 
     public BrawlhallaEntitiesService(
-        ICacheService<List<Legend>> legendsCache,
-        ICacheService<List<Weapon>> weaponsCache,
         BrawlhallaStatContext dbContext,
         IMapper mapper,
         ILogger<BrawlhallaEntitiesService> logger
     )
     {
-        _legendsCache = legendsCache;
-        _weaponsCache = weaponsCache;
         _dbContext = dbContext;
         _mapper = mapper;
         _logger = logger;

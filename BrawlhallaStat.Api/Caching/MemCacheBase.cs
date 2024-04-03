@@ -1,5 +1,4 @@
-﻿using BrawlhallaStat.Domain.Context;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 #pragma warning disable CS8600
 
 namespace BrawlhallaStat.Api.Caching;
@@ -7,31 +6,29 @@ namespace BrawlhallaStat.Api.Caching;
 public abstract class MemCacheBase<T> : ICacheService<T>
 {
     private readonly IMemoryCache _cache;
-
-    protected readonly BrawlhallaStatContext DbContext;
     protected abstract string CacheKey { get; }
-    protected virtual TimeSpan Expiration => TimeSpan.FromHours(1);
+    protected virtual TimeSpan Expiration => TimeSpan.FromMinutes(20);
 
-    private readonly SemaphoreSlim _dataLoadSemaphoreSlim = new (1, 1);
+    private readonly SemaphoreSlim _dataLoadSemaphore = new (1, 1);
 
-    protected MemCacheBase(IMemoryCache cache, BrawlhallaStatContext dbContext)
+    protected MemCacheBase(IMemoryCache cache)
     {
         _cache = cache;
-        DbContext = dbContext;
     }
 
-    public async Task<T> GetDataAsync()
+    public async Task<T> GetOrCreateAsync(Func<Task<T>> factory)
     {
         var dataLoaded = _cache.TryGetValue(CacheKey, out T data);
+
         if (dataLoaded) return data!;
 
-        await _dataLoadSemaphoreSlim.WaitAsync();
+        await _dataLoadSemaphore.WaitAsync();
 
         try
         {
             if (!_cache.TryGetValue(CacheKey, out data))
             {
-                data = await LoadDataAsync();
+                data = await factory();
 
                 var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(Expiration);
@@ -41,11 +38,9 @@ public abstract class MemCacheBase<T> : ICacheService<T>
         }
         finally
         {
-            _dataLoadSemaphoreSlim.Release();
+            _dataLoadSemaphore.Release();
         }
 
         return data!;
     }
-
-    protected abstract Task<T> LoadDataAsync();
 }

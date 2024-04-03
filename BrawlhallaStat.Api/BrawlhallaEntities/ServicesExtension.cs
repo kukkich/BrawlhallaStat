@@ -11,6 +11,9 @@ public static class ServicesExtension
     {
         services.AddSingleton<ICacheService<List<Weapon>>, WeaponsCache>();
         services.AddSingleton<ICacheService<List<Legend>>, LegendsCache>();
-        services.AddScoped<IBrawlhallaEntitiesService, BrawlhallaEntitiesService>();
+        services.AddScoped<BrawlhallaEntitiesService>();
+        services.AddScoped<IBrawlhallaEntitiesService, CachedBrawlhallaEntitiesService>(
+            x => new CachedBrawlhallaEntitiesService(x.GetRequiredService<BrawlhallaEntitiesService>())
+        );
     }
 }
