@@ -8,5 +8,5 @@ public interface IBrawlhallaEntitiesService
     public Task<List<Legend>> GetLegends();
     public Task<List<Weapon>> GetWeapons();
     public Task AddWeapon(WeaponDto weapon);
-    public Task AddLegend(AddLegendDto addLegend);
+    public Task AddLegend(AddLegendDto legend);
 }

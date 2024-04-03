@@ -2,5 +2,5 @@
 
 public interface ICacheService<T>
 {
-    Task<T> GetDataAsync();
+    Task<T> GetOrCreateAsync(Func<Task<T>> factory);
 }
