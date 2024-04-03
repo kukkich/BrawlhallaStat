@@ -33,14 +33,18 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
 
     public async Task<List<Legend>> GetLegends()
     {
-        var legends = await _legendsCache.GetDataAsync();
-        return legends;
+        return await _dbContext.Legends
+            .Include(x => x.FirstWeapon)
+            .Include(x => x.SecondWeapon)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<List<Weapon>> GetWeapons()
     {
-        var weapons = await _weaponsCache.GetDataAsync();
-        return weapons;
+        return await _dbContext.Weapons
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task AddWeapon(WeaponDto weapon)
@@ -72,30 +76,30 @@ public class BrawlhallaEntitiesService : IBrawlhallaEntitiesService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task AddLegend(AddLegendDto addLegend)
+    public async Task AddLegend(AddLegendDto legend)
     {
         var sameNameExist = await _dbContext.Legends
-            .AnyAsync(x => x.Name == addLegend.Name);
+            .AnyAsync(x => x.Name == legend.Name);
         if (sameNameExist)
         {
             throw new AlreadyExistException(
                 who: nameof(Legend),
                 propertyName: nameof(Legend.Name),
-                value: addLegend.Name
+                value: legend.Name
             );
         }
         var sameIdExist = await _dbContext.Legends
-            .AnyAsync(x => x.Id == addLegend.Id);
+            .AnyAsync(x => x.Id == legend.Id);
         if (sameIdExist)
         {
             throw new AlreadyExistException(
                 who: nameof(Legend),
                 propertyName: nameof(Legend.Id),
-                value: addLegend.Id.ToString()
+                value: legend.Id.ToString()
             );
         }
 
-        var newLegend = _mapper.Map<Legend>(addLegend);
+        var newLegend = _mapper.Map<Legend>(legend);
         
         _dbContext.Legends.Add(newLegend);
         await _dbContext.SaveChangesAsync();

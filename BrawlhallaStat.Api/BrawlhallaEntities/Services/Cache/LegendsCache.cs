@@ -4,7 +4,7 @@ using BrawlhallaStat.Domain.GameEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace BrawlhallaStat.Api.BrawlhallaEntities.Cache;
+namespace BrawlhallaStat.Api.BrawlhallaEntities.Services.Cache;
 
 public class LegendsCache : MemCacheBase<List<Legend>>
 {

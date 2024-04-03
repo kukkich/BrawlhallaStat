@@ -1,5 +1,5 @@
-﻿using BrawlhallaStat.Api.BrawlhallaEntities.Cache;
-using BrawlhallaStat.Api.BrawlhallaEntities.Services;
+﻿using BrawlhallaStat.Api.BrawlhallaEntities.Services;
+using BrawlhallaStat.Api.BrawlhallaEntities.Services.Cache;
 using BrawlhallaStat.Api.Caching;
 using BrawlhallaStat.Domain.GameEntities;
 
@@ -9,8 +9,8 @@ public static class ServicesExtension
 {
     public static void AddBrawlhallaEntities(this IServiceCollection services)
     {
-        services.AddScoped<ICacheService<List<Weapon>>, WeaponsCache>();
-        services.AddScoped<ICacheService<List<Legend>>, LegendsCache>();
+        services.AddSingleton<ICacheService<List<Weapon>>, WeaponsCache>();
+        services.AddSingleton<ICacheService<List<Legend>>, LegendsCache>();
         services.AddScoped<IBrawlhallaEntitiesService, BrawlhallaEntitiesService>();
     }
 }
