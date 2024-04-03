@@ -1,16 +1,13 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Api.General.Time;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
 using BrawlhallaStat.Domain.Statistics.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
 
@@ -109,6 +106,10 @@ public class StatisticService : IStatisticService
         if (!await _dbContext.Users.AnyAsync(x => x.Id == actor.Id))
         {
             throw new EntityNotFoundException<User, string>(actor.Id);
+        }
+        if (await _dbContext.StatisticFilters.AnyAsync(filter.GetEqualityComparer()))
+        {
+            throw new AlreadyExistException<StatisticFilter>();
         }
 
         var newFilter = _mapper.Map<StatisticFilter>(filter);

@@ -52,6 +52,17 @@ public abstract class StatisticFilterBase
         return true;
     }
 
+    public Expression<Func<StatisticFilterBase, bool>> GetEqualityComparer()
+    {
+        return filter => GameType == filter.GameType &&
+                                LegendId == filter.LegendId &&
+                                WeaponId == filter.WeaponId &&
+                                EnemyLegendId == filter.EnemyLegendId &&
+                                EnemyWeaponId == filter.EnemyWeaponId &&
+                                TeammateLegendId == filter.TeammateLegendId &&
+                                TeammateWeaponId == filter.TeammateWeaponId;
+    }
+
     public IQueryable<GameStatisticView> ApplyFilterExpression(IQueryable<GameStatisticView> source)
     {
         source = ApplyPropertyFilterIfNotNull(source, GameType, game => game.GameType == GameType);

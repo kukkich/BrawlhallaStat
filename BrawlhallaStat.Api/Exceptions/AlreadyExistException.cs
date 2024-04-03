@@ -14,3 +14,10 @@ public class AlreadyExistException : ApiException
         Message = $"{who.ToLower()} with {propertyName.ToLower()} {value.ToLower()} already exists";
     }
 }
+
+public class AlreadyExistException<TEntity> : AlreadyExistException
+{
+    public AlreadyExistException() 
+        : base($"Same {typeof(TEntity).Name} already exists")
+    { }
+}

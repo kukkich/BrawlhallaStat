@@ -72,7 +72,8 @@ public class StatisticController : ControllerBase
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
         if (filter is null || !filter.IsValid())
         {
-            return BadRequest();
+            string[] errors = ["Invalid filter"];
+            return BadRequest(errors);
         }
 
         var result = await _mediator.Send(new AddFilterRequest(user, filter));
