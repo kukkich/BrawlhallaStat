@@ -4,6 +4,7 @@ import {Pagination} from "../types/Pagination";
 export interface StatisticFormState {
     data: StatisticFilterCreate,
     isFetching: boolean,
+    visible: boolean,
     errors: string[],
 }
 

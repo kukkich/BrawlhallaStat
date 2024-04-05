@@ -15,6 +15,7 @@ export const emptyForm = {
         teammateWeaponId: null,
     },
     isFetching: false,
+    visible: false,
     errors: []
 }
 
@@ -35,23 +36,37 @@ export const statisticSlice = createSlice({
     name: 'statistic',
     initialState,
     reducers: {
+        openForm(state) {
+            state.form.visible = true
+        },
+        closeForm(state) {
+            state.form = {
+                ...emptyForm,
+                visible: state.form.visible
+            }
+            state.form.visible = false
+        },
         setFormState(state, action: PayloadAction<StatisticFilterCreate>) {
             state.form.data = action.payload;
+        },
+        clearForm(state) {
+            state.form = {
+                ...emptyForm,
+                visible: state.form.visible
+            }
         },
         submitFormStart(state) {
             state.form.isFetching = true;
             state.form.errors = [];
         },
-        submitFormSuccess(state, action: PayloadAction<StatisticWithFilter>) {
+        submitFormSuccess(state) {
             state.form = emptyForm;
-            state.statistics.push(action.payload);
         },
         submitFormFailed(state, action: PayloadAction<string[]>) {
             state.form.isFetching = false;
-            action.payload.forEach(x => {
-                state.errors.push(x);
-            })
+            state.form.errors = action.payload;
         },
+
         fetchStatisticsStart(state) {
             state.isFetching = true;
             state.errors = [];
@@ -73,7 +88,7 @@ export const statisticSlice = createSlice({
             state.statistics = action.payload.statisticWithFilter;
             state.totalStatistics = action.payload.total;
         },
-        setPagination(state, action: PayloadAction<Pagination>){
+        setPagination(state, action: PayloadAction<Pagination>) {
             state.pagination = action.payload;
         },
 

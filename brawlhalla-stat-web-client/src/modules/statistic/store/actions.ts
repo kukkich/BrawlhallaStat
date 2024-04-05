@@ -9,9 +9,9 @@ export const submitForm = () => async (dispatch: AppDispatch, getState: () => Ro
 
         const state = getState().statisticReducer;
         const data = state.form.data;
-        const response = await StatisticService.createFilter(data);
+        await StatisticService.createFilter(data);
 
-        dispatch(statisticActions.submitFormSuccess(response));
+        dispatch(statisticActions.submitFormSuccess());
         await dispatch(fetchPagedStatistics(state.pagination.page, state.pagination.pageSize))
     } catch (e: any){
         dispatch(statisticActions.submitFormFailed(getErrorResponse(e).errors))

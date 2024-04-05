@@ -14,18 +14,21 @@ import {CircularProgressLabeledGradient} from "../../../UI/components/CircularPr
 import {statisticActions} from "../../store/reducer";
 
 function EditToolbar() {
-    const [open, setOpen] = useState<boolean>(false)
+    const formState = useRootSelector(state => state.statisticReducer.form)
+    const dispatch = useRootDispatch();
 
     const handleClick = () => {
-        setOpen(true)
+        dispatch(statisticActions.openForm())
     };
 
     return (
         <>
             <ModalFilterForm
-                open={open}
-                onSubmit={(filter) => setOpen(false)}
-                onClose={() => setOpen(false)}
+                open={formState.visible}
+                onSubmit={() => {}}
+                onClose={() => {
+                    dispatch(statisticActions.closeForm())
+                }}
             />
             <GridToolbarContainer>
                 <Button color="primary" startIcon={<AddIcon/>} onClick={handleClick}>
