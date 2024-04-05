@@ -1,4 +1,4 @@
-import {useState, FC} from 'react';
+import {useState, FC, FormEvent} from 'react';
 import {Button, CircularProgress, Container, TextField, Typography} from '@mui/material';
 import {useRootDispatch, useRootSelector} from "../../../store";
 import {LoginStatus} from "../store/state";
@@ -21,7 +21,7 @@ const RegistrationForm: FC<RegistrationFormProps> = ({onSubmit}) => {
     const [emailError, setEmailError] = useState<string | null>(null);
     const [buttonColor] = useState<'primary' | 'success' | 'error'>('primary');
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         let anyErrors: boolean = false;
 
@@ -33,7 +33,7 @@ const RegistrationForm: FC<RegistrationFormProps> = ({onSubmit}) => {
             setPasswordError('Password must be at least 8 characters long and contain both letters and numbers.');
             anyErrors = true
         }
-        if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        if (!/^[\w.-]+@\w+\.\w{2,7}$/.test(email)) {
             setEmailError('Invalid email');
             anyErrors = true;
         }

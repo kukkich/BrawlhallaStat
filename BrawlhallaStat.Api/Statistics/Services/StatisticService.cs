@@ -107,7 +107,9 @@ public class StatisticService : IStatisticService
         {
             throw new EntityNotFoundException<User, string>(actor.Id);
         }
-        if (await _dbContext.StatisticFilters.AnyAsync(filter.GetEqualityComparer()))
+        if (await _dbContext.StatisticFilters
+                .Where(x => x.UserId == actor.Id)
+                .AnyAsync(filter.GetEqualityComparer()))
         {
             throw new AlreadyExistException<StatisticFilter>();
         }

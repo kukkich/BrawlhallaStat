@@ -15,6 +15,6 @@ public partial class PasswordValidator : AbstractValidator<string>
             .WithMessage("Password must contain at least 4 digits and at least 4 non-digits");
     }
 
-    [GeneratedRegex("^(?=(?:.*?\\d){4})(?=(?:.*?\\D){4}).*$")]
+    [GeneratedRegex(@"^(?=(?:.*?\d){4})(?=(?:.*?\D){4}).*$")]
     private static partial Regex FourDigitsAndFourNotDigitsRegex();
 }
