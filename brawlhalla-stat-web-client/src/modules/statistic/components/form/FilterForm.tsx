@@ -1,5 +1,5 @@
 import {FC, FormEvent} from 'react';
-import {Button, Container, Divider, List, Paper} from "@mui/material";
+import {Button, CircularProgress, Container, Divider, LinearProgress, List, Paper} from "@mui/material";
 import {StatisticFilterCreate} from "../../types";
 import {PlayerDataSelect} from "./PlayerDataSelect";
 import {GameType} from "../../../brawlhallaEntities/types";
@@ -7,6 +7,7 @@ import {GameTypeSelect} from "../../../brawlhallaEntities/components/GameTypeSel
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {statisticActions} from "../../store/reducer";
 import {submitForm} from "../../store/actions";
+import {LoginStatus} from "../../../authentication/store/state";
 
 type FilterFormProps = {
     onSubmit: (filter: StatisticFilterCreate) => void;
@@ -65,8 +66,11 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
         <Container
             sx={{color: 'primary', display: 'flex'}}
         >
-            <Paper elevation={6} sx={{py: '20px'}}>
-                <Container sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+            <Paper elevation={6}>
+                {state.form.isFetching
+                    ? <LinearProgress />
+                    : null}
+                <Container sx={{py: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                     <Container sx={{display: 'flex', justifyContent: 'center', mb: 2}}>
                         <GameTypeSelect gameTypeChange={setGameType}/>
                     </Container>
@@ -91,6 +95,10 @@ export const FilterForm: FC<FilterFormProps> = ({onSubmit}: FilterFormProps) => 
                     <Button
                         variant="contained"
                         onClick={handleSubmit}
+                        disabled={state.form.isFetching}
+                        endIcon={state.form.isFetching
+                            ? <CircularProgress size={20} color="inherit"/>
+                            : null}
                     >
                         Create
                     </Button>
