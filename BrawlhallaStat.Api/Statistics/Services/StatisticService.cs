@@ -44,61 +44,33 @@ public class StatisticService : IStatisticService
 
     public async Task<IEnumerable<StatisticWithFilterDto>> GetStatisticsFromUserFilters(IUserIdentity user)
     {
-        var statistics = await BuildUserStatisticsQuery(user)
-            .OrderBy(x => x.Filter.CreatedAt)
-            .ToListAsync();
+        var statistics = await _mapper
+            .ProjectTo<StatisticWithFilterDto>(
+                _dbContext.FiltersView
+                    .Where(x => x.UserId == user.Id)
+                    .OrderBy(x => x.CreatedAt)
+            ).ToListAsync();
 
         return statistics;
     }
 
     public async Task<PagedStatisticWithFilterDto> GetStatisticsFromUserFilters(IUserIdentity user, Page page)
     {
-        var query = BuildUserStatisticsQuery(user);
+        var query = _dbContext.FiltersView
+            .Where(x => x.UserId == user.Id);
 
         var total = await query.CountAsync();
-        var statistics = await query
-            .OrderBy(x => x.Filter.CreatedAt)
-            .FromPage(page)
-            .ToListAsync();
+        var statistics = await _mapper
+            .ProjectTo<StatisticWithFilterDto>(query
+                .OrderBy(x => x.CreatedAt)
+                .FromPage(page)
+            ).ToListAsync();
 
         return new PagedStatisticWithFilterDto
         {
             StatisticWithFilter = statistics,
             Total = total
         };
-    }
-
-    private IQueryable<StatisticWithFilterDto> BuildUserStatisticsQuery(IUserIdentity user)
-    {
-        return _mapper.ProjectTo<StatisticWithFilterDto>(
-            _dbContext.StatisticFilters
-                .Join(_dbContext.GameStatistics,
-                    filter => filter.UserId,
-                    gameStatistic => gameStatistic.UserId,
-                    (filter, gameStatistic) => new GameFilter
-                    {
-                        Filter = filter,
-                        Game = gameStatistic
-                    })
-                .Where(x => x.Filter.UserId == user.Id)
-                .Where(StatisticFilterBase.GameMather)
-                .Select(x => new
-                {
-                    x.Filter,
-                    x.Game.GameDetailId,
-                    x.Game.IsWin,
-                })
-                .Distinct()
-                .GroupBy(x => x.Filter, x => x)
-                .Select(g => new StatisticWithFilter
-                {
-                    Filter = g.Key,
-                    Statistic = new Statistic
-                    {
-                        Wins = g.Count(x => x.IsWin),
-                        Defeats = g.Count(x => !x.IsWin)
-                    }
-                }));
     }
 
     public async Task<StatisticWithFilterDto> AddFilter(StatisticFilterCreateDto filter, IUserIdentity actor)
