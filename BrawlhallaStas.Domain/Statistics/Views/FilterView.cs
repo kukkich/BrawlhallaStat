@@ -6,6 +6,7 @@ public class FilterView
 {
     public string FilterId { get; set; } = null!;
     public string UserId { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
     public int Wins { get; set; }
     public int Defeats { get; set; }
     public GameType GameType { get; set; }

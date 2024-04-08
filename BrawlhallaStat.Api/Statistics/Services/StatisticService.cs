@@ -53,13 +53,18 @@ public class StatisticService : IStatisticService
 
     public async Task<PagedStatisticWithFilterDto> GetStatisticsFromUserFilters(IUserIdentity user, Page page)
     {
-        var query = BuildUserStatisticsQuery(user);
+        //var query = BuildUserStatisticsQuery(user);
+
+        var query = _dbContext.FiltersView
+            .Where(x => x.UserId == user.Id);
 
         var total = await query.CountAsync();
-        var statistics = await query
-            .OrderBy(x => x.Filter.CreatedAt)
-            .FromPage(page)
-            .ToListAsync();
+        var statistics = await _mapper
+            .ProjectTo<StatisticWithFilterDto>(
+                query
+                .OrderBy(x => x.CreatedAt)
+                .FromPage(page)
+            ).ToListAsync();
 
         return new PagedStatisticWithFilterDto
         {

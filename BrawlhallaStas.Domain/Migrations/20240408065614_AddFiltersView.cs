@@ -13,6 +13,7 @@ namespace BrawlhallaStat.Domain.Migrations
             migrationBuilder.Sql(@"
                 CREATE VIEW ""FilterView"" AS
                 SELECT filtered_games.""Id"" AS ""FilterId"", 
+	                filtered_games.""CreatedAt"" AS ""CreatedAt"",
 	                filtered_games.""UserId"" AS ""UserId"",
 	                filtered_games.""GameType"" AS ""GameType"",
 	                filtered_games.""LegendId"" AS ""LegendId"",
@@ -39,6 +40,7 @@ namespace BrawlhallaStat.Domain.Migrations
 		                )
 	                ) AS filtered_games
                 GROUP BY ""FilterId"",
+	                ""CreatedAt"",
 	                ""UserId"",
 	                ""GameType"",
 	                ""LegendId"",
