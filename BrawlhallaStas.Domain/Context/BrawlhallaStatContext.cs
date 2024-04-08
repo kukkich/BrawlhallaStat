@@ -2,6 +2,7 @@
 using BrawlhallaStat.Domain.GameEntities.Views;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Statistics;
+using BrawlhallaStat.Domain.Statistics.Views;
 using Microsoft.EntityFrameworkCore;
 // ReSharper disable VirtualMemberCallInConstructor
 
@@ -25,7 +26,8 @@ public class BrawlhallaStatContext : DbContext
 
     public DbSet<StatisticFilter> StatisticFilters { get; set; }
     public DbSet<GameStatisticView> GameStatistics { get; set; } = null!;
-
+    public DbSet<FilterView> FiltersView { get; set; } = null!;
+    
     public BrawlhallaStatContext(DbContextOptions options)
         : base(options)
     {
