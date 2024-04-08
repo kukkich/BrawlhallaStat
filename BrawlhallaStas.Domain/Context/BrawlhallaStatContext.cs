@@ -30,9 +30,9 @@ public class BrawlhallaStatContext : DbContext
         : base(options)
     {
         //Database.EnsureDeleted();
-        if (!Database.EnsureCreated()) return;
+        // if (!Database.EnsureCreated()) return;
     }
-        
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
