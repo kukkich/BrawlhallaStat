@@ -5,13 +5,13 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.Users.Requests;
 
-public class ChangeNickNameRequestHandler : IRequestHandler<ChangeNickNameRequest>
+public class UpdateProfileRequestHandler : IRequestHandler<UpdateProfileRequest>
 {
     private readonly IUserService _userService;
     private readonly BrawlhallaStatContext _dbContext;
     private readonly ILogger<LoginUserRequest> _logger;
 
-    public ChangeNickNameRequestHandler(
+    public UpdateProfileRequestHandler(
         IUserService userService,
         BrawlhallaStatContext dbContext,
         ILogger<LoginUserRequest> logger
@@ -22,7 +22,7 @@ public class ChangeNickNameRequestHandler : IRequestHandler<ChangeNickNameReques
         _logger = logger;
     }
 
-    public async Task Handle(ChangeNickNameRequest request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateProfileRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
@@ -32,7 +32,7 @@ public class ChangeNickNameRequestHandler : IRequestHandler<ChangeNickNameReques
                 request.User.Id
             );
 
-            await _userService.ChangeNickName(request.User, request.NewNickName);
+            await _userService.UpdateProfile(request.User, request.NewProfile);
 
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation(

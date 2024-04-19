@@ -1,8 +1,9 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
+using BrawlhallaStat.Domain.Identity.Dto;
 
 namespace BrawlhallaStat.Api.Users.Services;
 
 public interface IUserService
 {
-    public Task ChangeNickName(IUserIdentity user, string newNickName);
+    public Task UpdateProfile(IUserIdentity user, UpdateUserProfile newProfile);
 }
