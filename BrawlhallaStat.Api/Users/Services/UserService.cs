@@ -23,13 +23,13 @@ public class UserService : IUserService
 
     public async Task UpdateProfile(IUserIdentity user, UpdateUserProfile newProfile)
     {
-        var updated = await _dbContext.Users.Where(x => x.Id == user.Id)
+        var entitiesUpdated = await _dbContext.Users.Where(x => x.Id == user.Id)
             .ExecuteUpdateAsync(x => 
                 x.SetProperty(u => u.NickName, newProfile.NickName)
                     .SetProperty(u => u.Email, newProfile.Email)
             );
 
-        if (updated == 0)
+        if (entitiesUpdated == 0)
         {
             throw new EntityNotFoundException<User, string>(user.Id);
         }
