@@ -6,6 +6,7 @@ import {AnonymousOnly} from "./politics/AnonymousOnly";
 import {AuthPage} from "../authentication";
 import {AuthRequired} from "./politics/AuthRequired";
 import { StatisticPage } from '../statistic';
+import {ProfilePage} from "../authentication/profile/ProfilePage";
 
 const RouterView = () => {
     return (
@@ -25,6 +26,11 @@ const RouterView = () => {
                 <Route path="/statistic" element={
                     <AuthRequired>
                         <StatisticPage/>
+                    </AuthRequired>
+                } />
+                <Route path="/profile" element={
+                    <AuthRequired>
+                        <ProfilePage/>
                     </AuthRequired>
                 } />
             </Route>

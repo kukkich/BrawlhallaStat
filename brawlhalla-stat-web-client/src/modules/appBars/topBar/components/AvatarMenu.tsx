@@ -3,11 +3,13 @@ import {IconButton, Menu, MenuItem, Typography} from "@mui/material";
 import {AccountCircle} from "@mui/icons-material";
 import {useRootDispatch, useRootSelector} from "../../../../store";
 import {logoutAction} from "../../../authentication/store/actions";
+import {useNavigate} from "react-router-dom";
 
 const AvatarMenu: React.FC = () => {
     const dispatch = useRootDispatch();
-    const nickName = useRootSelector(state => state.userReducer.user?.nickName);
+    const login = useRootSelector(state => state.userReducer.user?.login);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const navigate = useNavigate();
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -20,6 +22,10 @@ const AvatarMenu: React.FC = () => {
         await dispatch(logoutAction())
         handleClose()
     };
+    const handleMoveToProfile = () => {
+        navigate('/profile')
+        handleClose()
+    }
 
     return (
         <div>
@@ -29,7 +35,7 @@ const AvatarMenu: React.FC = () => {
                 color="inherit"
             >
                 <Typography variant="h6" style={{ marginRight: 8 }}>
-                    {nickName}
+                    {login}
                 </Typography>
                 <AccountCircle/>
             </IconButton>
@@ -49,6 +55,7 @@ const AvatarMenu: React.FC = () => {
                 onClose={handleClose}
             >
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={handleMoveToProfile}>Profile</MenuItem>
             </Menu>
         </div>
     );
