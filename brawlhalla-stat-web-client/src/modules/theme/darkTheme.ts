@@ -16,6 +16,10 @@ const darkTheme: Theme = createTheme({
             default: '#1b1b1d',
             paper: '#1b1b1d',
         },
+        text: {
+            primary: '#fff', // цвет текста для темной темы
+            secondary: '#bbb'
+        }
     },
     typography: {
         fontFamily: 'monospace',

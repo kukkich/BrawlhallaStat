@@ -10,6 +10,10 @@ const lightTheme : Theme = createTheme({
         secondary: {
             main: '#f50057',
         },
+        text: {
+            primary: '#000', // цвет текста для светлой темы
+            secondary: '#555' // подойдет для менее выделяющегося текста
+        }
     },
     typography: {
         fontFamily: 'monospace',
