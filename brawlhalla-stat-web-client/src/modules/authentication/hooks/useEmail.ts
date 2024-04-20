@@ -15,6 +15,7 @@ export const useEmail = () :
             setError('Invalid email');
             return false
         }
+        setError(null)
         return true;
     }
 

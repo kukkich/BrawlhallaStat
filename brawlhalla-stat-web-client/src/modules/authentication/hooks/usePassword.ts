@@ -15,6 +15,7 @@ export const usePassword = () :
             setError('Password must be at least 8 characters long and contain both letters and numbers.');
             return false
         }
+        setError(null)
         return true;
     }
 

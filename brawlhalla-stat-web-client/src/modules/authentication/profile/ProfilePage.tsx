@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect} from 'react';
 import { Grid, Typography, TextField, Button, List, ListItem, useMediaQuery, Theme } from '@mui/material';
 import { useRootSelector } from "../../../store";
 import {useNickName} from "../hooks/useNickName";
@@ -14,16 +14,19 @@ export const ProfilePage: FC = () => {
     const [email, setEmail, emailError, validateEmail] = useEmail()
 
     useEffect(() => {
+        console.log("update")
         if (user === null) {
             return
         }
         setNickName(user.nickName)
         setEmail(user.email)
-    }, [user])
+    }, [])
 
     const handleSave = () => {
         const isEmailValid = validateEmail();
         const isNickNameValid = validateNickName();
+        console.log(isEmailValid);
+        console.log(isNickNameValid)
         if (!isEmailValid || !isNickNameValid){
             return;
         }
@@ -43,30 +46,34 @@ export const ProfilePage: FC = () => {
                     <Typography variant="subtitle1" color="text.primary">Login: {user.login}</Typography>
                 </Grid>
                 <Grid item container direction="row" alignItems="center" spacing={2}>
-                    <Grid item xs>
-                        <TextField
-                            label="Nick Name"
-                            variant="outlined"
-                            fullWidth
-                            value={nickName}
-                            onChange={(e) => console.log('Nick Name change:', e.target.value)}
-                        />
-                    </Grid>
+                <Grid item xs>
+                    <TextField
+                        label="Nick Name"
+                        variant="outlined"
+                        fullWidth
+                        value={nickName}
+                        onChange={(e) => setNickName(e.target.value)}
+                        error={!!nickNameError}
+                        helperText={nickNameError || ''}
+                    />
                 </Grid>
-                <Grid item container direction="row" alignItems="center" spacing={2}>
-                    <Grid item xs>
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            fullWidth
-                            value={email}
-                            onChange={(e) => console.log('Email Change:', e.target.value)}
-                        />
-                    </Grid>
+            </Grid>
+            <Grid item container direction="row" alignItems="center" spacing={2}>
+                <Grid item xs>
+                    <TextField
+                        label="Email"
+                        variant="outlined"
+                        fullWidth
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={!!emailError}  // Добавляем проверку ошибки
+                        helperText={emailError || ''}  // Показываем текст ошибки если он есть
+                    />
                 </Grid>
+            </Grid>
 
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={() => { console.log("Save changes") }}>
+                    <Button variant="contained" color="primary" onClick={handleSave}>
                         Save
                     </Button>
                 </Grid>

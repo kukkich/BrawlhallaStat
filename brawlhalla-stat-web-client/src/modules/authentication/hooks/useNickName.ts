@@ -15,6 +15,7 @@ export const useNickName = () :
             setError('Nick name cannot be empty')
             return false
         }
+        setError(null)
         return true;
     }
 
