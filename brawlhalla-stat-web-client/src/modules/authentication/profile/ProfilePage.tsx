@@ -1,20 +1,33 @@
-import React, {FC, useEffect} from 'react';
-import { Grid, Typography, TextField, Button, List, ListItem, useMediaQuery, Theme } from '@mui/material';
+import React, {FC, useEffect, useState} from 'react';
+import {
+    Grid,
+    Typography,
+    TextField,
+    Button,
+    List,
+    ListItem,
+    useMediaQuery,
+    Theme,
+    CircularProgress
+} from '@mui/material';
 import { useRootSelector } from "../../../store";
 import {useNickName} from "../hooks/useNickName";
 import {useEmail} from "../hooks/useEmail";
+import UserService, {UpdateProfileRequest} from "./services/UserService";
+import {useActionFeedbackColor} from "../../UI/hooks/useActionFeedbackColor";
 
 export const ProfilePage: FC = () => {
     const user = useRootSelector(x => x.userReducer.user);
 
     const isLargerMd = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const topMargin = isLargerMd ? '5%' : '8px';
+    const [buttonColor, onSucceed, onFailed]= useActionFeedbackColor('primary')
 
     const [nickName, setNickName, nickNameError, validateNickName] = useNickName()
     const [email, setEmail, emailError, validateEmail] = useEmail()
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log("update")
         if (user === null) {
             return
         }
@@ -22,16 +35,28 @@ export const ProfilePage: FC = () => {
         setEmail(user.email)
     }, [])
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const isEmailValid = validateEmail();
         const isNickNameValid = validateNickName();
-        console.log(isEmailValid);
-        console.log(isNickNameValid)
+
         if (!isEmailValid || !isNickNameValid){
             return;
         }
 
-        //todo handle Save
+        setIsLoading(true);
+        const request: UpdateProfileRequest = {
+            nickName,
+            email
+        };
+
+        try {
+            await UserService.login(request);
+            onSucceed()
+        } catch (error) {
+            onFailed()
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     if (!user) {
@@ -66,15 +91,14 @@ export const ProfilePage: FC = () => {
                         fullWidth
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        error={!!emailError}  // Добавляем проверку ошибки
-                        helperText={emailError || ''}  // Показываем текст ошибки если он есть
+                        error={!!emailError}
+                        helperText={emailError || ''}
                     />
                 </Grid>
             </Grid>
-
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleSave}>
-                        Save
+                    <Button variant="contained" color={buttonColor} onClick={handleSave} disabled={isLoading}>
+                        {isLoading ? <CircularProgress size={24} /> : 'Save'}
                     </Button>
                 </Grid>
 

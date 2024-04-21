@@ -1,14 +1,16 @@
 import {useState} from "react";
+import {OverridableStringUnion} from "@mui/types";
+import {ButtonPropsColorOverrides} from "@mui/material/Button/Button";
 
 interface ActionFeedbackTimeout {
     succeed: number,
     failed: number
 }
 
-export const useActionFeedbackColor = (defaultColor: string, timeout?: ActionFeedbackTimeout)
-    : [string, () => void, () => void] => {
+export const useActionFeedbackColor = (defaultColor: Color, timeout?: ActionFeedbackTimeout)
+    : [Color, () => void, () => void] => {
     if (timeout === undefined) {
-        timeout = {succeed: 500, failed: 500}
+        timeout = {succeed: 800, failed: 800}
     }
     const [color, setColor] = useState<string>(defaultColor);
 
@@ -25,5 +27,10 @@ export const useActionFeedbackColor = (defaultColor: string, timeout?: ActionFee
         }, timeout!.failed);
     }
 
-    return [color, onSucceed, onFailed];
+    return [color as Color, onSucceed, onFailed];
 }
+
+export type Color = OverridableStringUnion<
+    'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning',
+    ButtonPropsColorOverrides
+>
