@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using BrawlhallaStat.Api.Contracts.Identity;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity;
-using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity.Base;
-using BrawlhallaStat.Domain.Identity.Dto;
 using ClaimTypes = BrawlhallaStat.Domain.Identity.ClaimTypes;
 
 namespace BrawlhallaStat.Api.Authentication.MapperProfiles;

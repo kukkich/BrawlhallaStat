@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Api.BrawlhallaEntities.Queries;
 using BrawlhallaStat.Api.BrawlhallaEntities.Requests;
-using BrawlhallaStat.Domain.GameEntities.Dtos;
+using BrawlhallaStat.Api.Contracts.GameEntities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

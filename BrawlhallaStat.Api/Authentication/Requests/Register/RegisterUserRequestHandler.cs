@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Services.Auth;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Authentication;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Authentication.Requests.Register;

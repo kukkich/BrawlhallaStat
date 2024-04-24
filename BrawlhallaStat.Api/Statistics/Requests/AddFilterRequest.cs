@@ -1,5 +1,5 @@
-﻿using BrawlhallaStat.Domain.Identity.Base;
-using BrawlhallaStat.Domain.Statistics.Dtos;
+﻿using BrawlhallaStat.Api.Contracts.Statistics;
+using BrawlhallaStat.Domain.Identity.Base;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Statistics.Requests;

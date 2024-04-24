@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BrawlhallaStat.Api.BrawlhallaEntities.Services;
-using BrawlhallaStat.Domain.GameEntities;
-using BrawlhallaStat.Domain.GameEntities.Dtos;
+using BrawlhallaStat.Api.Contracts.GameEntities;
 using MediatR;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Queries;

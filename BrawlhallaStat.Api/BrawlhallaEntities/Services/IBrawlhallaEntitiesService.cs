@@ -1,5 +1,5 @@
-﻿using BrawlhallaStat.Domain.GameEntities;
-using BrawlhallaStat.Domain.GameEntities.Dtos;
+﻿using BrawlhallaStat.Api.Contracts.GameEntities;
+using BrawlhallaStat.Domain.GameEntities;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Services;
 

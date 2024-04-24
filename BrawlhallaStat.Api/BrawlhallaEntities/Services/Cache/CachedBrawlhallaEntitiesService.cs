@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Api.Caching;
+using BrawlhallaStat.Api.Contracts.GameEntities;
 using BrawlhallaStat.Domain.GameEntities;
-using BrawlhallaStat.Domain.GameEntities.Dtos;
 
 namespace BrawlhallaStat.Api.BrawlhallaEntities.Services.Cache;
 

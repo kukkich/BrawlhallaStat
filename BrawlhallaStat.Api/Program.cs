@@ -13,7 +13,6 @@ using BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using BrawlhallaStat.Api.General.Time;
 

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using BrawlhallaStat.Domain.Identity.Authentication;
-using BrawlhallaStat.Domain.Identity.Authentication.Dto;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 
 namespace BrawlhallaStat.Api.Authentication.MapperProfiles;
 
