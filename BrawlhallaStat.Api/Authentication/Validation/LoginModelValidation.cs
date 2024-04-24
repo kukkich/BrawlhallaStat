@@ -1,7 +1,7 @@
 ﻿using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using FluentValidation;
 
-namespace BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
+namespace BrawlhallaStat.Api.Authentication.Validation;
 
 public class LoginModelValidation : AbstractValidator<LoginModel>
 {

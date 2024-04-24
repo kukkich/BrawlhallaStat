@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
+namespace BrawlhallaStat.Api.Authentication.Validation;
 
 public class NickNameValidator : AbstractValidator<string>
 {
