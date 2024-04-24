@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.GameEntities.Dtos;
+﻿namespace BrawlhallaStat.Api.Contracts.GameEntities;
 
 public class LegendDto
 {

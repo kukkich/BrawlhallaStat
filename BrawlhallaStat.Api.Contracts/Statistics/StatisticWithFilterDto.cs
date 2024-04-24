@@ -1,4 +1,6 @@
-﻿namespace BrawlhallaStat.Domain.Statistics.Dtos;
+﻿using BrawlhallaStat.Domain.Statistics;
+
+namespace BrawlhallaStat.Api.Contracts.Statistics;
 
 public class StatisticWithFilterDto
 {

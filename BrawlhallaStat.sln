@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrawlhallaStat.Api.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReplayWatcher.Desktop", "ReplayWatcher.Desktop\ReplayWatcher.Desktop.csproj", "{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrawlhallaStat.Api.Contracts", "BrawlhallaStat.Api.Contracts\BrawlhallaStat.Api.Contracts.csproj", "{09D65301-636A-4670-BFAB-F060C938EAFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B6F49D7-1C41-4A73-BC25-BA1523589FDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09D65301-636A-4670-BFAB-F060C938EAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09D65301-636A-4670-BFAB-F060C938EAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09D65301-636A-4670-BFAB-F060C938EAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09D65301-636A-4670-BFAB-F060C938EAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

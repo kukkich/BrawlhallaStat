@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Identity.Dto;
+﻿namespace BrawlhallaStat.Api.Contracts.Identity;
 
 public class UpdateUserProfile
 {

@@ -1,7 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
-using BrawlhallaStat.Domain.Identity.Dto;
 
-namespace BrawlhallaStat.Domain.Identity.Authentication;
+namespace BrawlhallaStat.Api.Contracts.Identity.Authentication;
 
 public class AuthenticatedUser : IUserIdentity
 {

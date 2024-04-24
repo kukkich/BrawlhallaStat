@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Domain.Identity.Base;
 
-namespace BrawlhallaStat.Domain.Identity.Dto;
+namespace BrawlhallaStat.Api.Contracts.Identity;
 
 public class ClaimDto : IClaim
 {

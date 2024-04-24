@@ -3,7 +3,7 @@ using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Requests.Logout;
 using BrawlhallaStat.Api.Authentication.Requests.Refresh;
 using BrawlhallaStat.Api.Authentication.Requests.Register;
-using BrawlhallaStat.Domain.Identity.Authentication.Dto;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
