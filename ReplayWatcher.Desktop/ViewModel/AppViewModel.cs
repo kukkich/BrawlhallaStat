@@ -32,7 +32,9 @@ public class AppViewModel : ReactiveObject
     public ReactiveCommand<string, Unit> UploadReplayCommand { get; private set; }
 
     public readonly IObservable<EventPattern<FileSystemEventArgs>> ReplayCreatedObservable = null!;
+    public IReadOnlyList<IReactiveCommand> AllCommands => _allCommands;
 
+    private readonly List<IReactiveCommand> _allCommands;
     private readonly ReplayWatcherService _replayWatcher;
     private readonly ConfigurationManager _configurationManager;
     private readonly IAuthService _authService;
@@ -71,6 +73,15 @@ public class AppViewModel : ReactiveObject
                 handler => _replayWatcher.FileCreated -= handler
             )
             .Subscribe(pattern => UploadReplayCommand.Execute(pattern.EventArgs.FullPath).Subscribe());
+        
+        var properties = GetType().GetProperties();
+        var commandProperties = properties
+            .Where(prop => typeof(IReactiveCommand).IsAssignableFrom(prop.PropertyType))
+            .Select(prop => (IReactiveCommand?)prop.GetValue(this))
+            .Where(prop => prop is not null)
+            .ToList();
+
+        _allCommands = commandProperties!;
     }
 
     private void ConfigureAuthentication()

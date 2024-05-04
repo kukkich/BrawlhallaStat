@@ -74,6 +74,12 @@ public partial class MainWindow
 
             this.BindCommand(ViewModel, vm => vm.SelectPathCommand, view => view.SelectPathButton)
                 .DisposeWith(disposables);
+
+            foreach (var command in ViewModel.AllCommands)
+            {
+                command.ThrownExceptions.Subscribe(HandleError)
+                    .DisposeWith(disposables);
+            }
         });
 
         ViewModel!.StartApplicationCommand.Execute();
@@ -129,6 +135,11 @@ public partial class MainWindow
         };
 
         return taskbar;
+    }
+
+    private void HandleError(Exception e)
+    {
+        MessageBox.Show(e.Message, "An error has occurred", MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
     private void Dispose()

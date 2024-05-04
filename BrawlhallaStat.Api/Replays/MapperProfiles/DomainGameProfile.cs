@@ -8,6 +8,7 @@ using ReaderGameSettings = BrawlhallaReplayReader.Models.GameSettings;
 
 namespace BrawlhallaStat.Api.Replays.MapperProfiles;
 
+// todo: doesn't work, need to fix and replace mapping with using Automapper
 public class DomainGameProfile : Profile
 {
     public DomainGameProfile()

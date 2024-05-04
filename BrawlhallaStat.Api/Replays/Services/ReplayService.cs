@@ -55,6 +55,7 @@ public class ReplayService : IReplayService
         gameDetail.Id = Guid.NewGuid().ToString();
 
         var nickName = author.NickName;
+        //todo  retry with nickName from db if NoUserInGameException occurred
         var authorAsPlayer = GetAuthorFromGame(gameDetail, nickName);
 
         gameDetail.Type = GameTypes[replay.PlaylistName];
