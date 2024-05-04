@@ -16,15 +16,15 @@ public class AuthController : ControllerBase
     private const string RefreshTokenCookieKey = "refreshToken";
 
     private readonly IMediator _mediator;
-    private readonly IValidator<RegistrationModel> _registrationValidator;
-    private readonly IValidator<LoginModel> _loginValidator;
+    private readonly IValidator<RegisterRequest> _registrationValidator;
+    private readonly IValidator<LoginRequest> _loginValidator;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
 
     public AuthController(
         IMediator mediator, 
-        IValidator<RegistrationModel> registrationValidator,
-        IValidator<LoginModel> loginValidator,
+        IValidator<RegisterRequest> registrationValidator,
+        IValidator<LoginRequest> loginValidator,
         IConfiguration configuration,
         IMapper mapper
     )

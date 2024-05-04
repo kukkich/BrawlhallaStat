@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Text;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ReplayWatcher.Desktop.Model.Authentication.Storage;
@@ -23,7 +24,8 @@ public class AuthenticationService : IAuthService
         ILogger<AuthenticationService> logger,
         IHttpClientFactory httpClientFactory,
         ITokenStorage tokenStorage,
-        CookieContainer cookieContainer)
+        CookieContainer cookieContainer
+        )
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -44,18 +46,19 @@ public class AuthenticationService : IAuthService
             Content = content
         };
 
-        var response = await httpClient.SendAsync(httpRequest);
+        var httpResponse = await httpClient.SendAsync(httpRequest);
 
-        if (!response.IsSuccessStatusCode)
+        if (!httpResponse.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadAsStringAsync();
+            var error = await httpResponse.Content.ReadAsStringAsync();
             _logger.LogDebug("Error while logging: {error}", error);
 
             return new AuthenticationResult(false, new() { error });
         }
 
-        var accessToken = await response.Content.ReadAsStringAsync();
-        _tokenStorage.SaveAccessToken(accessToken);
+        var responseContentString = await httpResponse.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<LoginResultDto>(responseContentString)!;
+        _tokenStorage.SaveAccessToken(response.AccessToken);
 
         if (!await SaveRefreshToken(httpClient))
         {
@@ -79,18 +82,19 @@ public class AuthenticationService : IAuthService
             Content = content
         };
 
-        var response = await httpClient.SendAsync(httpRequest);
+        var httpResponse = await httpClient.SendAsync(httpRequest);
 
-        if (!response.IsSuccessStatusCode)
+        if (!httpResponse.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadAsStringAsync();
+            var error = await httpResponse.Content.ReadAsStringAsync();
             _logger.LogDebug("Error while register: {error}", error);
 
             return new AuthenticationResult(false, new() { error });
         }
 
-        var accessToken = await response.Content.ReadAsStringAsync();
-        _tokenStorage.SaveAccessToken(accessToken);
+        var responseContentString = await httpResponse.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<LoginResultDto>(responseContentString)!;
+        _tokenStorage.SaveAccessToken(response.AccessToken);
 
         if (!await SaveRefreshToken(httpClient))
         {
@@ -113,18 +117,20 @@ public class AuthenticationService : IAuthService
         }
 
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, "api/Auth/Refresh");
-        var response = await httpClient.SendAsync(httpRequest);
+        var httpResponse = await httpClient.SendAsync(httpRequest);
 
-        if (!response.IsSuccessStatusCode)
+        if (!httpResponse.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadAsStringAsync();
+            var error = await httpResponse.Content.ReadAsStringAsync();
             _logger.LogDebug("Error while refresh: {error}", error);
 
             return new AuthenticationResult(false, new() { error });
         }
 
-        var accessToken = await response.Content.ReadAsStringAsync();
-        _tokenStorage.SaveAccessToken(accessToken);
+        //todo refactor: code duplication in all methods
+        var responseContentString = await httpResponse.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<LoginResultDto>(responseContentString)!;
+        _tokenStorage.SaveAccessToken(response.AccessToken);
 
 
         if (!await SaveRefreshToken(httpClient))
@@ -140,20 +146,21 @@ public class AuthenticationService : IAuthService
     {
         var baseAddress = new Uri(httpClient.BaseAddress!.GetLeftPart(UriPartial.Authority));
         var cookies = _cookieContainer.GetCookies(baseAddress);
-        var serverSetRefreshTokenCookie = cookies[RefreshTokenCookieKey];
+        var setByServerRefreshTokenCookie = cookies[RefreshTokenCookieKey];
         
-        cookies.Remove(serverSetRefreshTokenCookie);
+        cookies.Remove(setByServerRefreshTokenCookie);
         var clientSetCookie = cookies[RefreshTokenCookieKey];
 
         if (clientSetCookie is not null)
         {
             clientSetCookie.Expired = true;
         }
-        _cookieContainer.SetCookies(baseAddress, $"refreshToken={serverSetRefreshTokenCookie.Value}");
 
-        if (serverSetRefreshTokenCookie is not null)
+        if (setByServerRefreshTokenCookie is not null)
         {
-            var refreshToken = serverSetRefreshTokenCookie.Value;
+            _cookieContainer.SetCookies(baseAddress, $"refreshToken={setByServerRefreshTokenCookie.Value}");
+
+            var refreshToken = setByServerRefreshTokenCookie.Value;
             await _tokenStorage.SaveRefreshToken(refreshToken);
             _logger.LogDebug("RefreshToken extracted: {refreshToken}", refreshToken);
         }

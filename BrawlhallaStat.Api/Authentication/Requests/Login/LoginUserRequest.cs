@@ -3,5 +3,5 @@ using MediatR;
 
 namespace BrawlhallaStat.Api.Authentication.Requests.Login;
 
-public class LoginUserRequest : LoginModel, IRequest<LoginResult>
+public class LoginUserRequest : LoginRequest, IRequest<LoginResult>
     { }

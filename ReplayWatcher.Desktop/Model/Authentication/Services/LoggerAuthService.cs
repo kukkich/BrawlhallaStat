@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using BrawlhallaStat.Api.Contracts.Identity.Authentication;
+using Microsoft.Extensions.Logging;
 
 namespace ReplayWatcher.Desktop.Model.Authentication.Services;
 

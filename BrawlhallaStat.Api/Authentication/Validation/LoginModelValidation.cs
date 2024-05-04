@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BrawlhallaStat.Api.Authentication.Validation;
 
-public class LoginModelValidation : AbstractValidator<LoginModel>
+public class LoginModelValidation : AbstractValidator<LoginRequest>
 {
     public LoginModelValidation()
     {
