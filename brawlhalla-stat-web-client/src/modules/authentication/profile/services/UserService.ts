@@ -3,9 +3,9 @@ import $api from "../../../../api/axios";
 import {getDetailsFromApiException} from "../../../../api/tools/getDetailsFromApiException";
 
 export default class UserService {
-    static async login(request: UpdateProfileRequest): Promise<AxiosResponse> {
+    static async updateProfile(request: UpdateProfileRequest, userId: string): Promise<AxiosResponse> {
         try {
-            return await $api.post<any>('/user/profile', request);
+            return await $api.patch<any>(`/users/${userId}`, request);
         } catch (e) {
             throw getDetailsFromApiException(e)
         }

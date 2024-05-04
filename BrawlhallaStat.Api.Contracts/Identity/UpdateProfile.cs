@@ -2,6 +2,6 @@
 
 public class UpdateUserProfile
 {
-    public string NickName { get; set; } = null!;
-    public string Email { get; set; } = null!;
+    public string? NickName { get; set; } = null!;
+    public string? Email { get; set; } = null!;
 }

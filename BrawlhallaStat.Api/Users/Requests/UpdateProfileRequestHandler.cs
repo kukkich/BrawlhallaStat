@@ -28,7 +28,7 @@ public class UpdateProfileRequestHandler : IRequestHandler<UpdateProfileRequest>
         try
         {
             _logger.LogInformation(
-                "User {Id} change nickname transaction begin",
+                "User {Id} update profile transaction begin",
                 request.User.Id
             );
 
@@ -36,7 +36,7 @@ public class UpdateProfileRequestHandler : IRequestHandler<UpdateProfileRequest>
 
             await transaction.CommitAsync(cancellationToken);
             _logger.LogInformation(
-                "User {Id} change nickname transaction commit",
+                "User {Id} update profile transaction commit",
                 request.User.Id
             );
         }
@@ -44,7 +44,7 @@ public class UpdateProfileRequestHandler : IRequestHandler<UpdateProfileRequest>
         {
             await transaction.RollbackAsync(CancellationToken.None);
             _logger.LogWarning(
-                "User {Id} change nickname transaction rollback: {Message}",
+                "User {Id} update profile transaction rollback: {Message}",
                 request.User.Id, exception.Message
             );
             throw;

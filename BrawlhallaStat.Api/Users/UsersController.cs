@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BrawlhallaStat.Api.Users;
 
-[Route("api/[controller]/[action]")]
-public class UserController : ControllerBase
+[Route("api/[controller]/{userId:guid}")]
+public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IValidator<UpdateUserProfile> _profileValidator;
 
-    public UserController(
+    public UsersController(
         IMediator mediator, 
         IMapper mapper, 
         IValidator<UpdateUserProfile> profileValidator
@@ -27,10 +27,9 @@ public class UserController : ControllerBase
         _profileValidator = profileValidator;
     }
 
-    [HttpPost]
+    [HttpPatch]
     [Authorize]
-    [ActionName("profile")]
-    public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfile? newProfile)
+    public async Task<IActionResult> UpdateProfile([FromRoute]Guid userId, [FromBody] UpdateUserProfile? newProfile)
     {
         if (newProfile is null)
         {
@@ -43,6 +42,11 @@ public class UserController : ControllerBase
         }
 
         var user = _mapper.Map<AuthenticatedUser>(HttpContext.User);
+        //todo extract in action filter
+        if (userId.ToString() != user.Id)
+        {
+            return new ForbidResult();
+        }
 
         var request = new UpdateProfileRequest(user, newProfile);
         await _mediator.Send(request);

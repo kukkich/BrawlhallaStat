@@ -25,8 +25,8 @@ public class UserService : IUserService
     {
         var entitiesUpdated = await _dbContext.Users.Where(x => x.Id == user.Id)
             .ExecuteUpdateAsync(x => 
-                x.SetProperty(u => u.NickName, newProfile.NickName)
-                    .SetProperty(u => u.Email, newProfile.Email)
+                x.SetProperty(u => u.NickName, u => newProfile.NickName ?? u.NickName)
+                    .SetProperty(u => u.Email, u => newProfile.Email ?? u.Email)
             );
 
         if (entitiesUpdated == 0)

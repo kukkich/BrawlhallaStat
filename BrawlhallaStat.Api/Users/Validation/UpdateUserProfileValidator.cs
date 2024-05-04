@@ -8,7 +8,9 @@ public class UpdateUserProfileValidator : AbstractValidator<UpdateUserProfile>
 {
     public UpdateUserProfileValidator()
     {
-        RuleFor(x => x.NickName).SetValidator(new NickNameValidator());
-        RuleFor(x => x.Email).SetValidator(new EmailValidator());
+        RuleFor(x => x.NickName!).SetValidator(new NickNameValidator())
+            .When(x => x.NickName is not null);
+        RuleFor(x => x.Email!).SetValidator(new EmailValidator())
+            .When(x => x.Email is not null);
     }
 }

@@ -50,7 +50,8 @@ export const ProfilePage: FC = () => {
         };
 
         try {
-            await UserService.login(request);
+            console.log('обновляю профиль')
+            await UserService.updateProfile(request, user!.id);
             onSucceed()
         } catch (error) {
             onFailed()
