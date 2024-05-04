@@ -1,6 +1,7 @@
 using BrawlhallaReplayReader.DependencyInjection;
 using BrawlhallaStat.Api.Authentication;
 using BrawlhallaStat.Api.Authentication.Services.Tokens;
+using BrawlhallaStat.Api.Authentication.Validation;
 using BrawlhallaStat.Api.BrawlhallaEntities;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.General.Paging;
@@ -9,11 +10,9 @@ using BrawlhallaStat.Api.Replays;
 using BrawlhallaStat.Api.Statistics;
 using BrawlhallaStat.Api.Users;
 using BrawlhallaStat.Domain.Context;
-using BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using BrawlhallaStat.Api.General.Time;
 

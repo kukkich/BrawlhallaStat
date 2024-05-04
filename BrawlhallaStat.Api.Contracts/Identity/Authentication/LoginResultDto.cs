@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Identity.Authentication.Dto;
+﻿namespace BrawlhallaStat.Api.Contracts.Identity.Authentication;
 
 public class LoginResultDto
 {

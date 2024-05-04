@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -26,7 +27,7 @@ public class AppViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> StartApplicationCommand { get; private set; }
     public ReactiveCommand<Unit, AuthenticationResult> LoginCommand { get; private set; } = null!;
     public ReactiveCommand<Unit, AuthenticationResult> RegisterCommand { get; private set; } = null!;
-    public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; private set; } = null!;
+    public ReactiveCommand<Unit, Unit> GetSecureDataCommand { get; private set; } = null!; // for auth debug
     public ReactiveCommand<Unit, Unit> SelectPathCommand { get; private set; }
     public ReactiveCommand<string, Unit> UploadReplayCommand { get; private set; }
 
@@ -75,7 +76,11 @@ public class AppViewModel : ReactiveObject
     private void ConfigureAuthentication()
     {
         LoginCommand = ReactiveCommand.CreateFromTask(
-            () => LoginAsync(new LoginRequest(AuthContext.Login, AuthContext.Password)),
+            () => LoginAsync(new LoginRequest
+            {
+                Login = AuthContext.Login,
+                Password = AuthContext.Password
+            }),
             this.WhenAnyValue(x => x.AuthContext.IsAuthenticated, x => x.AuthContext.Login, x => x.AuthContext.Password,
                 (isAuth, login, password) =>
                     !isAuth &&
@@ -97,12 +102,13 @@ public class AppViewModel : ReactiveObject
             AuthContext.IsAuthenticated = result.IsSucceed;
         });
         RegisterCommand = ReactiveCommand.CreateFromTask(
-            execute: () => RegisterAsync(new RegisterRequest(
-                    AuthContext.Login, 
-                    AuthContext.NickName, 
-                    AuthContext.Email, 
-                    AuthContext.Password
-            )),
+            execute: () => RegisterAsync(new RegisterRequest
+            {
+                Login = AuthContext.Login, 
+                NickName = AuthContext.NickName, 
+                Email = AuthContext.Email,
+                Password = AuthContext.Password
+            }),
             canExecute: this.WhenAnyValue(x => x.AuthContext.IsAuthenticated,
                 x => x.AuthContext.Email, x => x.AuthContext.Login, x => x.AuthContext.Password, x => x.AuthContext.PasswordConfirm,
                 (isAuth, login, email, password, passwordConfirm) =>

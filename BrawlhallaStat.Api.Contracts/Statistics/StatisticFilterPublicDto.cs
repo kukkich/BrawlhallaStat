@@ -1,6 +1,7 @@
 ﻿using BrawlhallaStat.Domain.Base;
+using BrawlhallaStat.Domain.Statistics;
 
-namespace BrawlhallaStat.Domain.Statistics.Dtos;
+namespace BrawlhallaStat.Api.Contracts.Statistics;
 
 public class StatisticFilterPublicDto : StatisticFilterBase, IHaveId<string>
 {

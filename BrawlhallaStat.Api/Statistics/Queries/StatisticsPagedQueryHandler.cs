@@ -1,6 +1,6 @@
 ﻿using BrawlhallaStat.Api.Authentication.Requests.Login;
+using BrawlhallaStat.Api.Contracts.Statistics;
 using BrawlhallaStat.Api.Statistics.Services;
-using BrawlhallaStat.Domain.Statistics.Dtos;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Statistics.Queries;

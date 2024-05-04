@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BrawlhallaStat.Api.Contracts.Statistics;
 using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Api.General.Time;
@@ -6,7 +7,6 @@ using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
-using BrawlhallaStat.Domain.Statistics.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrawlhallaStat.Api.Statistics.Services;

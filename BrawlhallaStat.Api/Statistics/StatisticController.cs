@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
+using BrawlhallaStat.Api.Contracts.Statistics;
 using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Api.Statistics.Queries;
 using BrawlhallaStat.Api.Statistics.Requests;
-using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Statistics;
-using BrawlhallaStat.Domain.Statistics.Dtos;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

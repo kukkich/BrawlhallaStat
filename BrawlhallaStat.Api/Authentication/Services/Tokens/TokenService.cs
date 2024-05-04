@@ -2,9 +2,9 @@
 using System.Security.Claims;
 using AutoMapper;
 using BrawlhallaStat.Api.Authentication.Exceptions.Tokens;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using BrawlhallaStat.Domain.Context;
 using BrawlhallaStat.Domain.Identity;
-using BrawlhallaStat.Domain.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

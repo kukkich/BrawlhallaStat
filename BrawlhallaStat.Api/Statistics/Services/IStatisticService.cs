@@ -1,7 +1,7 @@
-﻿using BrawlhallaStat.Api.General.Paging;
+﻿using BrawlhallaStat.Api.Contracts.Statistics;
+using BrawlhallaStat.Api.General.Paging;
 using BrawlhallaStat.Domain.Identity.Base;
 using BrawlhallaStat.Domain.Statistics;
-using BrawlhallaStat.Domain.Statistics.Dtos;
 
 namespace BrawlhallaStat.Api.Statistics.Services;
 

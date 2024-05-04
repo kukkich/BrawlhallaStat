@@ -1,4 +1,4 @@
-﻿namespace BrawlhallaStat.Domain.Statistics.Dtos;
+﻿namespace BrawlhallaStat.Api.Contracts.Statistics;
 
 public class PagedStatisticWithFilterDto
 {

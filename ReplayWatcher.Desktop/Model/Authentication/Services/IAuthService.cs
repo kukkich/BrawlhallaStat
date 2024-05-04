@@ -1,4 +1,6 @@
-﻿namespace ReplayWatcher.Desktop.Model.Authentication.Services;
+﻿using BrawlhallaStat.Api.Contracts.Identity.Authentication;
+
+namespace ReplayWatcher.Desktop.Model.Authentication.Services;
 
 public interface IAuthService
 {

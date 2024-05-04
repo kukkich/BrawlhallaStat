@@ -1,7 +1,7 @@
 ﻿using BrawlhallaStat.Api.Exceptions;
 using BrawlhallaStat.Domain.GameEntities;
-using BrawlhallaStat.Domain.GameEntities.Dtos;
 using AutoMapper;
+using BrawlhallaStat.Api.Contracts.GameEntities;
 using BrawlhallaStat.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using BrawlhallaStat.Api.Contracts.Identity;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using BrawlhallaStat.Api.Users.Requests;
-using BrawlhallaStat.Domain.Identity.Authentication;
-using BrawlhallaStat.Domain.Identity.Dto;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

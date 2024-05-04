@@ -3,7 +3,7 @@ using BrawlhallaStat.Api.Authentication.Requests.Login;
 using BrawlhallaStat.Api.Authentication.Requests.Logout;
 using BrawlhallaStat.Api.Authentication.Requests.Refresh;
 using BrawlhallaStat.Api.Authentication.Requests.Register;
-using BrawlhallaStat.Domain.Identity.Authentication.Dto;
+using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +16,15 @@ public class AuthController : ControllerBase
     private const string RefreshTokenCookieKey = "refreshToken";
 
     private readonly IMediator _mediator;
-    private readonly IValidator<RegistrationModel> _registrationValidator;
-    private readonly IValidator<LoginModel> _loginValidator;
+    private readonly IValidator<RegisterRequest> _registrationValidator;
+    private readonly IValidator<LoginRequest> _loginValidator;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
 
     public AuthController(
         IMediator mediator, 
-        IValidator<RegistrationModel> registrationValidator,
-        IValidator<LoginModel> loginValidator,
+        IValidator<RegisterRequest> registrationValidator,
+        IValidator<LoginRequest> loginValidator,
         IConfiguration configuration,
         IMapper mapper
     )

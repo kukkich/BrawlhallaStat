@@ -1,6 +1,6 @@
-﻿namespace BrawlhallaStat.Domain.Identity.Authentication.Dto;
+﻿namespace BrawlhallaStat.Api.Contracts.Identity.Authentication;
 
-public class RegistrationModel
+public class RegisterRequest
 {
     public string Login { get; set; } = null!;
     public string NickName { get; set; } = null!;

@@ -36,4 +36,8 @@
 	<ItemGroup>
 	  <Folder Include="View\Auth\Converters\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BrawlhallaStat.Api.Contracts\BrawlhallaStat.Api.Contracts.csproj" />
+	</ItemGroup>
 </Project>

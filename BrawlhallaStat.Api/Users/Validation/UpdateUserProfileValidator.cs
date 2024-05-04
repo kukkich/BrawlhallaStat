@@ -1,7 +1,8 @@
-﻿using BrawlhallaStat.Domain.Identity.Authentication.Dto.Validation;
+﻿using BrawlhallaStat.Api.Authentication.Validation;
+using BrawlhallaStat.Api.Contracts.Identity;
 using FluentValidation;
 
-namespace BrawlhallaStat.Domain.Identity.Dto.Validation;
+namespace BrawlhallaStat.Api.Users.Validation;
 
 public class UpdateUserProfileValidator : AbstractValidator<UpdateUserProfile>
 {

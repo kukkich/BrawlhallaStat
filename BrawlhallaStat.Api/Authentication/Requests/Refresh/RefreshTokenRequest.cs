@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Domain.Identity.Authentication;
+﻿using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using MediatR;
 
 namespace BrawlhallaStat.Api.Authentication.Requests.Refresh;

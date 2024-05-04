@@ -1,4 +1,4 @@
-﻿using BrawlhallaStat.Domain.Identity.Authentication;
+﻿using BrawlhallaStat.Api.Contracts.Identity.Authentication;
 using BrawlhallaStat.Domain.Identity.Base;
 
 namespace BrawlhallaStat.Api.Authentication.Services.Tokens;

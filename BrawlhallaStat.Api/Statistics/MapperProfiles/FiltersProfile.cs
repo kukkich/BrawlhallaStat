@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using BrawlhallaStat.Api.Contracts.Statistics;
 using BrawlhallaStat.Domain.Statistics;
-using BrawlhallaStat.Domain.Statistics.Dtos;
 using BrawlhallaStat.Domain.Statistics.Views;
 
 namespace BrawlhallaStat.Api.Statistics.MapperProfiles;
